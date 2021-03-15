@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Container, Image, Row, Col, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AppIcon from "../../assets/img/icon.png";
-import "./index.css";
 import { Transition } from "react-transition-group";
 
 const duration = 300;

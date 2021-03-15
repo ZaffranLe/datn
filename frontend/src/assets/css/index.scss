@@ -1,0 +1,75 @@
+@import "~bootstrap/scss/bootstrap";
+
+body {
+    font-family: "Montserrat", "Roboto", sans-serif;
+}
+
+.app-container {
+    background: linear-gradient(to bottom, rgba(245, 246, 252, 0), rgba(255, 171, 115, 0.73)), url("../img/index-bg.jpg") fixed;
+    background-size: cover;
+    height: 100vh;
+}
+
+.full {
+    &-height {
+        height: 100%;
+    }
+
+    &-width {
+        width: 100%;
+    }
+}
+
+.btn {
+    &-login {
+        background: linear-gradient(to right, #ffab73 50%, #ffaec0);
+        color: black;
+        border: 0.5px solid gray;
+        &:hover {
+            background: linear-gradient(to left, #ffab73 50%, #ffaec0);
+            color: black;
+            text-decoration: underline;
+        }
+    }
+
+    &-register {
+        background: linear-gradient(to right, #ffd384 50%, #fff9b0);
+        color: black;
+        border: 0.5px solid gray;
+        &:hover {
+            background: linear-gradient(to left, #ffd384 50%, #fff9b0);
+            color: black;
+            text-decoration: underline;
+        }
+    }
+}
+
+.mt {
+    &-15 {
+        margin-top: 15px;
+    }
+}
+
+.login-container {
+    background: white;
+    padding: 30px;
+}
+
+.a-like {
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+        font-weight: bold;
+    }
+}
+
+.text {
+    &-black {
+        color: black;
+    }
+
+    &-error {
+        color: red;
+    }
+}

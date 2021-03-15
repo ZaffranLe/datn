@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Container, Image, Row, Col, Button, Form, Overlay } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
-import { Tooltip } from "bootstrap";
+import { Link } from "react-router-dom";
 
 const duration = 300;
 
@@ -82,12 +81,7 @@ function Register(props) {
                                     <Col md={12} className="text-left">
                                         <Form>
                                             <Form.Group controlId="Register.email">
-                                                <Form.Control
-                                                    type="email"
-                                                    placeholder="Email"
-                                                    value={registerInfo["email"]}
-                                                    onChange={handleChange("email")}
-                                                />
+                                                <Form.Control type="email" placeholder="Email" value={registerInfo["email"]} onChange={handleChange("email")} />
                                             </Form.Group>
                                             <Form.Group controlId="Register.password">
                                                 <Form.Control
@@ -95,6 +89,8 @@ function Register(props) {
                                                     placeholder="Mật khẩu"
                                                     value={registerInfo["password"]}
                                                     onChange={handleChange("password")}
+                                                    onBlur={handleCheckPassword}
+                                                    onFocus={() => setRegisterInfo({ ...registerInfo, passwordMatched: true })}
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="Register.confirmPassword">
@@ -105,18 +101,15 @@ function Register(props) {
                                                     value={registerInfo["confirmPassword"]}
                                                     onChange={handleChange("confirmPassword")}
                                                     onBlur={handleCheckPassword}
+                                                    onFocus={() => setRegisterInfo({ ...registerInfo, passwordMatched: true })}
                                                 />
-                                                <Overlay
-                                                    target={confirmPasswordRef.current}
-                                                    show={!registerInfo["passwordMatched"]}
-                                                    placement="bottom"
-                                                >
-                                                    <Tooltip>Mật khẩu không trùng khớp!</Tooltip>
-                                                </Overlay>
+                                                {!registerInfo["passwordMatched"] && <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>}
                                             </Form.Group>
-                                            <Button className="btn-register" block>
-                                                Đăng ký
-                                            </Button>
+                                            <Link to="/">
+                                                <Button className="btn-register" block>
+                                                    Đăng ký
+                                                </Button>
+                                            </Link>
                                         </Form>
                                     </Col>
                                 </Row>
