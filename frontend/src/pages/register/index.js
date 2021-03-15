@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Image, Row, Col, Button, Form, Overlay } from "react-bootstrap";
+import { Container, Image, Row, Col, Button, Form } from "react-bootstrap";
 import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
@@ -26,6 +26,7 @@ function Register(props) {
         password: "",
         confirmPassword: "",
         passwordMatched: true,
+        agreeTerm: false,
     });
 
     useEffect(() => {
@@ -66,7 +67,10 @@ function Register(props) {
                         id="register-page"
                     >
                         <Row className="full-width">
-                            <Col className="text-center login-container" md={{ span: 4, offset: 4 }}>
+                            <Col
+                                className="text-center login-container"
+                                md={{ span: 4, offset: 4 }}
+                            >
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} />
@@ -81,7 +85,12 @@ function Register(props) {
                                     <Col md={12} className="text-left">
                                         <Form>
                                             <Form.Group controlId="Register.email">
-                                                <Form.Control type="email" placeholder="Email" value={registerInfo["email"]} onChange={handleChange("email")} />
+                                                <Form.Control
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    value={registerInfo["email"]}
+                                                    onChange={handleChange("email")}
+                                                />
                                             </Form.Group>
                                             <Form.Group controlId="Register.password">
                                                 <Form.Control
@@ -90,7 +99,12 @@ function Register(props) {
                                                     value={registerInfo["password"]}
                                                     onChange={handleChange("password")}
                                                     onBlur={handleCheckPassword}
-                                                    onFocus={() => setRegisterInfo({ ...registerInfo, passwordMatched: true })}
+                                                    onFocus={() =>
+                                                        setRegisterInfo({
+                                                            ...registerInfo,
+                                                            passwordMatched: true,
+                                                        })
+                                                    }
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="Register.confirmPassword">
@@ -101,12 +115,35 @@ function Register(props) {
                                                     value={registerInfo["confirmPassword"]}
                                                     onChange={handleChange("confirmPassword")}
                                                     onBlur={handleCheckPassword}
-                                                    onFocus={() => setRegisterInfo({ ...registerInfo, passwordMatched: true })}
+                                                    onFocus={() =>
+                                                        setRegisterInfo({
+                                                            ...registerInfo,
+                                                            passwordMatched: true,
+                                                        })
+                                                    }
                                                 />
-                                                {!registerInfo["passwordMatched"] && <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>}
+                                                {!registerInfo["passwordMatched"] && (
+                                                    <Form.Text className="text-error">
+                                                        Mật khẩu không trùng khớp!
+                                                    </Form.Text>
+                                                )}
                                             </Form.Group>
-                                            <Link to="/">
-                                                <Button className="btn-register" block>
+                                            <Form.Group controlId="Register.agreeTerm">
+                                                <Form.Check
+                                                    type="checkbox"
+                                                    label={
+                                                        <Link to="/term-of-use">
+                                                            Điều khoản sử dụng
+                                                        </Link>
+                                                    }
+                                                />
+                                            </Form.Group>
+                                            <Link to="/register/update-info">
+                                                <Button
+                                                    className="btn-register"
+                                                    block
+                                                    disabled={!registerInfo["agreeTerm"]}
+                                                >
                                                     Đăng ký
                                                 </Button>
                                             </Link>

@@ -5,7 +5,8 @@ body {
 }
 
 .app-container {
-    background: linear-gradient(to bottom, rgba(245, 246, 252, 0), rgba(255, 171, 115, 0.73)), url("../img/index-bg.jpg") fixed;
+    background: linear-gradient(to bottom, rgba(245, 246, 252, 0), rgba(255, 171, 115, 0.73)),
+        url("../img/index-bg.jpg") fixed;
     background-size: cover;
     height: 100vh;
 }
@@ -53,6 +54,19 @@ body {
 .login-container {
     background: white;
     padding: 30px;
+}
+
+.term-of-use {
+    &__container {
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    &__bg {
+        background: rgba(135, 135, 135, 0.4);
+        overflow-y: scroll;
+        border: 1px solid black;
+        margin: 10px;
+    }
 }
 
 .a-like {
