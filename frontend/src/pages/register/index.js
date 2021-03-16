@@ -52,6 +52,13 @@ function Register(props) {
         });
     };
 
+    const handleCheckTos = (e) => {
+        setRegisterInfo({
+            ...registerInfo,
+            agreeTerm: e.target.checked,
+        });
+    };
+
     const confirmPasswordRef = useRef(null);
 
     return (
@@ -67,10 +74,7 @@ function Register(props) {
                         id="register-page"
                     >
                         <Row className="full-width">
-                            <Col
-                                className="text-center login-container"
-                                md={{ span: 4, offset: 4 }}
-                            >
+                            <Col className="text-center login-container" md={{ span: 4, offset: 4 }}>
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} />
@@ -85,12 +89,7 @@ function Register(props) {
                                     <Col md={12} className="text-left">
                                         <Form>
                                             <Form.Group controlId="Register.email">
-                                                <Form.Control
-                                                    type="email"
-                                                    placeholder="Email"
-                                                    value={registerInfo["email"]}
-                                                    onChange={handleChange("email")}
-                                                />
+                                                <Form.Control type="email" placeholder="Email" value={registerInfo["email"]} onChange={handleChange("email")} />
                                             </Form.Group>
                                             <Form.Group controlId="Register.password">
                                                 <Form.Control
@@ -122,28 +121,17 @@ function Register(props) {
                                                         })
                                                     }
                                                 />
-                                                {!registerInfo["passwordMatched"] && (
-                                                    <Form.Text className="text-error">
-                                                        Mật khẩu không trùng khớp!
-                                                    </Form.Text>
-                                                )}
+                                                {!registerInfo["passwordMatched"] && <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>}
                                             </Form.Group>
                                             <Form.Group controlId="Register.agreeTerm">
                                                 <Form.Check
                                                     type="checkbox"
-                                                    label={
-                                                        <Link to="/term-of-use">
-                                                            Điều khoản sử dụng
-                                                        </Link>
-                                                    }
+                                                    onClick={handleCheckTos}
+                                                    label={<Link to="/term-of-use">Điều khoản sử dụng</Link>}
                                                 />
                                             </Form.Group>
                                             <Link to="/register/update-info">
-                                                <Button
-                                                    className="btn-register"
-                                                    block
-                                                    disabled={!registerInfo["agreeTerm"]}
-                                                >
+                                                <Button className="btn-register" block disabled={!registerInfo["agreeTerm"]}>
                                                     Đăng ký
                                                 </Button>
                                             </Link>

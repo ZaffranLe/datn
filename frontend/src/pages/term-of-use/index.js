@@ -30,19 +30,10 @@ function TermOfUse(props) {
             <Container className="d-flex align-items-center full-height" id="term-of-use-page">
                 <Row className="full-width">
                     <Col className="text-center term-of-use__container" md={{ span: 8, offset: 2 }}>
-                        <Row>
-                            <Col md={12}>
-                                <Image src={AppIcon} />
-                            </Col>
-                        </Row>
                         <Row className="mt-15">
                             <Col md={12}>
                                 <h1>Điều khoản sử dụng</h1>
-                                <div
-                                    className="term-of-use__bg"
-                                >
-                                    Test
-                                </div>
+                                <div className="term-of-use__bg">Test</div>
                             </Col>
                         </Row>
                     </Col>
