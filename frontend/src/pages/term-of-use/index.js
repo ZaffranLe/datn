@@ -3,6 +3,7 @@ import { Container, Image, Row, Col, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function TermOfUse(props) {
+
     return (
         <>
             <Container className="d-flex align-items-center full-height" id="term-of-use-page">

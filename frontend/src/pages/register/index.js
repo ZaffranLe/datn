@@ -4,6 +4,8 @@ import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { updateRegisterInfo } from "./slice";
 
 const duration = 300;
 
@@ -21,13 +23,8 @@ const transitionStyles = {
 
 function Register(props) {
     const [inProp, setInProp] = useState(false);
-    const [registerInfo, setRegisterInfo] = useState({
-        email: "",
-        password: "",
-        confirmPassword: "",
-        passwordMatched: true,
-        agreeTerm: false,
-    });
+    const { registerInfo } = useSelector((state) => state.register);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setInProp(true);
@@ -35,10 +32,7 @@ function Register(props) {
     }, []);
 
     const handleChange = (name) => ({ target: { value } }) => {
-        setRegisterInfo({
-            ...registerInfo,
-            [name]: value,
-        });
+        dispatch(updateRegisterInfo({ name, value }));
     };
 
     const handleCheckPassword = () => {
@@ -46,17 +40,15 @@ function Register(props) {
         if (registerInfo["password"] === registerInfo["confirmPassword"]) {
             _matched = true;
         }
-        setRegisterInfo({
-            ...registerInfo,
-            passwordMatched: _matched,
-        });
+        dispatch(updateRegisterInfo({ name: "passwordMatched", value: _matched }));
     };
 
     const handleCheckTos = (e) => {
-        setRegisterInfo({
-            ...registerInfo,
-            agreeTerm: e.target.checked,
-        });
+        dispatch(updateRegisterInfo({ name: "agreeTerm", value: e.target.checked }));
+    };
+
+    const handleFocusPassword = () => {
+        dispatch(updateRegisterInfo({ name: "passwordMatched", value: true }));
     };
 
     const confirmPasswordRef = useRef(null);
@@ -89,7 +81,12 @@ function Register(props) {
                                     <Col md={12} className="text-left">
                                         <Form>
                                             <Form.Group controlId="Register.email">
-                                                <Form.Control type="email" placeholder="Email" value={registerInfo["email"]} onChange={handleChange("email")} />
+                                                <Form.Control
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    value={registerInfo["email"]}
+                                                    onChange={handleChange("email")}
+                                                />
                                             </Form.Group>
                                             <Form.Group controlId="Register.password">
                                                 <Form.Control
@@ -98,12 +95,7 @@ function Register(props) {
                                                     value={registerInfo["password"]}
                                                     onChange={handleChange("password")}
                                                     onBlur={handleCheckPassword}
-                                                    onFocus={() =>
-                                                        setRegisterInfo({
-                                                            ...registerInfo,
-                                                            passwordMatched: true,
-                                                        })
-                                                    }
+                                                    onFocus={handleFocusPassword}
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="Register.confirmPassword">
@@ -114,24 +106,28 @@ function Register(props) {
                                                     value={registerInfo["confirmPassword"]}
                                                     onChange={handleChange("confirmPassword")}
                                                     onBlur={handleCheckPassword}
-                                                    onFocus={() =>
-                                                        setRegisterInfo({
-                                                            ...registerInfo,
-                                                            passwordMatched: true,
-                                                        })
-                                                    }
+                                                    onFocus={handleFocusPassword}
                                                 />
-                                                {!registerInfo["passwordMatched"] && <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>}
+                                                {!registerInfo["passwordMatched"] && (
+                                                    <Form.Text className="text-error">
+                                                        Mật khẩu không trùng khớp!
+                                                    </Form.Text>
+                                                )}
                                             </Form.Group>
                                             <Form.Group controlId="Register.agreeTerm">
                                                 <Form.Check
                                                     type="checkbox"
+                                                    checked={registerInfo["agreeTerm"]}
                                                     onClick={handleCheckTos}
                                                     label={<Link to="/term-of-use">Điều khoản sử dụng</Link>}
                                                 />
                                             </Form.Group>
                                             <Link to="/register/update-info">
-                                                <Button className="btn-register" block disabled={!registerInfo["agreeTerm"]}>
+                                                <Button
+                                                    className="btn-register"
+                                                    block
+                                                    disabled={!registerInfo["agreeTerm"]}
+                                                >
                                                     Đăng ký
                                                 </Button>
                                             </Link>
