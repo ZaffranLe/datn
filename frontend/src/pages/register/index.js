@@ -51,6 +51,10 @@ function Register(props) {
         dispatch(updateRegisterInfo({ name: "passwordMatched", value: true }));
     };
 
+    const handleValidateRegisterInfo = () => {
+        const { email, password, confirmPassword, passwordMatched, agreeTerm, isValid } = registerInfo;
+    };
+
     const confirmPasswordRef = useRef(null);
 
     return (
@@ -81,12 +85,7 @@ function Register(props) {
                                     <Col md={12} className="text-left">
                                         <Form>
                                             <Form.Group controlId="Register.email">
-                                                <Form.Control
-                                                    type="email"
-                                                    placeholder="Email"
-                                                    value={registerInfo["email"]}
-                                                    onChange={handleChange("email")}
-                                                />
+                                                <Form.Control type="email" placeholder="Email" value={registerInfo["email"]} onChange={handleChange("email")} />
                                             </Form.Group>
                                             <Form.Group controlId="Register.password">
                                                 <Form.Control
@@ -108,11 +107,7 @@ function Register(props) {
                                                     onBlur={handleCheckPassword}
                                                     onFocus={handleFocusPassword}
                                                 />
-                                                {!registerInfo["passwordMatched"] && (
-                                                    <Form.Text className="text-error">
-                                                        Mật khẩu không trùng khớp!
-                                                    </Form.Text>
-                                                )}
+                                                {!registerInfo["passwordMatched"] && <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>}
                                             </Form.Group>
                                             <Form.Group controlId="Register.agreeTerm">
                                                 <Form.Check
@@ -123,11 +118,7 @@ function Register(props) {
                                                 />
                                             </Form.Group>
                                             <Link to="/register/update-info">
-                                                <Button
-                                                    className="btn-register"
-                                                    block
-                                                    disabled={!registerInfo["agreeTerm"]}
-                                                >
+                                                <Button className="btn-register" block disabled={!registerInfo["isValid"]}>
                                                     Đăng ký
                                                 </Button>
                                             </Link>

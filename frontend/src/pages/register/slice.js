@@ -9,6 +9,7 @@ export const registerSlice = createSlice({
             confirmPassword: "",
             passwordMatched: true,
             agreeTerm: false,
+            isValid: false,
         },
     },
     reducers: {
