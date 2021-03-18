@@ -8,7 +8,7 @@ function TermOfUse(props) {
         <>
             <Container className="d-flex align-items-center full-height" id="term-of-use-page">
                 <Row className="full-width">
-                    <Col className="text-center term-of-use__container" md={{ span: 8, offset: 2 }}>
+                    <Col className="text-center term-of-use__container border--round" md={{ span: 8, offset: 2 }}>
                         <Row className="mt-15">
                             <Col md={12}>
                                 <h1>Điều khoản sử dụng</h1>

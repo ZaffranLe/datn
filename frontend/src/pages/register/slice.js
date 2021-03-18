@@ -7,19 +7,28 @@ export const registerSlice = createSlice({
             email: "",
             password: "",
             confirmPassword: "",
-            passwordMatched: true,
             agreeTerm: false,
+        },
+        registerInfoValidation: {
+            isPasswordMatched: true,
+            isEmailValid: true,
             isValid: false,
+            isFocusingPassword: false,
+            isFocusingEmail: false,
+            passwordStrength: 0,
         },
     },
     reducers: {
         updateRegisterInfo: (state, action) => {
-            state.registerInfo[action.payload.name] = action.payload.value;
+            state.registerInfo = action.payload;
+        },
+        updateRegisterInfoValidation: (state, action) => {
+            state.registerInfoValidation = action.payload;
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateRegisterInfo } = registerSlice.actions;
+export const { updateRegisterInfo, updateRegisterInfoValidation } = registerSlice.actions;
 
 export default registerSlice.reducer;

@@ -42,7 +42,7 @@ function Login(props) {
                         id="login-page"
                     >
                         <Row className="full-width">
-                            <Col className="text-center login-container" md={{ span: 4, offset: 4 }}>
+                            <Col className="text-center login-container border--round" md={{ span: 4, offset: 4 }}>
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} alt="icon" />

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Image, Row, Col, Button, Form } from "react-bootstrap";
+import { Container, Image, Row, Col, Button, Form, ProgressBar } from "react-bootstrap";
 import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { updateRegisterInfo } from "./slice";
+import { updateRegisterInfo, updateRegisterInfoValidation } from "./slice";
+import produce from "immer";
 
 const duration = 300;
 
@@ -23,7 +24,19 @@ const transitionStyles = {
 
 function Register(props) {
     const [inProp, setInProp] = useState(false);
-    const { registerInfo } = useSelector((state) => state.register);
+    const {
+        registerInfo,
+        registerInfo: { email, password, confirmPassword, agreeTerm },
+        registerInfoValidation,
+        registerInfoValidation: {
+            isEmailValid,
+            isPasswordMatched,
+            isValid,
+            isFocusingEmail,
+            isFocusingPassword,
+            passwordStrength,
+        },
+    } = useSelector((state) => state.register);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -31,28 +44,71 @@ function Register(props) {
         return () => setInProp(false);
     }, []);
 
+    useEffect(() => {
+        let _isValid = false;
+        if (isEmailValid && isPasswordMatched && email && password && agreeTerm) {
+            _isValid = true;
+        }
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
+            draft.isValid = _isValid;
+        });
+        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+    }, [isEmailValid, isPasswordMatched, agreeTerm]);
+
     const handleChange = (name) => ({ target: { value } }) => {
-        dispatch(updateRegisterInfo({ name, value }));
+        const _registerInfo = produce(registerInfo, (draft) => {
+            draft[name] = value;
+        });
+        dispatch(updateRegisterInfo(_registerInfo));
     };
 
     const handleCheckPassword = () => {
-        let _matched = false;
-        if (registerInfo["password"] === registerInfo["confirmPassword"]) {
-            _matched = true;
+        let _isMatched = false;
+        if (password === confirmPassword) {
+            _isMatched = true;
         }
-        dispatch(updateRegisterInfo({ name: "passwordMatched", value: _matched }));
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
+            draft["isPasswordMatched"] = _isMatched;
+            draft["isFocusingPassword"] = false;
+        });
+        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+    };
+
+    const handleCheckEmail = () => {
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        const _isValid = emailRegex.test(String(email).toLowerCase());
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
+            draft["isEmailValid"] = _isValid;
+        });
+        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
     };
 
     const handleCheckTos = (e) => {
-        dispatch(updateRegisterInfo({ name: "agreeTerm", value: e.target.checked }));
+        const _registerInfo = produce(registerInfo, (draft) => {
+            draft["agreeTerm"] = e.target.checked;
+        });
+        dispatch(updateRegisterInfo(_registerInfo));
     };
 
     const handleFocusPassword = () => {
-        dispatch(updateRegisterInfo({ name: "passwordMatched", value: true }));
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
+            draft["isFocusingPassword"] = true;
+        });
+        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
     };
 
-    const handleValidateRegisterInfo = () => {
-        const { email, password, confirmPassword, passwordMatched, agreeTerm, isValid } = registerInfo;
+    const handleFocusEmail = () => {
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
+            draft["isFocusingEmail"] = true;
+        });
+        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+    };
+
+    const handleChangePassword = ({ target: { value } }) => {
+        const _registerInfo = produce(registerInfo, (draft) => {
+            draft["password"] = value;
+        });
+        dispatch(updateRegisterInfo(_registerInfo));
     };
 
     const confirmPasswordRef = useRef(null);
@@ -70,7 +126,7 @@ function Register(props) {
                         id="register-page"
                     >
                         <Row className="full-width">
-                            <Col className="text-center login-container" md={{ span: 4, offset: 4 }}>
+                            <Col className="text-center login-container border--round" md={{ span: 4, offset: 4 }}>
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} />
@@ -84,41 +140,63 @@ function Register(props) {
                                 <Row className="mt-15">
                                     <Col md={12} className="text-left">
                                         <Form>
-                                            <Form.Group controlId="Register.email">
-                                                <Form.Control type="email" placeholder="Email" value={registerInfo["email"]} onChange={handleChange("email")} />
+                                            <Form.Group controlId="register.email">
+                                                <Form.Control
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    value={email}
+                                                    onChange={handleChange("email")}
+                                                    onBlur={handleCheckEmail}
+                                                    onFocus={handleFocusEmail}
+                                                />
+                                                {!isEmailValid && !isFocusingEmail && (
+                                                    <Form.Text className="text-error">Email không hợp lệ!</Form.Text>
+                                                )}
                                             </Form.Group>
-                                            <Form.Group controlId="Register.password">
+                                            <Form.Group controlId="register.password">
                                                 <Form.Control
                                                     type="password"
                                                     placeholder="Mật khẩu"
-                                                    value={registerInfo["password"]}
-                                                    onChange={handleChange("password")}
+                                                    value={password}
+                                                    onChange={handleChangePassword}
                                                     onBlur={handleCheckPassword}
                                                     onFocus={handleFocusPassword}
                                                 />
+                                                {password && (
+                                                    <>
+                                                        <Form.Text>Độ mạnh của mật khẩu</Form.Text>
+                                                        <Form.Text>
+                                                            <ProgressBar now={passwordStrength} />
+                                                        </Form.Text>
+                                                    </>
+                                                )}
                                             </Form.Group>
-                                            <Form.Group controlId="Register.confirmPassword">
+                                            <Form.Group controlId="register.confirmPassword">
                                                 <Form.Control
                                                     ref={confirmPasswordRef}
                                                     type="password"
                                                     placeholder="Xác nhận mật khẩu"
-                                                    value={registerInfo["confirmPassword"]}
+                                                    value={confirmPassword}
                                                     onChange={handleChange("confirmPassword")}
                                                     onBlur={handleCheckPassword}
                                                     onFocus={handleFocusPassword}
                                                 />
-                                                {!registerInfo["passwordMatched"] && <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>}
+                                                {!isPasswordMatched && !isFocusingPassword && (
+                                                    <Form.Text className="text-error">
+                                                        Mật khẩu không trùng khớp!
+                                                    </Form.Text>
+                                                )}
                                             </Form.Group>
-                                            <Form.Group controlId="Register.agreeTerm">
+                                            <Form.Group controlId="register.agreeTerm">
                                                 <Form.Check
                                                     type="checkbox"
-                                                    checked={registerInfo["agreeTerm"]}
+                                                    checked={agreeTerm}
                                                     onClick={handleCheckTos}
                                                     label={<Link to="/term-of-use">Điều khoản sử dụng</Link>}
                                                 />
                                             </Form.Group>
                                             <Link to="/register/update-info">
-                                                <Button className="btn-register" block disabled={!registerInfo["isValid"]}>
+                                                <Button className="btn-register" block disabled={!isValid}>
                                                     Đăng ký
                                                 </Button>
                                             </Link>
