@@ -15,7 +15,13 @@ export const registerSlice = createSlice({
             isValid: false,
             isFocusingPassword: false,
             isFocusingEmail: false,
-            passwordStrength: 0,
+            passwordStrength: {
+                value: 0,
+                isLengthPassed: false,
+                isSpecialCharIncluded: false,
+                isUpperCaseIncluded: false,
+                isNumberIncluded: false,
+            },
         },
     },
     reducers: {

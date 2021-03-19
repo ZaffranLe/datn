@@ -28,14 +28,7 @@ function Register(props) {
         registerInfo,
         registerInfo: { email, password, confirmPassword, agreeTerm },
         registerInfoValidation,
-        registerInfoValidation: {
-            isEmailValid,
-            isPasswordMatched,
-            isValid,
-            isFocusingEmail,
-            isFocusingPassword,
-            passwordStrength,
-        },
+        registerInfoValidation: { isEmailValid, isPasswordMatched, isValid, isFocusingEmail, isFocusingPassword, passwordStrength },
     } = useSelector((state) => state.register);
     const dispatch = useDispatch();
 
@@ -105,10 +98,47 @@ function Register(props) {
     };
 
     const handleChangePassword = ({ target: { value } }) => {
+        let _passwordStrength = {
+            value: 0,
+            isLengthPassed: false,
+            isSpecialCharIncluded: false,
+            isUpperCaseIncluded: false,
+            isNumberIncluded: false,
+        };
+        const _passwordLengthReg = /(?=.{8,})/;
+        const _specialCharReg = /(?=.*[!@#$%^&*])/;
+        const _numberReg = /(?=.*[0-9])/;
+        const _upperCaseReg = /(?=.*[A-Z])/;
+        if (_passwordLengthReg.test(value)) {
+            _passwordStrength.isLengthPassed = true;
+            _passwordStrength.value += 25;
+        }
+        if (_specialCharReg.test(value)) {
+            _passwordStrength.isSpecialCharIncluded = true;
+            if (_passwordStrength.isLengthPassed) {
+                _passwordStrength.value += 25;
+            }
+        }
+        if (_numberReg.test(value)) {
+            _passwordStrength.isNumberIncluded = true;
+            if (_passwordStrength.isLengthPassed) {
+                _passwordStrength.value += 25;
+            }
+        }
+        if (_upperCaseReg.test(value)) {
+            _passwordStrength.isUpperCaseIncluded = true;
+            if (_passwordStrength.isLengthPassed) {
+                _passwordStrength.value += 25;
+            }
+        }
         const _registerInfo = produce(registerInfo, (draft) => {
             draft["password"] = value;
         });
         dispatch(updateRegisterInfo(_registerInfo));
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
+            draft["passwordStrength"] = _passwordStrength;
+        });
+        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
     };
 
     const confirmPasswordRef = useRef(null);
@@ -149,9 +179,7 @@ function Register(props) {
                                                     onBlur={handleCheckEmail}
                                                     onFocus={handleFocusEmail}
                                                 />
-                                                {!isEmailValid && !isFocusingEmail && (
-                                                    <Form.Text className="text-error">Email không hợp lệ!</Form.Text>
-                                                )}
+                                                {!isEmailValid && !isFocusingEmail && <Form.Text className="text-error">Email không hợp lệ!</Form.Text>}
                                             </Form.Group>
                                             <Form.Group controlId="register.password">
                                                 <Form.Control
@@ -166,7 +194,7 @@ function Register(props) {
                                                     <>
                                                         <Form.Text>Độ mạnh của mật khẩu</Form.Text>
                                                         <Form.Text>
-                                                            <ProgressBar now={passwordStrength} />
+                                                            <ProgressBar now={passwordStrength.value} />
                                                         </Form.Text>
                                                     </>
                                                 )}
@@ -182,9 +210,7 @@ function Register(props) {
                                                     onFocus={handleFocusPassword}
                                                 />
                                                 {!isPasswordMatched && !isFocusingPassword && (
-                                                    <Form.Text className="text-error">
-                                                        Mật khẩu không trùng khớp!
-                                                    </Form.Text>
+                                                    <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>
                                                 )}
                                             </Form.Group>
                                             <Form.Group controlId="register.agreeTerm">
