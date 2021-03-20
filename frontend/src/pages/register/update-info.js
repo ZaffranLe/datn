@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Image, Row, Col, Button, Form, Overlay, InputGroup } from "react-bootstrap";
 import { Transition } from "react-transition-group";
-import { Link } from "react-router-dom";
-import AppIcon from "../../assets/img/icon.png";
+import DefaultAvatar from "../../assets/img/default-avatar.png";
 
 const duration = 300;
 
@@ -39,7 +38,10 @@ function UpdateInfo(props) {
                         id="register-update-info-page"
                     >
                         <Row className="full-width">
-                            <Col className="text-center login-container" md={{ span: 8, offset: 2 }}>
+                            <Col
+                                className="text-center login-container"
+                                md={{ span: 8, offset: 2 }}
+                            >
                                 <Form>
                                     <Row>
                                         <Col md={12}>
@@ -50,7 +52,13 @@ function UpdateInfo(props) {
                                         <Col md={4}>
                                             <Row className="full-height pb-15">
                                                 <Col md={12} className="full-height">
-                                                    <div className="border rounded full-height">Test</div>
+                                                    <div className="border rounded full-height">
+                                                        <Image
+                                                            src={DefaultAvatar}
+                                                            alt="Default avatar"
+                                                            fluid
+                                                        />
+                                                    </div>
                                                 </Col>
                                             </Row>
                                         </Col>
@@ -59,46 +67,80 @@ function UpdateInfo(props) {
                                                 <Col md={12}>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="lastName">
-                                                            <Form.Control type="text" placeholder="Họ" />
+                                                            <Form.Control
+                                                                type="text"
+                                                                placeholder="Họ"
+                                                            />
                                                         </Form.Group>
                                                         <Form.Group as={Col} controlId="firstName">
-                                                            <Form.Control type="text" placeholder="Tên" />
+                                                            <Form.Control
+                                                                type="text"
+                                                                placeholder="Tên"
+                                                            />
                                                         </Form.Group>
                                                     </Form.Row>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="dob">
-                                                            <Form.Control type="text" placeholder="Ngày sinh" />
+                                                            <Form.Control
+                                                                type="text"
+                                                                placeholder="Ngày sinh"
+                                                            />
                                                         </Form.Group>
                                                         <Form.Group as={Col} controlId="gender">
-                                                            <Form.Control type="text" placeholder="Giới tính" />
+                                                            <Form.Control
+                                                                as="select"
+                                                            >
+                                                                <option>Giới tính</option>
+                                                                <option value={1}>Nam</option>
+                                                                <option value={0}>Nữ</option>
+                                                            </Form.Control>
                                                         </Form.Group>
                                                     </Form.Row>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="preference">
-                                                            <Form.Control type="text" placeholder="--Quan tâm đến--" />
+                                                            <Form.Control
+                                                                as="select"
+                                                            >
+                                                                <option>Quan tâm đến</option>
+                                                                <option value={1}>Nam</option>
+                                                                <option value={0}>Nữ</option>
+                                                            </Form.Control>
                                                         </Form.Group>
                                                     </Form.Row>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="weight">
                                                             <InputGroup>
-                                                                <Form.Control type="text" placeholder="Cân nặng" />
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    placeholder="Cân nặng"
+                                                                />
                                                                 <InputGroup.Append>
-                                                                    <InputGroup.Text>kg</InputGroup.Text>
+                                                                    <InputGroup.Text>
+                                                                        kg
+                                                                    </InputGroup.Text>
                                                                 </InputGroup.Append>
                                                             </InputGroup>
                                                         </Form.Group>
                                                         <Form.Group as={Col} controlId="height">
                                                             <InputGroup>
-                                                                <Form.Control type="text" placeholder="Chiều cao" />
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    placeholder="Chiều cao"
+                                                                />
                                                                 <InputGroup.Append>
-                                                                    <InputGroup.Text>cm</InputGroup.Text>
+                                                                    <InputGroup.Text>
+                                                                        cm
+                                                                    </InputGroup.Text>
                                                                 </InputGroup.Append>
                                                             </InputGroup>
                                                         </Form.Group>
                                                     </Form.Row>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="city">
-                                                            <Form.Control type="text" placeholder="Quê quán" />
+                                                            <Form.Control
+                                                                type="text"
+                                                                placeholder="Quê quán"
+                                                            />
                                                         </Form.Group>
                                                     </Form.Row>
                                                 </Col>
