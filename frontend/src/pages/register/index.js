@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Image, Row, Col, Button, Form, ProgressBar } from "react-bootstrap";
+import { Container, Image, Row, Col, Button, Form, ProgressBar, Tooltip, Overlay } from "react-bootstrap";
 import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
@@ -28,9 +28,12 @@ function Register(props) {
         registerInfo,
         registerInfo: { email, password, confirmPassword, agreeTerm },
         registerInfoValidation,
-        registerInfoValidation: { isEmailValid, isPasswordMatched, isValid, isFocusingEmail, isFocusingPassword, passwordStrength },
+        registerInfoValidation: { isEmailValid, isPasswordMatched, isValid, passwordStrength },
     } = useSelector((state) => state.register);
     const dispatch = useDispatch();
+
+    const [isFocusingPassword, setIsFocusingPassword] = useState(false);
+    const [isFocusingEmail, setIsFocusingEmail] = useState(false);
 
     useEffect(() => {
         setInProp(true);
@@ -62,9 +65,9 @@ function Register(props) {
         }
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft["isPasswordMatched"] = _isMatched;
-            draft["isFocusingPassword"] = false;
         });
         dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        setIsFocusingPassword(false);
     };
 
     const handleCheckEmail = () => {
@@ -84,17 +87,13 @@ function Register(props) {
     };
 
     const handleFocusPassword = () => {
-        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
-            draft["isFocusingPassword"] = true;
-        });
+        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {});
         dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        setIsFocusingPassword(true);
     };
 
     const handleFocusEmail = () => {
-        const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
-            draft["isFocusingEmail"] = true;
-        });
-        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        setIsFocusingEmail(true);
     };
 
     const handleChangePassword = ({ target: { value } }) => {
@@ -137,11 +136,19 @@ function Register(props) {
         dispatch(updateRegisterInfo(_registerInfo));
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft["passwordStrength"] = _passwordStrength;
+            draft["isValid"] =
+                _passwordStrength.isLengthPassed &&
+                isEmailValid &&
+                isPasswordMatched &&
+                agreeTerm &&
+                _passwordStrength.value >= 75
+                    ? true
+                    : false;
         });
         dispatch(updateRegisterInfoValidation(_registerInfoValidation));
     };
 
-    const confirmPasswordRef = useRef(null);
+    const passwordRef = useRef(null);
 
     return (
         <>
@@ -179,10 +186,13 @@ function Register(props) {
                                                     onBlur={handleCheckEmail}
                                                     onFocus={handleFocusEmail}
                                                 />
-                                                {!isEmailValid && !isFocusingEmail && <Form.Text className="text-error">Email không hợp lệ!</Form.Text>}
+                                                {!isEmailValid && !isFocusingEmail && (
+                                                    <Form.Text className="text-error">Email không hợp lệ!</Form.Text>
+                                                )}
                                             </Form.Group>
                                             <Form.Group controlId="register.password">
                                                 <Form.Control
+                                                    ref={passwordRef}
                                                     type="password"
                                                     placeholder="Mật khẩu"
                                                     value={password}
@@ -190,6 +200,63 @@ function Register(props) {
                                                     onBlur={handleCheckPassword}
                                                     onFocus={handleFocusPassword}
                                                 />
+                                                <Overlay
+                                                    target={passwordRef.current}
+                                                    placement="top"
+                                                    show={isFocusingPassword}
+                                                >
+                                                    <Tooltip id="password-tooltip">
+                                                        <div className="text-left">
+                                                            <span>
+                                                                - Tối thiểu 8 ký tự{" "}
+                                                                <i
+                                                                    className={`fa ${
+                                                                        passwordStrength.isLengthPassed
+                                                                            ? "fa-check text-success"
+                                                                            : "fa-times text-danger"
+                                                                    }`}
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                            <br />
+                                                            <span>
+                                                                - Có ký tự đặc biệt{" "}
+                                                                <i
+                                                                    className={`fa ${
+                                                                        passwordStrength.isSpecialCharIncluded
+                                                                            ? "fa-check text-success"
+                                                                            : "fa-times text-danger"
+                                                                    }`}
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                            <br />
+                                                            <span>
+                                                                - Có ký tự là số{" "}
+                                                                <i
+                                                                    className={`fa ${
+                                                                        passwordStrength.isNumberIncluded
+                                                                            ? "fa-check text-success"
+                                                                            : "fa-times text-danger"
+                                                                    }`}
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                            <br />
+                                                            <span>
+                                                                - Có ký tự in hoa{" "}
+                                                                <i
+                                                                    className={`fa ${
+                                                                        passwordStrength.isUpperCaseIncluded
+                                                                            ? "fa-check text-success"
+                                                                            : "fa-times text-danger"
+                                                                    }`}
+                                                                    aria-hidden="true"
+                                                                />
+                                                            </span>
+                                                        </div>
+                                                    </Tooltip>
+                                                </Overlay>
                                                 {password && (
                                                     <>
                                                         <Form.Text>Độ mạnh của mật khẩu</Form.Text>
@@ -201,7 +268,6 @@ function Register(props) {
                                             </Form.Group>
                                             <Form.Group controlId="register.confirmPassword">
                                                 <Form.Control
-                                                    ref={confirmPasswordRef}
                                                     type="password"
                                                     placeholder="Xác nhận mật khẩu"
                                                     value={confirmPassword}
@@ -210,14 +276,16 @@ function Register(props) {
                                                     onFocus={handleFocusPassword}
                                                 />
                                                 {!isPasswordMatched && !isFocusingPassword && (
-                                                    <Form.Text className="text-error">Mật khẩu không trùng khớp!</Form.Text>
+                                                    <Form.Text className="text-error">
+                                                        Mật khẩu không trùng khớp!
+                                                    </Form.Text>
                                                 )}
                                             </Form.Group>
                                             <Form.Group controlId="register.agreeTerm">
                                                 <Form.Check
                                                     type="checkbox"
                                                     checked={agreeTerm}
-                                                    onClick={handleCheckTos}
+                                                    onChange={handleCheckTos}
                                                     label={<Link to="/term-of-use">Điều khoản sử dụng</Link>}
                                                 />
                                             </Form.Group>

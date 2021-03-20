@@ -13,8 +13,6 @@ export const registerSlice = createSlice({
             isPasswordMatched: true,
             isEmailValid: true,
             isValid: false,
-            isFocusingPassword: false,
-            isFocusingEmail: false,
             passwordStrength: {
                 value: 0,
                 isLengthPassed: false,
