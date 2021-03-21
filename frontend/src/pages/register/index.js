@@ -6,21 +6,8 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { updateRegisterInfo, updateRegisterInfoValidation } from "./slice";
+import { duration, defaultStyle, transitionStyles } from "../../common/transition-style";
 import produce from "immer";
-
-const duration = 300;
-
-const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
-    opacity: 0,
-};
-
-const transitionStyles = {
-    entering: { opacity: 1 },
-    entered: { opacity: 1 },
-    exiting: { opacity: 0 },
-    exited: { opacity: 0 },
-};
 
 function Register(props) {
     const [inProp, setInProp] = useState(false);
