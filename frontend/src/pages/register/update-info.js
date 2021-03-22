@@ -345,7 +345,7 @@ function UpdateInfo(props) {
                                             <Button variant="link">Bỏ qua</Button>
                                         </Col>
                                         <Col md={9} className="text-right">
-                                            <Button variant="info" onClick={() => console.log(profileInfo)}>Hoàn tất</Button>
+                                            <Button variant="info">Hoàn tất</Button>
                                         </Col>
                                     </Row>
                                 </Form>
