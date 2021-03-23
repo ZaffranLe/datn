@@ -10,6 +10,7 @@ import RegisterUpdateInfoPage from "./register/update-info";
 import TermOfUsePage from "./term-of-use";
 
 function App() {
+    
     return (
         <div className="app-container">
             <Router history={history}>
