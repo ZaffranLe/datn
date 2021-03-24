@@ -1,5 +1,6 @@
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
+import AuthLayout from "../components/layout/AuthLayout";
 import { history } from "./history";
 
 // import pages
@@ -9,14 +10,26 @@ import RegisterPage from "./register";
 import RegisterUpdateInfoPage from "./register/update-info";
 import TermOfUsePage from "./term-of-use";
 
+function AuthRoute({ component: Component, ...rest }) {
+    return (
+        <Route
+            {...rest}
+            render={(matchProps) => (
+                <AuthLayout>
+                    <Component {...matchProps} />
+                </AuthLayout>
+            )}
+        />
+    );
+}
+
 function App() {
-    
     return (
         <div className="app-container">
             <Router history={history}>
                 <Switch>
                     <Route exact path="/" component={LoginPage} />
-                    <Route exact path="/profile" component={ProfilePage} />
+                    <AuthRoute exact path="/profile" component={ProfilePage} />
                     <Route exact path="/register" component={RegisterPage} />
                     <Route exact path="/register/update-info" component={RegisterUpdateInfoPage} />
                     <Route exact path="/term-of-use" component={TermOfUsePage} />

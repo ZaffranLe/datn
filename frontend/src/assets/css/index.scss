@@ -7,9 +7,9 @@ body {
 }
 
 .app-container {
-    background: linear-gradient(to bottom, rgba(245, 246, 252, 0), rgba(255, 171, 115, 0.73)), url("../img/index-bg.jpg") fixed;
+    background: linear-gradient(to bottom, rgba(245, 246, 252, 0), rgba(0, 0, 0, 0.9)), url("../img/index-bg.jpg") fixed;
     background-size: cover;
-    height: 96vh;
+    height: 100vh;
     overflow-y: auto;
 }
 
@@ -51,21 +51,44 @@ body {
     }
 }
 
-.mt {
-    &-15 {
-        margin-top: 15px;
+.m {
+    &t {
+        &-15 {
+            margin-top: 15px;
+        }
+        &-30 {
+            margin-top: 30px;
+        }
+    }
+    &b {
+        &-15 {
+            margin-bottom: 15px;
+        }
     }
 }
 
-.mb {
-    &-15 {
-        margin-bottom: 15px;
+.p {
+    &b {
+        &-15 {
+            padding-bottom: 15px;
+        }
     }
-}
 
-.pb {
-    &-15 {
-        padding-bottom: 15px;
+    &t {
+        &-15 {
+            padding-top: 15px;
+        }
+    }
+    &b {
+        &-10 {
+            padding-bottom: 10px;
+        }
+    }
+
+    &t {
+        &-10 {
+            padding-top: 10px;
+        }
     }
 }
 

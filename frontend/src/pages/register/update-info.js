@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Image, Row, Col, Button, Form, InputGroup, Overlay } from "react-bootstrap";
 import { Transition } from "react-transition-group";
 import DefaultAvatar from "../../assets/img/default-avatar.png";

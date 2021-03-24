@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Container, Image, Row, Col, Button, Form } from "react-bootstrap";
+import React from "react";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function TermOfUse(props) {
