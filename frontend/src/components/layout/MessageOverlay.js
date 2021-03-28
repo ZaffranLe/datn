@@ -7,6 +7,7 @@ import DefaultAvatar4 from "../../assets/img/default-avatar-4.jpg";
 import "./style.scss";
 import moment from "moment";
 import classNames from "classnames";
+import { Link } from "react-router-dom";
 
 function calcTimeDifferenceFromNow(time) {
     const timeConverter = [
@@ -162,6 +163,12 @@ function MessageOverlay({ show, target, marginTop }) {
                     {messageData.map((msg, idx) => (
                         <UserMessage message={msg} key={idx} />
                     ))}
+                    <hr className="bg-light" />
+                    <Row>
+                        <Col md={12} className="text-center">
+                            <Link to="/messages" className="text-light">Xem tất cả</Link>
+                        </Col>
+                    </Row>
                 </Container>
             )}
         </Overlay>
