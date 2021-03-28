@@ -166,7 +166,7 @@ function AuthLayout(props) {
                 </Col>
             </Row>
             <Row className="justify-content-center" style={{ marginTop: marginTop }}>
-                <Col md="11" className="bg-white">
+                <Col md="10" className="bg-white">
                     {props.children}
                 </Col>
             </Row>

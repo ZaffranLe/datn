@@ -1,0 +1,16 @@
+.profile {
+    &__avatar {
+        margin-top: 220px;
+        position: relative;
+        z-index: 1;
+        border-color: "#242526";
+        border: 5px solid;
+        cursor: pointer;
+        transition-property: border-color;
+        transition-duration: 0.5s;
+        
+        &:hover {
+            border: 5px solid lightblue !important;
+        }
+    }
+}
