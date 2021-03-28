@@ -16,3 +16,11 @@
         color: white;
     }
 }
+
+.notification-item {
+    cursor: pointer;
+
+    &:hover {
+        background-color: #494f54;
+    }
+}

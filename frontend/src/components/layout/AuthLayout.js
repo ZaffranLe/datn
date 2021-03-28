@@ -39,17 +39,21 @@ function AuthLayout(props) {
     };
 
     const notiRef = useRef(null);
-    const [showNotiOverlay, setShowNotiOverlay] = useState(false);
-
     const messageRef = useRef(null);
-    const [showMessageOverlay, setShowMessageOverlay] = useState(false);
-
     const settingRef = useRef(null);
-    const [showSettingOverlay, setShowSettingOverlay] = useState(false);
+    const [activeMenu, setActiveMenu] = useState(null);
+
+    const handleToggleMenu = (name) => {
+        setActiveMenu(activeMenu === name ? null : name);
+    };
 
     return (
         <Container fluid>
-            <Row id="app-header" className="bg-dark fixed-top ml-0 mr-0 pt-2 pb-2" style={{ color: "white" }}>
+            <Row
+                id="app-header"
+                className="bg-dark fixed-top ml-0 mr-0 pt-2 pb-2"
+                style={{ color: "white" }}
+            >
                 <Col md="3">
                     <Navbar>
                         <Nav>
@@ -64,7 +68,11 @@ function AuthLayout(props) {
                                             className="mr-2"
                                         />
                                     </Link>
-                                    <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Tìm kiếm"
+                                        className="fluid"
+                                    />
                                     <Button variant="outline-info">
                                         <i className="fa fa-search" />
                                     </Button>
@@ -89,54 +97,69 @@ function AuthLayout(props) {
                                 <div
                                     ref={messageRef}
                                     className="a-like"
-                                    onClick={() => setShowMessageOverlay(!showMessageOverlay)}
+                                    onClick={() => handleToggleMenu("message")}
                                 >
                                     <span className="fa fa-stack fa-lg">
                                         <i className="fa fa-circle fa-stack-2x text-black-50" />
                                         <i className="fa fa-comments fa-stack-1x" />
                                     </span>
                                     {messageData.havingUnseen && (
-                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
+                                        <Badge
+                                            style={{ position: "relative", bottom: 10, right: 10 }}
+                                            variant="danger"
+                                        >
                                             {messageData.unseenAmount}
                                         </Badge>
                                     )}
                                 </div>
                                 <MessageOverlay
-                                    show={showMessageOverlay}
+                                    show={activeMenu === "message"}
                                     target={messageRef.current}
                                     marginTop={marginTop}
+                                    onClose={handleToggleMenu}
                                 />
                             </Nav.Item>
                             <Nav.Item>
                                 <div
                                     ref={notiRef}
                                     className="a-like"
-                                    onClick={() => setShowNotiOverlay(!showNotiOverlay)}
+                                    onClick={() => handleToggleMenu("notification")}
                                 >
                                     <span className="fa fa-stack fa-lg">
                                         <i className="fa fa-circle fa-stack-2x text-black-50" />
                                         <i className="fa fa-bell fa-stack-1x" />
                                     </span>
                                     {notificationData.havingUnseen && (
-                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
+                                        <Badge
+                                            style={{ position: "relative", bottom: 10, right: 10 }}
+                                            variant="danger"
+                                        >
                                             {notificationData.unseenAmount}
                                         </Badge>
                                     )}
                                 </div>
-                                <NotificationOverlay show={showNotiOverlay} target={notiRef.current} />
+                                <NotificationOverlay
+                                    show={activeMenu === "notification"}
+                                    target={notiRef.current}
+                                />
                             </Nav.Item>
                             <Nav.Item>
                                 <div
                                     ref={settingRef}
                                     className="a-like"
-                                    onClick={() => setShowSettingOverlay(!showSettingOverlay)}
+                                    onClick={() => handleToggleMenu("setting")}
                                 >
                                     <span className="fa fa-stack fa-lg">
                                         <i className="fa fa-circle fa-stack-2x text-black-50" />
                                         <i className="fa fa-caret-down fa-stack-1x" />
                                     </span>
                                 </div>
-                                <SettingOverlay show={showSettingOverlay} target={settingRef.current} />
+                                <SettingOverlay
+                                    show={activeMenu === "setting"}
+                                    target={settingRef.current}
+                                    marginTop={marginTop}
+                                    onClose={handleToggleMenu}
+                                />
                             </Nav.Item>
                         </Nav>
                     </Navbar>

@@ -1,10 +1,15 @@
 import React from "react";
-import { Badge, Col, Container, Image, Overlay, Row } from "react-bootstrap";
+import {
+    Badge,
+    Col,
+    Container,
+    Image,
+    Overlay,
+    OverlayTrigger,
+    Row,
+    Tooltip,
+} from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
-import DefaultAvatar2 from "../../assets/img/default-avatar-2.jpg";
-import DefaultAvatar3 from "../../assets/img/default-avatar-3.jpg";
-import DefaultAvatar4 from "../../assets/img/default-avatar-4.jpg";
-import "./style.scss";
 import moment from "moment";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
@@ -15,21 +20,25 @@ function calcTimeDifferenceFromNow(time) {
             label: "ngày trước",
             ms: 86400000,
             maxValue: 7,
+            minValue: 1,
         },
         {
             label: "giờ trước",
             ms: 3600000,
             maxValue: 23,
+            minValue: 1,
         },
         {
             label: "phút trước",
             ms: 60000,
             maxValue: 59,
+            minValue: 1,
         },
         {
             label: "giây trước",
             ms: 1000,
             maxValue: 59,
+            minValue: 0,
         },
     ];
     const now = new Date();
@@ -41,7 +50,7 @@ function calcTimeDifferenceFromNow(time) {
     };
     for (let i = 0; i < timeConverter.length; ++i) {
         const _timeValue = Math.floor(timeDifference / timeConverter[i].ms);
-        if (_timeValue > 0 && _timeValue <= timeConverter[i].maxValue) {
+        if (_timeValue >= timeConverter[i].minValue && _timeValue <= timeConverter[i].maxValue) {
             result.display = `${_timeValue} ${timeConverter[i].label}`;
             result.isFitInTimeConverter = true;
             break;
@@ -67,11 +76,19 @@ function UserMessage({ message }) {
             </Col>
             <Col md={7}>
                 <Row className="mb-1">
-                    <Col md={12} className="user-message__user-name">
-                        <span
-                            style={{ fontSize: 20 }}
-                            className={`${!message.seen ? "font-weight-bold" : ""}`}
-                        >{`${message.targetUser.lastName} ${message.targetUser.firstName}`}</span>{" "}
+                    <Col md={12} className="user-message__user-name text-truncate">
+                        <OverlayTrigger
+                            placement="top"
+                            delay={{ show: 100, hide: 100 }}
+                            overlay={
+                                <Tooltip>{`${message.targetUser.lastName} ${message.targetUser.firstName}`}</Tooltip>
+                            }
+                        >
+                            <span
+                                style={{ fontSize: 20 }}
+                                className={`${!message.seen ? "font-weight-bold" : ""}`}
+                            >{`${message.targetUser.lastName} ${message.targetUser.firstName}`}</span>
+                        </OverlayTrigger>
                         {!message.seen ? (
                             <Badge pill style={{ backgroundColor: "#77aff7" }} className="ml-1">
                                 &nbsp;
@@ -94,38 +111,38 @@ function UserMessage({ message }) {
     );
 }
 
-function MessageOverlay({ show, target, marginTop }) {
+function MessageOverlay({ show, target, marginTop, onClose }) {
     const messageData = [
         {
             targetUser: {
-                avatar: DefaultAvatar3,
-                lastName: "Bắp",
-                firstName: "iu",
+                avatar: DefaultAvatar,
+                lastName: "Test",
+                firstName: "Name",
             },
             fromSelf: false,
-            content: "c ngủ ngon nè <3",
+            content: "Lorem ipsum donor",
             time: new Date(2021, 2, 26, 23, 58, 12),
             seen: true,
         },
         {
             targetUser: {
-                avatar: DefaultAvatar2,
-                lastName: "Nguyễn",
-                firstName: "Huỳnh Nguyên",
+                avatar: DefaultAvatar,
+                lastName: "Short",
+                firstName: "Name",
             },
             fromSelf: true,
-            content: "miễn sao ngồi với bồ á",
+            content: "Yo wassup mdafakaa",
             time: new Date(2021, 2, 27, 9, 6, 18),
             seen: true,
         },
         {
             targetUser: {
-                avatar: DefaultAvatar4,
-                lastName: "Lê",
-                firstName: "Thiên Phú",
+                avatar: DefaultAvatar,
+                lastName: "This is",
+                firstName: "A really long name, will it fit?",
             },
             fromSelf: false,
-            content: "Dạ em cảm ơn anh nha ^^",
+            content: "This is a super fucking long content",
             time: new Date(2021, 2, 26, 19, 41, 36),
             seen: true,
         },
@@ -152,21 +169,33 @@ function MessageOverlay({ show, target, marginTop }) {
                         position: "absolute",
                         right: 10,
                         top: marginTop,
-                        width: "30vw",
-                        maxHeight: "60vh",
-                        overflowY: "auto",
+                        width: "35vw",
                     }}
-                    className="bg-secondary text-light rounded pb-2 pt-2"
+                    className="bg-secondary text-light rounded pb-2 pt-4"
                 >
-                    <h2 className="mb-3">Tin nhắn</h2>
+                    <Row>
+                        <Col md={6}>
+                            <h2 className="mb-3">Tin nhắn</h2>
+                        </Col>
+                        <Col md={6} className="text-right">
+                            <i
+                                onClick={() => onClose("message")}
+                                className="fa fa-times-circle fa-2x a-like"
+                            />
+                        </Col>
+                    </Row>
                     <hr className="bg-light" />
-                    {messageData.map((msg, idx) => (
-                        <UserMessage message={msg} key={idx} />
-                    ))}
+                    <div style={{ maxHeight: "30vh", overflowY: "auto", overflowX: "hidden" }}>
+                        {messageData.map((msg, idx) => (
+                            <UserMessage message={msg} key={idx} />
+                        ))}
+                    </div>
                     <hr className="bg-light" />
                     <Row>
                         <Col md={12} className="text-center">
-                            <Link to="/messages" className="text-light">Xem tất cả</Link>
+                            <Link to="/messages" className="text-light">
+                                Xem tất cả
+                            </Link>
                         </Col>
                     </Row>
                 </Container>
