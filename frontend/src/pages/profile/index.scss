@@ -3,14 +3,28 @@
         margin-top: 220px;
         position: relative;
         z-index: 1;
-        border-color: "#242526";
-        border: 5px solid;
+        border: 5px solid #6C757D;
         cursor: pointer;
         transition-property: border-color;
-        transition-duration: 0.5s;
+        transition-duration: 0.3s;
         
         &:hover {
-            border: 5px solid lightblue !important;
+            border: 5px solid white !important;
+        }
+    }
+
+    &__btn {
+        border-radius: 25px;
+        background-color: transparent;
+        transition-property: background-color;
+        transition-duration: 0.3s;
+
+        &:hover {
+            background-color: #545B62;
+        }
+
+        &--active {
+            border-bottom: 1px solid #2E89FF;
         }
     }
 }
