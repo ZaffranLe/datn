@@ -3,30 +3,33 @@
         margin-top: 220px;
         position: relative;
         z-index: 1;
-        border: 5px solid #6C757D;
+        border: 5px solid #6c757d;
         cursor: pointer;
         transition-property: border-color;
         transition-duration: 0.3s;
-        
+
         &:hover {
             border: 5px solid white !important;
         }
     }
 
     &__btn {
-        border-radius: 10px;
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
         background-color: transparent;
         transition-property: background-color;
         transition-duration: 0.3s;
-        padding: 10px 20px 15px 20px;
+        padding: 15px;
+
         cursor: pointer;
-        
+
         &:hover {
-            background-color: #545B62;
+            background-color: #545b62;
+            border-radius: 15px;
         }
-        
+
         &--active {
-            border-bottom: 1px solid #2E89FF;
+            border-bottom: 1px solid #2e89ff;
         }
     }
 }
