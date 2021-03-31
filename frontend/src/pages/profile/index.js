@@ -3,6 +3,7 @@ import { Row, Col, Image, Button } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import BannerModal from "./banner-modal";
 import "./index.scss";
+import Info from "./info";
 
 function Profile(props) {
     // mock data
@@ -66,6 +67,20 @@ function Profile(props) {
                                 <i className="fa fa-pencil" /> Sửa thông tin cá nhân
                             </Button>
                         </Col>
+                    </Row>
+                </Col>
+            </Row>
+            <Row className="bg-dark pt-5 pb-5 justify-content-center">
+                <Col md={4}>
+                    <Row className="justify-content-center">
+                        <Col md={11} className="bg-secondary">
+                            <Info />
+                        </Col>
+                    </Row>
+                </Col>
+                <Col md={8}>
+                    <Row className="justify-content-center">
+                        <Col md={11} className="bg-secondary">Test</Col>
                     </Row>
                 </Col>
             </Row>

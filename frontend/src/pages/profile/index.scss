@@ -35,4 +35,11 @@
             color: #8dbbf7;
         }
     }
+
+    &__info {
+        & .row {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    }
 }
