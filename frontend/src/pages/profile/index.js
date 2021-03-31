@@ -58,7 +58,7 @@ function Profile(props) {
                 <Col md={11}>
                     <Row>
                         <Col md={6}>
-                            <span className="profile__btn">Bài đăng</span>
+                            <span className="profile__btn active">Bài đăng</span>
                             <span className="profile__btn">Ảnh</span>
                         </Col>
                         <Col md={6} className="text-right">

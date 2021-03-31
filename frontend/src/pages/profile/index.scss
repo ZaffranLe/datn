@@ -14,8 +14,7 @@
     }
 
     &__btn {
-        border-bottom-left-radius: 0px;
-        border-bottom-right-radius: 0px;
+        border-radius: 15px;
         background-color: transparent;
         transition-property: background-color;
         transition-duration: 0.3s;
@@ -25,11 +24,15 @@
 
         &:hover {
             background-color: #545b62;
-            border-radius: 15px;
+            border-radius: 15px !important;
+            border: 0px !important;
         }
 
-        &--active {
-            border-bottom: 1px solid #2e89ff;
+        &.active {
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+            border-bottom: 3px solid #8dbbf7;
+            color: #8dbbf7;
         }
     }
 }
