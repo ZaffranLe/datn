@@ -217,24 +217,24 @@ function UpdateInfo(props) {
                                                                 onChange={handleChangeInfo("gender")}
                                                                 value={gender}
                                                             >
-                                                                <option value={0}>Không rõ</option>
+                                                                <option value={2}>Không rõ</option>
                                                                 <option value={1}>Nam</option>
-                                                                <option value={2}>Nữ</option>
+                                                                <option value={0}>Nữ</option>
                                                             </Form.Control>
                                                         </Form.Group>
                                                     </Form.Row>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="preference">
-                                                            <Form.Label>Quan tâm đến</Form.Label>
+                                                            <Form.Label>Xu hướng</Form.Label>
                                                             <Form.Control
                                                                 as="select"
                                                                 onChange={handleChangeInfo("preference")}
                                                                 value={preference}
                                                             >
                                                                 <option value={0}>Không rõ</option>
-                                                                <option value={1}>Nam</option>
-                                                                <option value={2}>Nữ</option>
-                                                                <option value={2}>Cả nam lẫn nữ</option>
+                                                                <option value={1}>Đồng tính</option>
+                                                                <option value={2}>Dị tính</option>
+                                                                <option value={3}>Song tính</option>
                                                             </Form.Control>
                                                         </Form.Group>
                                                     </Form.Row>
