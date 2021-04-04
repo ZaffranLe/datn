@@ -42,4 +42,18 @@
             margin-bottom: 10px;
         }
     }
+
+    &__hobby {
+        border: 1px solid #535a61;
+        background-color: #6c757d;
+        margin: 4px;
+        padding: 14px;
+        border-radius: 100px;
+        display: inline-block;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #535a61;
+        }
+    }
 }

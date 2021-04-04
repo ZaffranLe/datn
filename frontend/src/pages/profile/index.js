@@ -19,68 +19,80 @@ function Profile(props) {
 
     return (
         <>
-            <Row>
-                <Col md={12} className="text-center">
-                    <div
-                        onClick={() => setShowBannerImg(true)}
-                        style={{
-                            height: 400,
-                            overflowY: "hidden",
-                            background: `url(${bannerUrl})`,
-                            backgroundRepeat: "no-repeat",
-                            backgroundSize: "cover",
-                            width: "100%",
-                            position: "absolute",
-                            left: 0,
-                            zIndex: 0,
-                        }}
-                    ></div>
-                    <Image src={DefaultAvatar} width={200} height={200} roundedCircle className="profile__avatar" />
-                </Col>
-            </Row>
-            <Row>
-                <Col md={12} className="text-center">
+            <Row className="justify-content-center">
+                <Col md={11} className="bg-secondary" style={{ borderRadius: 10 }}>
                     <Row>
-                        <Col md={12}>
-                            <span className="font-weight-bold h1">
-                                {user.lastName} {user.firstName}
-                            </span>
+                        <Col md={12} className="text-center">
+                            <div
+                                onClick={() => setShowBannerImg(true)}
+                                style={{
+                                    height: 400,
+                                    overflowY: "hidden",
+                                    background: `url(${bannerUrl})`,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundSize: "cover",
+                                    width: "100%",
+                                    position: "absolute",
+                                    left: 0,
+                                    zIndex: 0,
+                                }}
+                            ></div>
+                            <Image
+                                src={DefaultAvatar}
+                                width={200}
+                                height={200}
+                                roundedCircle
+                                className="profile__avatar"
+                            />
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={12}>
-                            <span className="h5">{user.bio}</span>
+                        <Col md={12} className="text-center">
+                            <Row>
+                                <Col md={12}>
+                                    <span className="font-weight-bold h1">
+                                        {user.lastName} {user.firstName}
+                                    </span>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={12}>
+                                    <span className="h5">{user.bio}</span>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                    <hr className="bg-light" />
+                    <Row className="justify-content-center mb-3">
+                        <Col md={11}>
+                            <Row>
+                                <Col md={6}>
+                                    <span className="profile__btn active">Bài đăng</span>
+                                    <span className="profile__btn">Ảnh</span>
+                                </Col>
+                                <Col md={6} className="text-right">
+                                    <Button variant="dark">
+                                        <i className="fa fa-pencil" /> Sửa thông tin cá nhân
+                                    </Button>
+                                </Col>
+                            </Row>
                         </Col>
                     </Row>
                 </Col>
             </Row>
-            <hr className="bg-light" />
-            <Row className="justify-content-center mb-3">
+            <Row className="justify-content-center">
                 <Col md={11}>
-                    <Row>
-                        <Col md={6}>
-                            <span className="profile__btn active">Bài đăng</span>
-                            <span className="profile__btn">Ảnh</span>
-                        </Col>
-                        <Col md={6} className="text-right">
-                            <Button variant="dark">
-                                <i className="fa fa-pencil" /> Sửa thông tin cá nhân
-                            </Button>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-            <Row className="bg-dark pt-5 pb-5 justify-content-center">
-                <Col md={4}>
-                    <Row className="justify-content-center">
-                        <Col md={11} className="bg-secondary">
+                    <Row className="bg-dark pt-4 pb-5 justify-content-center">
+                        <Col md={4}>
                             <Info />
                         </Col>
-                    </Row>
-                </Col>
-                <Col md={8}>
-                    <Row className="justify-content-center">
-                        <Col md={11} className="bg-secondary">Test</Col>
+                        <Col md={8}>
+                            <Row className="justify-content-center pl-3">
+                                <Col md={12}>
+                                    Test
+                                </Col>
+                            </Row>
+                        </Col>
                     </Row>
                 </Col>
             </Row>
