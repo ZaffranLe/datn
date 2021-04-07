@@ -112,15 +112,6 @@ body {
     }
 }
 
-.a-like {
-    cursor: pointer;
-
-    &:hover {
-        text-decoration: underline;
-        font-weight: bold;
-    }
-}
-
 .text {
     &-black {
         color: black;
@@ -141,5 +132,42 @@ body {
     &-90w {
         width: 90%;
         max-width: none !important;
+    }
+}
+
+.br {
+    &-10 {
+        border-radius: 10px;
+    }
+
+    &-50 {
+        border-radius: 50px;
+    }
+}
+
+.bg {
+    &-facebook--dark {
+        background-color: #242526;
+        color: white;
+    }
+    
+    &-facebook--darker {
+        background-color: #18191A;
+        color: white;
+    }
+}
+
+.clickable {
+    cursor: pointer;
+    
+    &__text {
+        &:hover {
+            text-decoration: underline;
+            font-weight: bold;
+        }
+    }
+    
+    &:hover {
+        font-weight: bold;
     }
 }

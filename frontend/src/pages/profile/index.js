@@ -4,6 +4,7 @@ import DefaultAvatar from "../../assets/img/default-avatar.png";
 import BannerModal from "./banner-modal";
 import "./index.scss";
 import Info from "./info";
+import NewPost from "./new-post";
 
 function Profile(props) {
     // mock data
@@ -20,7 +21,7 @@ function Profile(props) {
     return (
         <>
             <Row className="justify-content-center">
-                <Col md={11} className="bg-secondary" style={{ borderRadius: 10 }}>
+                <Col md={11} className="bg-facebook--dark br-10">
                     <Row>
                         <Col md={12} className="text-center">
                             <div
@@ -82,14 +83,14 @@ function Profile(props) {
             </Row>
             <Row className="justify-content-center">
                 <Col md={11}>
-                    <Row className="bg-dark pt-4 pb-5 justify-content-center">
+                    <Row className="bg-facebook--darker pt-4 pb-5 justify-content-center">
                         <Col md={4}>
                             <Info />
                         </Col>
                         <Col md={8}>
                             <Row className="justify-content-center pl-3">
                                 <Col md={12}>
-                                    Test
+                                    <NewPost />
                                 </Col>
                             </Row>
                         </Col>

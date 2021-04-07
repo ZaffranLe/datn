@@ -51,7 +51,7 @@ function AuthLayout(props) {
         <Container fluid>
             <Row
                 id="app-header"
-                className="bg-dark fixed-top ml-0 mr-0 pt-2 pb-2"
+                className="bg-facebook--darker fixed-top ml-0 mr-0 pt-2 pb-2"
                 style={{ color: "white" }}
             >
                 <Col md="3">
@@ -68,11 +68,7 @@ function AuthLayout(props) {
                                             className="mr-2"
                                         />
                                     </Link>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Tìm kiếm"
-                                        className="fluid"
-                                    />
+                                    <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
                                     <Button variant="outline-info">
                                         <i className="fa fa-search" />
                                     </Button>
@@ -94,20 +90,13 @@ function AuthLayout(props) {
                                 <span className="ml-2">Sơn Tùng</span>
                             </Nav.Item>
                             <Nav.Item>
-                                <div
-                                    ref={messageRef}
-                                    className="a-like"
-                                    onClick={() => handleToggleMenu("message")}
-                                >
+                                <div ref={messageRef} className="clickable" onClick={() => handleToggleMenu("message")}>
                                     <span className="fa fa-stack fa-lg">
-                                        <i className="fa fa-circle fa-stack-2x text-black-50" />
-                                        <i className="fa fa-comments fa-stack-1x" />
+                                        <i className="fa fa-circle fa-stack-2x text-light" />
+                                        <i className="fa fa-comments fa-stack-1x text-dark" />
                                     </span>
                                     {messageData.havingUnseen && (
-                                        <Badge
-                                            style={{ position: "relative", bottom: 10, right: 10 }}
-                                            variant="danger"
-                                        >
+                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
                                             {messageData.unseenAmount}
                                         </Badge>
                                     )}
@@ -122,36 +111,26 @@ function AuthLayout(props) {
                             <Nav.Item>
                                 <div
                                     ref={notiRef}
-                                    className="a-like"
+                                    className="clickable"
                                     onClick={() => handleToggleMenu("notification")}
                                 >
                                     <span className="fa fa-stack fa-lg">
-                                        <i className="fa fa-circle fa-stack-2x text-black-50" />
-                                        <i className="fa fa-bell fa-stack-1x" />
+                                        <i className="fa fa-circle fa-stack-2x text-light" />
+                                        <i className="fa fa-bell fa-stack-1x text-dark" />
                                     </span>
                                     {notificationData.havingUnseen && (
-                                        <Badge
-                                            style={{ position: "relative", bottom: 10, right: 10 }}
-                                            variant="danger"
-                                        >
+                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
                                             {notificationData.unseenAmount}
                                         </Badge>
                                     )}
                                 </div>
-                                <NotificationOverlay
-                                    show={activeMenu === "notification"}
-                                    target={notiRef.current}
-                                />
+                                <NotificationOverlay show={activeMenu === "notification"} target={notiRef.current} />
                             </Nav.Item>
                             <Nav.Item>
-                                <div
-                                    ref={settingRef}
-                                    className="a-like"
-                                    onClick={() => handleToggleMenu("setting")}
-                                >
+                                <div ref={settingRef} className="clickable" onClick={() => handleToggleMenu("setting")}>
                                     <span className="fa fa-stack fa-lg">
-                                        <i className="fa fa-circle fa-stack-2x text-black-50" />
-                                        <i className="fa fa-caret-down fa-stack-1x" />
+                                        <i className="fa fa-circle fa-stack-2x text-light" />
+                                        <i className="fa fa-caret-down fa-stack-1x text-dark" />
                                     </span>
                                 </div>
                                 <SettingOverlay
@@ -165,7 +144,7 @@ function AuthLayout(props) {
                     </Navbar>
                 </Col>
             </Row>
-            <Row className="justify-content-center bg-dark" style={{ marginTop: marginTop }}>
+            <Row className="justify-content-center bg-facebook--darker" style={{ marginTop: marginTop }}>
                 <Col md="12" className="text-light">
                     {props.children}
                 </Col>

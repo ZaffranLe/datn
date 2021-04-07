@@ -55,14 +55,14 @@ function Login(props) {
                                             <Row>
                                                 <Col md={6}>
                                                     <Link to="/forgot-password">
-                                                        <Form.Text className="a-like text-left text-black">
+                                                        <Form.Text className="clickable__text text-left text-black">
                                                             Quên mật khẩu
                                                         </Form.Text>
                                                     </Link>
                                                 </Col>
                                                 <Col md={6}>
                                                     <Link to="/register">
-                                                        <Form.Text className="a-like text-right text-black">
+                                                        <Form.Text className="clickable__text text-right text-black">
                                                             Chưa có tài khoản? Đăng ký ngay
                                                         </Form.Text>
                                                     </Link>

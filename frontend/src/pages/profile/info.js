@@ -79,7 +79,7 @@ function Info(props) {
     return (
         <>
             <Row className="justify-content-center pr-2">
-                <Col md={12} className="bg-secondary" style={{ borderRadius: 10 }}>
+                <Col md={12} className="bg-facebook--dark br-10">
                     <Row className="p-3 profile__info">
                         <Col md={12}>
                             <span className="h4">Giới thiệu</span>

@@ -171,7 +171,7 @@ function MessageOverlay({ show, target, marginTop, onClose }) {
                         top: marginTop,
                         width: "35vw",
                     }}
-                    className="bg-secondary text-light rounded pb-2 pt-4"
+                    className="bg-facebook--dark text-light rounded pb-2 pt-4"
                 >
                     <Row>
                         <Col md={6}>
@@ -180,7 +180,7 @@ function MessageOverlay({ show, target, marginTop, onClose }) {
                         <Col md={6} className="text-right">
                             <i
                                 onClick={() => onClose("message")}
-                                className="fa fa-times-circle fa-2x a-like"
+                                className="fa fa-times-circle fa-2x clickable"
                             />
                         </Col>
                     </Row>
