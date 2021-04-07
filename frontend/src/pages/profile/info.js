@@ -6,7 +6,7 @@ function Info(props) {
     const info = {
         dob: new Date("1999-12-29"),
         gender: 1,
-        preference: 1,
+        preference: 2,
         height: 186,
         weight: 80,
         homeTown: "Hà Nội",
