@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col, Image } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 
-function NewPostModal(props) {
-    
-}
+function NewPostModal(props) {}
 
 function NewPost(props) {
     const [imgHeight, setImgHeight] = useState(40);
@@ -25,7 +23,7 @@ function NewPost(props) {
     useEffect(() => {
         const newPostBtn = document.getElementById("new-post-btn");
         setImgHeight(newPostBtn.clientHeight);
-    });
+    }, []);
 
     return (
         <>
