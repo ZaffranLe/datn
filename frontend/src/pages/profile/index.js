@@ -21,7 +21,7 @@ function Profile(props) {
     return (
         <>
             <Row className="justify-content-center">
-                <Col md={11} className="bg-facebook--dark br-10">
+                <Col md={9} className="bg-facebook--dark br-10">
                     <Row>
                         <Col md={12} className="text-center">
                             <div
@@ -82,12 +82,12 @@ function Profile(props) {
                 </Col>
             </Row>
             <Row className="justify-content-center">
-                <Col md={11}>
+                <Col md={9}>
                     <Row className="bg-facebook--darker pt-4 pb-5 justify-content-center">
-                        <Col md={4}>
+                        <Col md={5}>
                             <Info />
                         </Col>
-                        <Col md={8}>
+                        <Col md={7}>
                             <Row className="justify-content-center pl-3">
                                 <Col md={12}>
                                     <NewPost />
