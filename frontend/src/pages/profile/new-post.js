@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "react-toastify";
@@ -126,7 +126,7 @@ function NewPost(props) {
                             />
                         </Form.Group>
                     </Form>
-                    <Row className="br-10 border border-secondary p-3">
+                    <Row className="br-10 border border-secondary p-3 m-0 mb-3">
                         <Col md={6}>
                             <span style={{ fontSize: 20 }}>Thêm vào bài đăng</span>
                         </Col>
@@ -149,6 +149,9 @@ function NewPost(props) {
                             />
                         </Col>
                     </Row>
+                    <Button block disabled={!content} variant="primary" className="br-10">
+                        Đăng
+                    </Button>
                 </Modal.Body>
             </Modal>
         </>
