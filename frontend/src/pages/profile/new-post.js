@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import TextareaAutosize from "react-textarea-autosize";
+import { toast } from "react-toastify";
+import { v4 } from "uuid";
 
 function NewPost(props) {
     const IMG_RATIO = 1; // ratio = width / height
@@ -47,8 +49,30 @@ function NewPost(props) {
 
     const handleAddImage = (e) => {
         const _images = e.target.files;
+        const imagesPreview = [];
+        const imagesBase64 = [];
         if (_images.length > 0) {
-            alert("sup")
+            for (let _image of _images) {
+                const name = v4();
+                imagesPreview.push({
+                    url: URL.createObjectURL(_image),
+                    name,
+                    error: false,
+                });
+                const reader = new FileReader();
+                reader.readAsDataURL(_image);
+                reader.onload = function () {
+                    imagesBase64.push({
+                        base64: reader.result,
+                        name,
+                    });
+                };
+                reader.onerror = function (error) {
+                    toast.error("Upload ảnh lỗi!");
+                };
+            }
+
+            setImages(imagesPreview);
         }
     };
 
