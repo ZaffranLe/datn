@@ -9,6 +9,7 @@ import ProfilePage from "./profile";
 import RegisterPage from "./register";
 import RegisterUpdateInfoPage from "./register/update-info";
 import TermOfUsePage from "./term-of-use";
+import ExplorePage from "./explore";
 
 function AuthRoute({ component: Component, ...rest }) {
     return (
@@ -30,6 +31,7 @@ function App() {
                 <Switch>
                     <Route exact path="/" component={LoginPage} />
                     <AuthRoute exact path="/profile" component={ProfilePage} />
+                    <AuthRoute exact path="/explore" component={ExplorePage} />
                     <Route exact path="/register" component={RegisterPage} />
                     <Route exact path="/register/update-info" component={RegisterUpdateInfoPage} />
                     <Route exact path="/term-of-use" component={TermOfUsePage} />

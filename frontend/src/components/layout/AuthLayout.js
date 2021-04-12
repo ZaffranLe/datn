@@ -144,8 +144,8 @@ function AuthLayout(props) {
                     </Navbar>
                 </Col>
             </Row>
-            <Row className="justify-content-center bg-facebook--darker" style={{ marginTop: marginTop }}>
-                <Col md="12" className="text-light">
+            <Row style={{ marginTop: marginTop }}>
+                <Col md="12">
                     {props.children}
                 </Col>
             </Row>

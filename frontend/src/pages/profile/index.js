@@ -20,77 +20,81 @@ function Profile(props) {
 
     return (
         <>
-            <Row className="justify-content-center">
-                <Col md={9} className="bg-facebook--dark br-10">
-                    <Row>
-                        <Col md={12} className="text-center">
-                            <div
-                                onClick={() => setShowBannerImg(true)}
-                                style={{
-                                    height: 400,
-                                    overflowY: "hidden",
-                                    background: `url(${bannerUrl})`,
-                                    backgroundRepeat: "no-repeat",
-                                    backgroundSize: "cover",
-                                    width: "100%",
-                                    position: "absolute",
-                                    left: 0,
-                                    zIndex: 0,
-                                }}
-                            ></div>
-                            <Image
-                                src={DefaultAvatar}
-                                width={200}
-                                height={200}
-                                roundedCircle
-                                className="profile__avatar"
-                            />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col md={12} className="text-center">
+            <Row className="bg-facebook--darker">
+                <Col md={12}>
+                    <Row className="justify-content-center">
+                        <Col md={9} className="bg-facebook--dark br-10">
                             <Row>
-                                <Col md={12}>
-                                    <span className="font-weight-bold h1">
-                                        {user.lastName} {user.firstName}
-                                    </span>
+                                <Col md={12} className="text-center">
+                                    <div
+                                        onClick={() => setShowBannerImg(true)}
+                                        style={{
+                                            height: 400,
+                                            overflowY: "hidden",
+                                            background: `url(${bannerUrl})`,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundSize: "cover",
+                                            width: "100%",
+                                            position: "absolute",
+                                            left: 0,
+                                            zIndex: 0,
+                                        }}
+                                    ></div>
+                                    <Image
+                                        src={DefaultAvatar}
+                                        width={200}
+                                        height={200}
+                                        roundedCircle
+                                        className="profile__avatar"
+                                    />
                                 </Col>
                             </Row>
                             <Row>
-                                <Col md={12}>
-                                    <span className="h5">{user.bio}</span>
+                                <Col md={12} className="text-center">
+                                    <Row>
+                                        <Col md={12}>
+                                            <span className="font-weight-bold h1">
+                                                {user.lastName} {user.firstName}
+                                            </span>
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col md={12}>
+                                            <span className="h5">{user.bio}</span>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                            </Row>
+                            <hr className="bg-light" />
+                            <Row className="justify-content-center mb-3">
+                                <Col md={11}>
+                                    <Row>
+                                        <Col md={6}>
+                                            <span className="profile__btn active">Bài đăng</span>
+                                            <span className="profile__btn">Ảnh</span>
+                                        </Col>
+                                        <Col md={6} className="text-right">
+                                            <Button variant="dark">
+                                                <i className="fa fa-pencil" /> Sửa thông tin cá nhân
+                                            </Button>
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
-                    <hr className="bg-light" />
-                    <Row className="justify-content-center mb-3">
-                        <Col md={11}>
-                            <Row>
-                                <Col md={6}>
-                                    <span className="profile__btn active">Bài đăng</span>
-                                    <span className="profile__btn">Ảnh</span>
+                    <Row className="justify-content-center">
+                        <Col md={9}>
+                            <Row className="bg-facebook--darker pt-4 pb-5 justify-content-center">
+                                <Col md={5}>
+                                    <Info />
                                 </Col>
-                                <Col md={6} className="text-right">
-                                    <Button variant="dark">
-                                        <i className="fa fa-pencil" /> Sửa thông tin cá nhân
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
-            <Row className="justify-content-center">
-                <Col md={9}>
-                    <Row className="bg-facebook--darker pt-4 pb-5 justify-content-center">
-                        <Col md={5}>
-                            <Info />
-                        </Col>
-                        <Col md={7}>
-                            <Row className="justify-content-center pl-3">
-                                <Col md={12}>
-                                    <NewPost />
+                                <Col md={7}>
+                                    <Row className="justify-content-center pl-3">
+                                        <Col md={12}>
+                                            <NewPost />
+                                        </Col>
+                                    </Row>
                                 </Col>
                             </Row>
                         </Col>
