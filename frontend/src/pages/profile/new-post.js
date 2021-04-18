@@ -86,7 +86,12 @@ function NewPost(props) {
                 <Col md={12} className="bg-facebook--dark br-10 p-3">
                     <Row>
                         <Col md={2} className="text-center">
-                            <Image src={DefaultAvatar} roundedCircle width={imgHeight * IMG_RATIO} height={imgHeight} />
+                            <Image
+                                src={DefaultAvatar}
+                                roundedCircle
+                                width={imgHeight * IMG_RATIO}
+                                height={imgHeight}
+                            />
                         </Col>
                         <Col md={10} className="pl-0">
                             <div
@@ -101,7 +106,13 @@ function NewPost(props) {
                 </Col>
             </Row>
             {/* New post modal */}
-            <Modal show={newPostModal} onHide={handleCloseNewPost} centered size="lg" className="new-post-modal">
+            <Modal
+                show={newPostModal}
+                onHide={handleCloseNewPost}
+                centered
+                size="lg"
+                className="new-post-modal"
+            >
                 <Modal.Header closeButton className="bg-facebook--dark new-post-modal__header p-4">
                     <Modal.Title>Đăng bài</Modal.Title>
                 </Modal.Header>
@@ -109,7 +120,8 @@ function NewPost(props) {
                     <Row className="mb-4">
                         <Col md={12}>
                             <span style={{ fontSize: 20 }}>
-                                <Image src={DefaultAvatar} roundedCircle width={50} height={50} /> Sơn Tùng
+                                <Image src={DefaultAvatar} roundedCircle width={50} height={50} />{" "}
+                                Sơn Tùng
                             </span>
                         </Col>
                     </Row>
@@ -126,17 +138,17 @@ function NewPost(props) {
                             />
                         </Form.Group>
                     </Form>
-                    <Row className="br-10 border border-secondary p-3 m-0 mb-3">
-                        <Col md={6}>
+                    <Row className="br-10 border border-secondary p-3 m-0 mb-3 display--table">
+                        <Col md={6} className="display--table-cell vertical-align-middle">
                             <span style={{ fontSize: 20 }}>Thêm vào bài đăng</span>
                         </Col>
-                        <Col md={6} className="text-right">
+                        <Col md={6} className="text-right display--table-cell vertical-align-middle">
                             <OverlayTrigger
                                 placement="top"
                                 delay={{ show: 400, hide: 200 }}
                                 overlay={(_props) => <Tooltip {..._props}>Ảnh</Tooltip>}
                             >
-                                <label for="upload-image">
+                                <label for="upload-image" className="mb-0">
                                     <i className="fa fa-picture-o text-success fa-2x clickable" />
                                 </label>
                             </OverlayTrigger>

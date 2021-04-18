@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Container, Image, Row, Col, Button, Form, ProgressBar, Tooltip, Overlay } from "react-bootstrap";
+import {
+    Container,
+    Image,
+    Row,
+    Col,
+    Button,
+    Form,
+    ProgressBar,
+    Tooltip,
+    Overlay,
+} from "react-bootstrap";
 import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
@@ -150,7 +160,10 @@ function Register(props) {
                         id="register-page"
                     >
                         <Row className="full-width">
-                            <Col className="text-center login-container border--round" md={{ span: 4, offset: 4 }}>
+                            <Col
+                                className="text-center login-container border--round"
+                                md={{ span: 4, offset: 4 }}
+                            >
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} />
@@ -174,7 +187,9 @@ function Register(props) {
                                                     onFocus={handleFocusEmail}
                                                 />
                                                 {!isEmailValid && !isFocusingEmail && (
-                                                    <Form.Text className="text-error">Email không hợp lệ!</Form.Text>
+                                                    <Form.Text className="text-error">
+                                                        Email không hợp lệ!
+                                                    </Form.Text>
                                                 )}
                                             </Form.Group>
                                             <Form.Group controlId="register.password">
@@ -248,7 +263,9 @@ function Register(props) {
                                                     <>
                                                         <Form.Text>Độ mạnh của mật khẩu</Form.Text>
                                                         <Form.Text>
-                                                            <ProgressBar now={passwordStrength.value} />
+                                                            <ProgressBar
+                                                                now={passwordStrength.value}
+                                                            />
                                                         </Form.Text>
                                                     </>
                                                 )}
@@ -273,13 +290,26 @@ function Register(props) {
                                                     type="checkbox"
                                                     checked={agreeTerm}
                                                     onChange={handleCheckTos}
-                                                    label={<Link to="/term-of-use">Điều khoản sử dụng</Link>}
+                                                    label={
+                                                        <Link to="/term-of-use">
+                                                            Điều khoản sử dụng
+                                                        </Link>
+                                                    }
                                                 />
                                             </Form.Group>
                                             <Link to="/register/update-info">
-                                                <Button className="btn-register" block disabled={!isValid}>
+                                                <Button
+                                                    className="btn-register"
+                                                    block
+                                                    disabled={!isValid}
+                                                >
                                                     Đăng ký
                                                 </Button>
+                                            </Link>
+                                            <Link to="/">
+                                                <Form.Text className="clickable__text text-black">
+                                                    Quay lại trang đăng nhập
+                                                </Form.Text>
                                             </Link>
                                         </Form>
                                     </Col>
