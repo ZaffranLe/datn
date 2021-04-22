@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const md5 = require("md5");
-const mysqlUser = require('../../database/mysql/facade/user');
-const { UserError } = require('../../common/utils/custom-errors');
+const mysqlUser = require("../../database/mysql/facade/user");
+const { UserError } = require("../../common/utils/custom-errors");
 const FILE_NAME = module.filename.split("\\").slice(-1)[0];
 
 async function login(req, res) {
@@ -21,7 +21,6 @@ async function register(req, res) {
         const encryptedPassword = md5(password);
         const userExist = await mysqlUser.getUserByEmail(email);
         if (!userExist) {
-            
         } else {
             throw UserError("Email is invalid", "EMAIL_INVALID");
         }

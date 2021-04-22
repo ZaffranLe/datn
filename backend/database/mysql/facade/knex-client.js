@@ -1,22 +1,25 @@
-const knex = require('knex');
-const databaseConfigs = require('../../../configs/database.cfg');
-const databaseConfig = databaseConfigs[databaseConfigs.environment].mysql;
+const knex = require("knex");
+const databaseConfigs = require("../../../config/database.cfg");
+const env = process.env.ENV;
+const databaseConfig = databaseConfigs[env].mysql;
 
 const knexClient = knex({
-    client: 'mysql',
+    client: "mysql",
     connection: {
         host: databaseConfig.host,
         user: databaseConfig.user,
         password: databaseConfig.password,
-        database: 'netdas_administrator'
+        database: databaseConfig.database,
     },
-    pool: { min: 2, max: 50 }
+    pool: { min: 2, max: 50 },
 });
 
-knexClient.on('query', function (queryData) {
-    console.log(`knex-mysql: ${queryData.sql}${queryData.bindings && queryData.bindings.length ? `\nparams: ${JSON.stringify(queryData.bindings)}` : ``}`);
+knexClient.on("query", function (queryData) {
+    console.log(
+        `knex-mysql: ${queryData.sql}${
+            queryData.bindings && queryData.bindings.length ? `\nparams: ${JSON.stringify(queryData.bindings)}` : ``
+        }`
+    );
 });
 
 module.exports = knexClient;
-
-
