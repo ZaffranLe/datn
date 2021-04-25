@@ -6,6 +6,7 @@ const genderRouter = require("./gender");
 const router = express.Router();
 
 router.post("/login", authController.login);
+router.post("/register", authController.register);
 
 router.use("/gender", genderRouter);
 

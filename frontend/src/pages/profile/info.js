@@ -14,19 +14,19 @@ function Info(props) {
             {
                 key: 0,
                 label: "Đọc sách",
-                icon: "fa-book",
+                icon: "fa fa-book",
                 value: 0,
             },
             {
                 key: 1,
                 label: "Chơi game",
-                icon: "fa-gamepad",
+                icon: "fa fa-gamepad",
                 value: 1,
             },
             {
                 key: 2,
                 label: "Ăn uống",
-                icon: "fa-cutlery",
+                icon: "gg gg-music",
                 value: 2,
             },
         ],
@@ -35,17 +35,17 @@ function Info(props) {
     const GENDERS = {
         MALE: {
             value: 1,
-            icon: "fa-mars",
+            icon: "fa fa-mars",
             text: "Nam",
         },
         FEMALE: {
             value: 0,
-            icon: "fa-venus",
+            icon: "fa fa-venus",
             text: "Nữ",
         },
         UNKNOWN: {
             value: 2,
-            icon: "fa-genderless",
+            icon: "fa fa-genderless",
             text: "Không rõ",
         },
     };
@@ -53,22 +53,22 @@ function Info(props) {
     const PREFERENCES = {
         GAY: {
             value: 1,
-            icon: "fa-mars-double",
+            icon: "fa fa-mars-double",
             text: "Đồng tính",
         },
         STRAIGHT: {
             value: 2,
-            icon: "fa-venus-mars",
+            icon: "fa fa-venus-mars",
             text: "Dị tính",
         },
         BISEXUAL: {
             value: 3,
-            icon: "fa-mars-stroke-v",
+            icon: "fa fa-mars-stroke-v",
             text: "Song tính",
         },
         UNKNOWN: {
             value: 0,
-            icon: "fa-genderless",
+            icon: "fa fa-genderless",
             text: "Không rõ",
         },
     };
@@ -91,11 +91,11 @@ function Info(props) {
                             </Row>
                             <Row>
                                 <Col md={1} className="text-center align-self-center">
-                                    <i className={`fa ${GENDERS[genderKey].icon}`} />
+                                    <i className={`${GENDERS[genderKey].icon}`} />
                                 </Col>
                                 <Col md={5}>{GENDERS[genderKey].text}</Col>
                                 <Col md={1} className="text-center align-self-center">
-                                    <i className={`fa ${PREFERENCES[prefKey].icon}`} />
+                                    <i className={`${PREFERENCES[prefKey].icon}`} />
                                 </Col>
                                 <Col md={5}>{PREFERENCES[prefKey].text}</Col>
                             </Row>
@@ -118,7 +118,7 @@ function Info(props) {
                                 <Col md={12}>
                                     {info.hobbies.map((hobby, idx) => (
                                         <div key={hobby.value} className="profile__hobby">
-                                            <i className={`fa ${hobby.icon}`} /> {hobby.label}
+                                            <i className={`${hobby.icon}`} /> {hobby.label}
                                         </div>
                                     ))}
                                 </Col>
