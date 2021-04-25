@@ -6,9 +6,11 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const router = require("./routes");
 const responseError = require('./api/middleware/resp-send-error');
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors())
 app.use(responseError);
 app.use(logger("dev"));
 app.use(express.json());

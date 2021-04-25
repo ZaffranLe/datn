@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-    Container,
-    Image,
-    Row,
-    Col,
-    Button,
-    Form,
-    ProgressBar,
-    Tooltip,
-    Overlay,
-} from "react-bootstrap";
+import { Container, Image, Row, Col, Button, Form, ProgressBar, Tooltip, Overlay, Alert } from "react-bootstrap";
 import AppIcon from "../../assets/img/icon.png";
 import { Transition } from "react-transition-group";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { updateRegisterInfo, updateRegisterInfoValidation } from "./slice";
+import * as registerActions from "./slice";
 import { duration, defaultStyle, transitionStyles } from "../../common/transition-style";
 import produce from "immer";
 
@@ -26,6 +16,8 @@ function Register(props) {
         registerInfo: { email, password, confirmPassword, agreeTerm },
         registerInfoValidation,
         registerInfoValidation: { isEmailValid, isPasswordMatched, isValid, passwordStrength },
+        isLoading,
+        errorMsg,
     } = useSelector((state) => state.register);
     const dispatch = useDispatch();
 
@@ -45,14 +37,15 @@ function Register(props) {
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft.isValid = _isValid;
         });
-        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
-    }, [isEmailValid, isPasswordMatched, agreeTerm]);
+        dispatch(registerActions.updateRegisterInfoValidation(_registerInfoValidation));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isEmailValid, isPasswordMatched, agreeTerm, dispatch]);
 
     const handleChange = (name) => ({ target: { value } }) => {
         const _registerInfo = produce(registerInfo, (draft) => {
             draft[name] = value;
         });
-        dispatch(updateRegisterInfo(_registerInfo));
+        dispatch(registerActions.updateRegisterInfo(_registerInfo));
     };
 
     const handleCheckPassword = () => {
@@ -63,7 +56,7 @@ function Register(props) {
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft["isPasswordMatched"] = _isMatched;
         });
-        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        dispatch(registerActions.updateRegisterInfoValidation(_registerInfoValidation));
         setIsFocusingPassword(false);
     };
 
@@ -73,19 +66,19 @@ function Register(props) {
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft["isEmailValid"] = _isValid;
         });
-        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        dispatch(registerActions.updateRegisterInfoValidation(_registerInfoValidation));
     };
 
     const handleCheckTos = (e) => {
         const _registerInfo = produce(registerInfo, (draft) => {
             draft["agreeTerm"] = e.target.checked;
         });
-        dispatch(updateRegisterInfo(_registerInfo));
+        dispatch(registerActions.updateRegisterInfo(_registerInfo));
     };
 
     const handleFocusPassword = () => {
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {});
-        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        dispatch(registerActions.updateRegisterInfoValidation(_registerInfoValidation));
         setIsFocusingPassword(true);
     };
 
@@ -130,7 +123,7 @@ function Register(props) {
         const _registerInfo = produce(registerInfo, (draft) => {
             draft["password"] = value;
         });
-        dispatch(updateRegisterInfo(_registerInfo));
+        dispatch(registerActions.updateRegisterInfo(_registerInfo));
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft["passwordStrength"] = _passwordStrength;
             draft["isValid"] =
@@ -142,7 +135,11 @@ function Register(props) {
                     ? true
                     : false;
         });
-        dispatch(updateRegisterInfoValidation(_registerInfoValidation));
+        dispatch(registerActions.updateRegisterInfoValidation(_registerInfoValidation));
+    };
+
+    const handleRegister = () => {
+        dispatch(registerActions.register(email, password));
     };
 
     const passwordRef = useRef(null);
@@ -160,10 +157,7 @@ function Register(props) {
                         id="register-page"
                     >
                         <Row className="full-width">
-                            <Col
-                                className="text-center login-container border--round"
-                                md={{ span: 4, offset: 4 }}
-                            >
+                            <Col className="text-center login-container border--round" md={{ span: 4, offset: 4 }}>
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} />
@@ -174,7 +168,14 @@ function Register(props) {
                                         <h4>Ngọt ngào cho tâm hồn</h4>
                                     </Col>
                                 </Row>
-                                <Row className="mt-15">
+                                {errorMsg && (
+                                    <Row className="mt-15">
+                                        <Col md={12}>
+                                            <Alert variant="danger">{errorMsg}</Alert>
+                                        </Col>
+                                    </Row>
+                                )}
+                                <Row className={`${!errorMsg && "mt-15"}`}>
                                     <Col md={12} className="text-left">
                                         <Form>
                                             <Form.Group controlId="register.email">
@@ -187,9 +188,7 @@ function Register(props) {
                                                     onFocus={handleFocusEmail}
                                                 />
                                                 {!isEmailValid && !isFocusingEmail && (
-                                                    <Form.Text className="text-error">
-                                                        Email không hợp lệ!
-                                                    </Form.Text>
+                                                    <Form.Text className="text-error">Email không hợp lệ!</Form.Text>
                                                 )}
                                             </Form.Group>
                                             <Form.Group controlId="register.password">
@@ -263,9 +262,7 @@ function Register(props) {
                                                     <>
                                                         <Form.Text>Độ mạnh của mật khẩu</Form.Text>
                                                         <Form.Text>
-                                                            <ProgressBar
-                                                                now={passwordStrength.value}
-                                                            />
+                                                            <ProgressBar now={passwordStrength.value} />
                                                         </Form.Text>
                                                     </>
                                                 )}
@@ -290,22 +287,17 @@ function Register(props) {
                                                     type="checkbox"
                                                     checked={agreeTerm}
                                                     onChange={handleCheckTos}
-                                                    label={
-                                                        <Link to="/term-of-use">
-                                                            Điều khoản sử dụng
-                                                        </Link>
-                                                    }
+                                                    label={<Link to="/term-of-use">Điều khoản sử dụng</Link>}
                                                 />
                                             </Form.Group>
-                                            <Link to="/register/update-info">
-                                                <Button
-                                                    className="btn-register"
-                                                    block
-                                                    disabled={!isValid}
-                                                >
-                                                    Đăng ký
-                                                </Button>
-                                            </Link>
+                                            <Button
+                                                className="btn-register"
+                                                block
+                                                disabled={!isValid}
+                                                onClick={handleRegister}
+                                            >
+                                                Đăng ký
+                                            </Button>
                                             <Link to="/">
                                                 <Form.Text className="clickable__text text-black">
                                                     Quay lại trang đăng nhập

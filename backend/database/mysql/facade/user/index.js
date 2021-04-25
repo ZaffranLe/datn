@@ -4,7 +4,7 @@ const _ = require("lodash");
 async function insertRefreshToken(info, transaction = null) {
     const _knex = transaction ? transaction : knex;
     try {
-        const fields = ["refreshToken", "idUser", "issuedAt", "expiredAt"];
+        const fields = ["refreshToken", "idUser", "issuedAt", "expiredAt", "ip"];
         const data = _.pick(info, fields);
         await _knex("refresh_token").insert(data);
     } catch (e) {

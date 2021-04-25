@@ -12,23 +12,23 @@ async function login(req, res) {
         const { email, password } = req.body;
         const encryptedPassword = md5(password);
         const userExist = await mysqlUser.getUserByEmail(email);
-        // if (!userExist || !_.isEqual(userExist["password"], encryptedPassword)) {
-        //     throw new UserError("Sai email hoặc mật khẩu, vui lòng kiểm tra lại.", "WRONG_EMAIL_OR_PASSWORD");
-        // }
-        // delete userExist["password"];
-        // const token = jwt.sign(userExist, process.env.JWT_SECRET, { expiresIn: "1h" });
-        const token = jwt.sign({ abc: 123 }, jwtConfig.tokenSecret, {
+        if (!userExist || !_.isEqual(userExist["password"], encryptedPassword)) {
+            throw new UserError("Sai email hoặc mật khẩu, vui lòng kiểm tra lại.", "WRONG_EMAIL_OR_PASSWORD");
+        }
+        delete userExist["password"];
+        delete userExist["createdAt"];
+        const token = jwt.sign(JSON.parse(JSON.stringify(userExist)), jwtConfig.tokenSecret, {
             expiresIn: jwtConfig.tokenLife,
         });
-        const refreshToken = jwt.sign({ abc: 123 }, jwtConfig.refreshTokenSecret, {
+        const refreshToken = jwt.sign({ email: email, id: userExist.id }, jwtConfig.refreshTokenSecret, {
             expiresIn: jwtConfig.refreshTokenLife,
         });
         const { iat, exp } = jwt.decode(refreshToken);
         const rtInfo = {
             refreshToken: sha("sha256").update(refreshToken).digest("hex"),
-            issuedAt: new Date(iat),
-            expiredAt: new Date(exp),
-            ip: req.headers["X-Forwarded-For"],
+            issuedAt: new Date(iat * 1000),
+            expiredAt: new Date(exp * 1000),
+            ip: req.socket.remoteAddress,
             idUser: userExist["id"],
         };
         await mysqlUser.insertRefreshToken(rtInfo);
@@ -44,7 +44,7 @@ async function login(req, res) {
     }
 }
 
-async function register(req, res) {
+async function register(req, res, next) {
     try {
         const { email, password } = req.body;
         const userExist = await mysqlUser.getUserByEmail(email);
@@ -58,15 +58,12 @@ async function register(req, res) {
             };
             const createdUserId = await mysqlUser.register(info);
             if (createdUserId) {
-                res.status(200).json({
-                    data: createdUserId,
-                    message: null,
-                });
+                next();
             } else {
-                throw new Error("Unable to register. Please try again later", "REGISTER_FAILED");
+                throw new Error("Đăng ký không thành công, vui lòng thử lại sau", "REGISTER_FAILED");
             }
         } else {
-            throw new UserError("Email is invalid", "EMAIL_INVALID");
+            throw new UserError("Email không hợp lệ, vui lòng chọn email khác", "EMAIL_INVALID");
         }
     } catch (e) {
         res.sendError(e, FILE_NAME < register.name);
