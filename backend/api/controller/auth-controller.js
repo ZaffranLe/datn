@@ -4,6 +4,7 @@ const mysqlUser = require("../../database/mysql/facade/user");
 const { UserError } = require("../../common/utils/custom-errors");
 const _ = require("lodash");
 const jwtConfig = require("../../config/jwt.cfg");
+const sha = require("sha.js");
 const FILE_NAME = module.filename.split("\\").slice(-1)[0];
 
 async function login(req, res) {
@@ -16,9 +17,26 @@ async function login(req, res) {
         // }
         // delete userExist["password"];
         // const token = jwt.sign(userExist, process.env.JWT_SECRET, { expiresIn: "1h" });
-        const token = jwt.sign({ abc: 123 }, jwtConfig.secret, { expiresIn: jwtConfig.tokenLife });
+        const token = jwt.sign({ abc: 123 }, jwtConfig.tokenSecret, {
+            expiresIn: jwtConfig.tokenLife,
+        });
+        const refreshToken = jwt.sign({ abc: 123 }, jwtConfig.refreshTokenSecret, {
+            expiresIn: jwtConfig.refreshTokenLife,
+        });
+        const { iat, exp } = jwt.decode(refreshToken);
+        const rtInfo = {
+            refreshToken: sha("sha256").update(refreshToken).digest("hex"),
+            issuedAt: new Date(iat),
+            expiredAt: new Date(exp),
+            ip: req.headers["X-Forwarded-For"],
+            idUser: userExist["id"],
+        };
+        await mysqlUser.insertRefreshToken(rtInfo);
         res.status(200).json({
-            data: token,
+            data: {
+                token,
+                refreshToken,
+            },
             message: null,
         });
     } catch (e) {
