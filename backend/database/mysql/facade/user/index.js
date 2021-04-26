@@ -1,19 +1,13 @@
 const knex = require("../knex-client");
 const _ = require("lodash");
 
-async function insertRefreshToken(info, transaction = null) {
-    const _knex = transaction ? transaction : knex;
-    try {
-        const fields = ["refreshToken", "idUser", "issuedAt", "expiredAt", "ip"];
-        const data = _.pick(info, fields);
-        await _knex("refresh_token").insert(data);
-    } catch (e) {
-        throw e;
-    }
-}
-
 async function getUserByEmail(email) {
     const user = await knex("user").where({ email: email }).first();
+    return user;
+}
+
+async function getUserById(id) {
+    const user = await knex("user").where({ id: id }).first();
     return user;
 }
 
@@ -34,6 +28,6 @@ async function register(info, transaction = null) {
 
 module.exports = {
     getUserByEmail,
+    getUserById,
     register,
-    insertRefreshToken,
 };

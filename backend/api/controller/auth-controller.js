@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const md5 = require("md5");
 const mysqlUser = require("../../database/mysql/facade/user");
+const mysqlRefreshToken = require("../../database/mysql/facade/refresh-token");
 const { UserError } = require("../../common/utils/custom-errors");
 const _ = require("lodash");
 const jwtConfig = require("../../config/jwt.cfg");
@@ -31,7 +32,7 @@ async function login(req, res) {
             ip: req.socket.remoteAddress,
             idUser: userExist["id"],
         };
-        await mysqlUser.insertRefreshToken(rtInfo);
+        await mysqlRefreshToken.insertRefreshToken(rtInfo);
         res.status(200).json({
             data: {
                 token,
@@ -70,7 +71,50 @@ async function register(req, res, next) {
     }
 }
 
+async function getTokenByRefreshToken(req, res) {
+    try {
+        const { refreshToken } = req.body;
+        try {
+            const decoded = jwt.verify(refreshToken, jwtConfig.refreshTokenSecret);
+            const idUser = decoded.id;
+            const ip = req.socket.remoteAddress;
+            const hashedToken = sha("sha256").update(refreshToken).digest("hex");
+            const tokenExist = await mysqlRefreshToken.getRefreshToken({
+                refreshToken: hashedToken,
+                ip,
+                idUser,
+            });
+            if (!tokenExist) {
+                throw new Error("Refresh token invalid.", "TOKEN_INVALID");
+            }
+            const userExist = await mysqlUser.getUserById(idUser);
+            if (userExist) {
+                delete userExist["password"];
+                delete userExist["createdAt"];
+                const token = jwt.sign(JSON.parse(JSON.stringify(userExist)), jwtConfig.tokenSecret, {
+                    expiresIn: jwtConfig.tokenLife,
+                });
+                res.status(200).json({
+                    data: token,
+                    message: null,
+                });
+            } else {
+                throw new Error("Refresh token malformed.", "TOKEN_MALFORMED");
+            }
+        } catch (e) {
+            console.error(e);
+            res.status(401).json({
+                data: {},
+                message: "Refresh token invalid.",
+            });
+        }
+    } catch (e) {
+        res.sendError(e, FILE_NAME, getTokenByRefreshToken.name);
+    }
+}
+
 module.exports = {
     login,
     register,
+    getTokenByRefreshToken,
 };

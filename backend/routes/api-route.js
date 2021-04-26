@@ -10,6 +10,7 @@ router.get("/test-api", (req, res) => {
 });
 
 router.post("/login", authController.login);
+router.post("/refresh-token", authController.getTokenByRefreshToken);
 router.post("/register", authController.register, authController.login);
 
 router.use("/gender", genderRouter);
