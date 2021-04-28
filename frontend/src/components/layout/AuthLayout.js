@@ -59,7 +59,7 @@ function AuthLayout(props) {
                         <Nav>
                             <Nav.Item>
                                 <Form inline>
-                                    <Link to="/explore">
+                                    <Link to="/">
                                         <Image
                                             src={AppThumbnail}
                                             roundedCircle
@@ -80,7 +80,7 @@ function AuthLayout(props) {
                 <Col md="9">
                     <Navbar>
                         <Nav className="mr-auto">
-                            <Nav.Item className="text-white" as={Link} to="/explore">
+                            <Nav.Item className="text-white" as={Link} to="/">
                                 #Khám phá
                             </Nav.Item>
                         </Nav>

@@ -14,16 +14,23 @@ async function login(req, res) {
         const encryptedPassword = md5(password);
         const userExist = await mysqlUser.getUserByEmail(email);
         if (!userExist || !_.isEqual(userExist["password"], encryptedPassword)) {
-            throw new UserError("Sai email hoặc mật khẩu, vui lòng kiểm tra lại.", "WRONG_EMAIL_OR_PASSWORD");
+            throw new UserError(
+                "Sai email hoặc mật khẩu, vui lòng kiểm tra lại.",
+                "WRONG_EMAIL_OR_PASSWORD"
+            );
         }
         delete userExist["password"];
         delete userExist["createdAt"];
         const token = jwt.sign(JSON.parse(JSON.stringify(userExist)), jwtConfig.tokenSecret, {
             expiresIn: jwtConfig.tokenLife,
         });
-        const refreshToken = jwt.sign({ email: email, id: userExist.id }, jwtConfig.refreshTokenSecret, {
-            expiresIn: jwtConfig.refreshTokenLife,
-        });
+        const refreshToken = jwt.sign(
+            { email: email, id: userExist.id },
+            jwtConfig.refreshTokenSecret,
+            {
+                expiresIn: jwtConfig.refreshTokenLife,
+            }
+        );
         const { iat, exp } = jwt.decode(refreshToken);
         const rtInfo = {
             refreshToken: sha("sha256").update(refreshToken).digest("hex"),
@@ -57,11 +64,14 @@ async function register(req, res, next) {
                 password: encryptedPassword,
                 createdAt: now,
             };
-            const createdUserId = await mysqlUser.register(info);
-            if (createdUserId) {
+            const createdIdUser = await mysqlUser.register(info);
+            if (createdIdUser) {
                 next();
             } else {
-                throw new Error("Đăng ký không thành công, vui lòng thử lại sau", "REGISTER_FAILED");
+                throw new Error(
+                    "Đăng ký không thành công, vui lòng thử lại sau",
+                    "REGISTER_FAILED"
+                );
             }
         } else {
             throw new UserError("Email không hợp lệ, vui lòng chọn email khác", "EMAIL_INVALID");
@@ -91,9 +101,13 @@ async function getTokenByRefreshToken(req, res) {
             if (userExist) {
                 delete userExist["password"];
                 delete userExist["createdAt"];
-                const token = jwt.sign(JSON.parse(JSON.stringify(userExist)), jwtConfig.tokenSecret, {
-                    expiresIn: jwtConfig.tokenLife,
-                });
+                const token = jwt.sign(
+                    JSON.parse(JSON.stringify(userExist)),
+                    jwtConfig.tokenSecret,
+                    {
+                        expiresIn: jwtConfig.tokenLife,
+                    }
+                );
                 res.status(200).json({
                     data: token,
                     message: null,
@@ -113,8 +127,26 @@ async function getTokenByRefreshToken(req, res) {
     }
 }
 
+async function logout(req, res) {
+    try {
+        const idUser = req.user.id;
+        const { token, refreshToken } = req.body;
+        const tokenPayload = jwt.decode(token);
+        const refreshTokenPayload = jwt.decode(refreshToken);
+        if (tokenPayload.id !== refreshTokenPayload.id || idUser !== refreshTokenPayload.id) {
+            throw new UserError("Token invalid", "TOKEN_INVALID");
+        }
+        const ip = req.socket.remoteAddress;
+        await mysqlRefreshToken.remove(refreshToken, ip, idUser);
+        res.status(200).json({ data: {}, message: null });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, logout.name);
+    }
+}
+
 module.exports = {
     login,
     register,
     getTokenByRefreshToken,
+    logout,
 };

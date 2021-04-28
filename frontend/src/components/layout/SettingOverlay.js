@@ -1,8 +1,25 @@
 import React from "react";
 import { Overlay, Container, Row, Col, Image } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
+import APICall from "../../utils/api/api-call";
+import constants from "../../common/constants";
+import { history } from "../../pages/history";
 
 function SettingOverlay({ show, target, marginTop, onClose }) {
+    const handleLogout = async () => {
+        const token = localStorage.getItem("token");
+        const refreshToken = localStorage.getItem("refreshToken");
+        await APICall({
+            url: "/api/logout",
+            method: constants.HTTP_METHOD.POST,
+            data: { token, refreshToken },
+        });
+        localStorage.removeItem("token");
+        localStorage.removeItem("refreshToken");
+        delete window.userInfo;
+        history.push("/login");
+    };
+
     return (
         <Overlay placement="bottom-end" show={show} target={target}>
             {({ placement, arrowProps, show: _show, popper, ...props }) => (
@@ -54,7 +71,11 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                             </Row>
                         </Col>
                     </Row>
-                    <Row className="mb-3 pb-3 pt-3 notification-item" style={{ fontSize: 20 }}>
+                    <Row
+                        className="mb-3 pb-3 pt-3 notification-item"
+                        style={{ fontSize: 20 }}
+                        onClick={handleLogout}
+                    >
                         <Col md={2} className="text-center">
                             <span className="fas fa-stack fa-lg">
                                 <i className="fas fa-circle fa-stack-2x text-black-50" />

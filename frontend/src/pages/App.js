@@ -16,6 +16,7 @@ function AuthRoute({ component: Component, ...rest }) {
     if (!userInfo) {
         const token = localStorage.getItem("token");
         if (!token) {
+            history.push("/login");
         } else {
             const payload = jwt.decode(token);
             const exp = new Date(payload.exp * 1000);
@@ -25,8 +26,10 @@ function AuthRoute({ component: Component, ...rest }) {
                 exp,
             };
             if (exp < now) {
-                localStorage.removeItem("token");
-                window.userInfo = undefined;
+                // TODO: handle token expired
+                // localStorage.removeItem("token");
+                // window.userInfo = undefined;
+                // history.push("/login");
             }
         }
     }
@@ -51,7 +54,11 @@ function App() {
                     <AuthRoute exact path="/" component={ExplorePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
-                    <AuthRoute exact path="/register/update-info" component={RegisterUpdateInfoPage} />
+                    <AuthRoute
+                        exact
+                        path="/register/update-info"
+                        component={RegisterUpdateInfoPage}
+                    />
                     <Route exact path="/term-of-use" component={TermOfUsePage} />
                 </Switch>
             </Router>

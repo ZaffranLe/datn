@@ -20,7 +20,12 @@ async function getRefreshToken(info) {
     return data;
 }
 
+async function remove(refreshToken, ip, idUser) {
+    await knex("refresh_token").where({ refreshToken, ip, idUser }).del();
+}
+
 module.exports = {
     insertRefreshToken,
     getRefreshToken,
+    remove,
 };
