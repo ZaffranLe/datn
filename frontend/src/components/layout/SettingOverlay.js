@@ -25,7 +25,7 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                         <Col md={6} className="text-right">
                             <i
                                 onClick={() => onClose("setting")}
-                                className="fa fa-times-circle fa-2x clickable"
+                                className="fas fa-times-circle fa-2x clickable"
                             />
                         </Col>
                     </Row>
@@ -56,9 +56,9 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                     </Row>
                     <Row className="mb-3 pb-3 pt-3 notification-item" style={{ fontSize: 20 }}>
                         <Col md={2} className="text-center">
-                            <span className="fa fa-stack fa-lg">
-                                <i className="fa fa-circle fa-stack-2x text-black-50" />
-                                <i className="fa fa-sign-out fa-stack-1x" />
+                            <span className="fas fa-stack fa-lg">
+                                <i className="fas fa-circle fa-stack-2x text-black-50" />
+                                <i className="fas fa-sign-out-alt fa-stack-1x" />
                             </span>
                         </Col>
                         <Col md={10} className="align-self-center">

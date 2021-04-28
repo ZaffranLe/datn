@@ -180,7 +180,7 @@ function MessageOverlay({ show, target, marginTop, onClose }) {
                         <Col md={6} className="text-right">
                             <i
                                 onClick={() => onClose("message")}
-                                className="fa fa-times-circle fa-2x clickable"
+                                className="fas fa-times-circle fa-2x clickable"
                             />
                         </Col>
                     </Row>

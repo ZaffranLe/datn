@@ -75,7 +75,7 @@ function Profile(props) {
                                         </Col>
                                         <Col md={6} className="text-right">
                                             <Button variant="dark">
-                                                <i className="fa fa-pencil" /> Sửa thông tin cá nhân
+                                                <i className="fas fa-pencil-alt" /> Sửa thông tin cá nhân
                                             </Button>
                                         </Col>
                                     </Row>

@@ -1,7 +1,9 @@
 @import "~bootstrap/scss/bootstrap";
-@import "../font-awesome/scss/font-awesome.scss";
 @import "~react-datepicker/src/stylesheets/datepicker.scss";
 @import "~css.gg/icons/all.scss";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/scss/brands.scss";
 
 body {
     font-family: "Montserrat", "Roboto", sans-serif;

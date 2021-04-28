@@ -149,7 +149,7 @@ function NewPost(props) {
                                 overlay={(_props) => <Tooltip {..._props}>Ảnh</Tooltip>}
                             >
                                 <label for="upload-image" className="mb-0">
-                                    <i className="fa fa-picture-o text-success fa-2x clickable" />
+                                    <i className="fas fa-image text-success fa-2x clickable" />
                                 </label>
                             </OverlayTrigger>
                             <input

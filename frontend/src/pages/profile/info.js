@@ -14,13 +14,13 @@ function Info(props) {
             {
                 key: 0,
                 label: "Đọc sách",
-                icon: "fa fa-book",
+                icon: "fas fa-book",
                 value: 0,
             },
             {
                 key: 1,
                 label: "Chơi game",
-                icon: "fa fa-gamepad",
+                icon: "fas fa-gamepad",
                 value: 1,
             },
             {
@@ -35,17 +35,17 @@ function Info(props) {
     const GENDERS = {
         MALE: {
             value: 1,
-            icon: "fa fa-mars",
+            icon: "fas fa-mars",
             text: "Nam",
         },
         FEMALE: {
             value: 0,
-            icon: "fa fa-venus",
+            icon: "fas fa-venus",
             text: "Nữ",
         },
         UNKNOWN: {
             value: 2,
-            icon: "fa fa-genderless",
+            icon: "fas fa-genderless",
             text: "Không rõ",
         },
     };
@@ -53,22 +53,22 @@ function Info(props) {
     const PREFERENCES = {
         GAY: {
             value: 1,
-            icon: "fa fa-mars-double",
+            icon: "fas fa-mars-double",
             text: "Đồng tính",
         },
         STRAIGHT: {
             value: 2,
-            icon: "fa fa-venus-mars",
+            icon: "fas fa-venus-mars",
             text: "Dị tính",
         },
         BISEXUAL: {
             value: 3,
-            icon: "fa fa-mars-stroke-v",
+            icon: "fas fa-mars-stroke-v",
             text: "Song tính",
         },
         UNKNOWN: {
             value: 0,
-            icon: "fa fa-genderless",
+            icon: "fas fa-genderless",
             text: "Không rõ",
         },
     };
@@ -85,7 +85,7 @@ function Info(props) {
                             <span className="h4">Giới thiệu</span>
                             <Row>
                                 <Col md={1} className="text-center">
-                                    <i className="fa fa-birthday-cake" />
+                                    <i className="fas fa-birthday-cake" />
                                 </Col>
                                 <Col md={11}>{moment(info.dob).format("DD-MM-YYYY")}</Col>
                             </Row>
@@ -101,7 +101,7 @@ function Info(props) {
                             </Row>
                             <Row>
                                 <Col md={1} className="text-center">
-                                    <i className="fa fa-home" />
+                                    <i className="fas fa-home" />
                                 </Col>
                                 <Col md={11}>{info.homeTown}</Col>
                             </Row>

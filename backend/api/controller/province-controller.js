@@ -1,10 +1,10 @@
-const mysqlGender = require("../../database/mysql/facade/gender");
+const mysqlProvince = require("../../database/mysql/facade/province");
 const { UserError } = require("../../common/utils/custom-errors");
 const FILE_NAME = module.filename.split("\\").slice(-1)[0];
 
 async function getAll(req, res) {
     try {
-        const data = await mysqlGender.getAll();
+        const data = await mysqlProvince.getAll();
         res.status(200).json({
             data,
             message: null,
@@ -17,7 +17,7 @@ async function getAll(req, res) {
 async function getById(req, res) {
     try {
         const { id } = req.params;
-        const data = await mysqlGender.getById(id);
+        const data = await mysqlProvince.getById(id);
         res.status(200).json({
             data,
             message: null,
@@ -29,7 +29,7 @@ async function getById(req, res) {
 
 async function create(req, res) {
     try {
-        const data = await mysqlGender.create(req.body);
+        const data = await mysqlProvince.create(req.body);
         res.status(201).json({
             data,
             message: null,
@@ -42,7 +42,7 @@ async function create(req, res) {
 async function update(req, res) {
     try {
         const { id } = req.params;
-        const data = await mysqlGender.update(id, req.body);
+        const data = await mysqlProvince.update(id, req.body);
         res.status(200).json({
             data,
             message: null,
@@ -55,7 +55,7 @@ async function update(req, res) {
 async function remove(req, res) {
     try {
         const { id } = req.params;
-        await mysqlGender.remove(id);
+        await mysqlProvince.remove(id);
         res.status(200).json({
             data: {},
             message: null,

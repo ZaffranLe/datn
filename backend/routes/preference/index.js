@@ -1,7 +1,11 @@
 const express = require("express");
-const genderController = require("../../api/controller/gender-controller");
+const preferenceController = require("../../api/controller/preference-controller");
 const router = express.Router();
 
-router.get("/", genderController.getAll);
+router.get("/", preferenceController.getAll);
+router.get("/:id", preferenceController.getById);
+router.post("/", preferenceController.create);
+router.put("/:id", preferenceController.update);
+router.delete("/:id", preferenceController.remove);
 
 module.exports = router;

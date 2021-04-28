@@ -70,7 +70,7 @@ function AuthLayout(props) {
                                     </Link>
                                     <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
                                     <Button variant="outline-info">
-                                        <i className="fa fa-search" />
+                                        <i className="fas fa-search" />
                                     </Button>
                                 </Form>
                             </Nav.Item>
@@ -91,9 +91,9 @@ function AuthLayout(props) {
                             </Nav.Item>
                             <Nav.Item>
                                 <div ref={messageRef} className="clickable" onClick={() => handleToggleMenu("message")}>
-                                    <span className="fa fa-stack fa-lg">
-                                        <i className="fa fa-circle fa-stack-2x text-light" />
-                                        <i className="fa fa-comments fa-stack-1x text-dark" />
+                                    <span className="fas fa-stack fa-lg">
+                                        <i className="fas fa-circle fa-stack-2x text-light" />
+                                        <i className="fas fa-comments fa-stack-1x text-dark" />
                                     </span>
                                     {messageData.havingUnseen && (
                                         <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
@@ -114,9 +114,9 @@ function AuthLayout(props) {
                                     className="clickable"
                                     onClick={() => handleToggleMenu("notification")}
                                 >
-                                    <span className="fa fa-stack fa-lg">
-                                        <i className="fa fa-circle fa-stack-2x text-light" />
-                                        <i className="fa fa-bell fa-stack-1x text-dark" />
+                                    <span className="fas fa-stack fa-lg">
+                                        <i className="fas fa-circle fa-stack-2x text-light" />
+                                        <i className="fas fa-bell fa-stack-1x text-dark" />
                                     </span>
                                     {notificationData.havingUnseen && (
                                         <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
@@ -128,9 +128,9 @@ function AuthLayout(props) {
                             </Nav.Item>
                             <Nav.Item>
                                 <div ref={settingRef} className="clickable" onClick={() => handleToggleMenu("setting")}>
-                                    <span className="fa fa-stack fa-lg">
-                                        <i className="fa fa-circle fa-stack-2x text-light" />
-                                        <i className="fa fa-caret-down fa-stack-1x text-dark" />
+                                    <span className="fas fa-stack fa-lg">
+                                        <i className="fas fa-circle fa-stack-2x text-light" />
+                                        <i className="fas fa-caret-down fa-stack-1x text-dark" />
                                     </span>
                                 </div>
                                 <SettingOverlay
