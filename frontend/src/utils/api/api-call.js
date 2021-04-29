@@ -28,7 +28,8 @@ instance.interceptors.response.use(
         const errorResponse = error.response;
         if (errorResponse && errorResponse.status === 401) {
             try {
-                await getTokenByRefreshToken();
+                const token = await getTokenByRefreshToken();
+                errorResponse.config.headers["token"] = token;
             } catch (e) {
                 return Promise.reject(e);
             }

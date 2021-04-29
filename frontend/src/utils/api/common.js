@@ -13,9 +13,10 @@ async function getTokenByRefreshToken() {
             },
         });
         const token = resp.data.data;
-        localStorage.setItem(token);
+        localStorage.setItem("token", token);
         const userInfo = jwt.decode(token);
         window.userInfo = { ...userInfo };
+        return token;
     } else {
         throw new Error("Refresh token invalid");
     }
