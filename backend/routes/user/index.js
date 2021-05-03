@@ -1,7 +1,10 @@
 const express = require("express");
-const genderController = require("../../api/controller/gender-controller");
+const userController = require("../../api/controller/user-controller");
+const verifyToken = require("../../api/middleware/verify-token");
 const router = express.Router();
 
-router.get("/", genderController.getAll);
+router.put("/self", verifyToken, userController.updateSelf);
+router.post("/check-slug", verifyToken, userController.checkSlugExist);
+router.get("/url/:slug", userController.getUserBySlug)
 
 module.exports = router;

@@ -1,132 +1,77 @@
 import React from "react";
-import { Row, Col, Table, Badge } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
-function Info(props) {
-    const info = {
-        dob: new Date("1999-12-29"),
-        gender: 1,
-        preference: 2,
-        height: 186,
-        weight: 80,
-        homeTown: "Hà Nội",
-        hobbies: [
-            {
-                key: 0,
-                label: "Đọc sách",
-                icon: "fas fa-book",
-                value: 0,
-            },
-            {
-                key: 1,
-                label: "Chơi game",
-                icon: "fas fa-gamepad",
-                value: 1,
-            },
-            {
-                key: 2,
-                label: "Ăn uống",
-                icon: "gg gg-music",
-                value: 2,
-            },
-        ],
-    };
-
-    const GENDERS = {
-        MALE: {
-            value: 1,
-            icon: "fas fa-mars",
-            text: "Nam",
-        },
-        FEMALE: {
-            value: 0,
-            icon: "fas fa-venus",
-            text: "Nữ",
-        },
-        UNKNOWN: {
-            value: 2,
-            icon: "fas fa-genderless",
-            text: "Không rõ",
-        },
-    };
-
-    const PREFERENCES = {
-        GAY: {
-            value: 1,
-            icon: "fas fa-mars-double",
-            text: "Đồng tính",
-        },
-        STRAIGHT: {
-            value: 2,
-            icon: "fas fa-venus-mars",
-            text: "Dị tính",
-        },
-        BISEXUAL: {
-            value: 3,
-            icon: "fas fa-mars-stroke-v",
-            text: "Song tính",
-        },
-        UNKNOWN: {
-            value: 0,
-            icon: "fas fa-genderless",
-            text: "Không rõ",
-        },
-    };
-
-    const genderKey = Object.keys(GENDERS).find((key) => GENDERS[key].value == info.gender);
-    const prefKey = Object.keys(PREFERENCES).find((key) => PREFERENCES[key].value == info.preference);
-
+function Info({ user }) {
     return (
         <>
-            <Row className="justify-content-center pr-2">
-                <Col md={12} className="bg-facebook--dark br-10">
-                    <Row className="p-3 profile__info">
-                        <Col md={12}>
-                            <span className="h4">Giới thiệu</span>
-                            <Row>
-                                <Col md={1} className="text-center">
-                                    <i className="fas fa-birthday-cake" />
-                                </Col>
-                                <Col md={11}>{moment(info.dob).format("DD-MM-YYYY")}</Col>
-                            </Row>
-                            <Row>
-                                <Col md={1} className="text-center align-self-center">
-                                    <i className={`${GENDERS[genderKey].icon}`} />
-                                </Col>
-                                <Col md={5}>{GENDERS[genderKey].text}</Col>
-                                <Col md={1} className="text-center align-self-center">
-                                    <i className={`${PREFERENCES[prefKey].icon}`} />
-                                </Col>
-                                <Col md={5}>{PREFERENCES[prefKey].text}</Col>
-                            </Row>
-                            <Row>
-                                <Col md={1} className="text-center">
-                                    <i className="fas fa-home" />
-                                </Col>
-                                <Col md={11}>{info.homeTown}</Col>
-                            </Row>
-                            <Row>
-                                <Col md={6}>
-                                    Cao: {info.height}cm
-                                </Col>
-                                <Col md={6}>
-                                    Nặng: {info.weight}kg
-                                </Col>
-                            </Row>
-                            <span className="h4">Sở thích</span>
-                            <Row>
-                                <Col md={12}>
-                                    {info.hobbies.map((hobby, idx) => (
-                                        <div key={hobby.value} className="profile__hobby">
-                                            <i className={`${hobby.icon}`} /> {hobby.label}
-                                        </div>
-                                    ))}
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Col>
-            </Row>
+            {user && (
+                <Row className="justify-content-center pr-2">
+                    <Col md={12} className="bg-facebook--dark br-10">
+                        <Row className="p-3 profile__info">
+                            <Col md={12}>
+                                <span className="h4">
+                                    <b>Giới thiệu</b>
+                                </span>
+                                <Row>
+                                    <Col md={3} className="align-self-center">
+                                        Giới tính:
+                                    </Col>
+                                    <Col md={9}>
+                                        {user.gender.name} <i className={`${user.gender.icon}`} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={3} className="align-self-center">
+                                        Xu hướng:
+                                    </Col>
+                                    <Col md={9}>
+                                        {user.preference.name} <i className={`${user.preference.icon}`} />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    {user.height && <Col md={6}>Cao: {user.height}cm</Col>}
+                                    {user.weight && <Col md={6}>Nặng: {user.weight}kg</Col>}
+                                </Row>
+                                <Row>
+                                    {user.dob && (
+                                        <>
+                                            <Col md={1} className="text-center">
+                                                <i className="fas fa-birthday-cake" />
+                                            </Col>
+                                            <Col md={5}>{moment(user.dob).format("DD-MM-YYYY")}</Col>
+                                        </>
+                                    )}
+                                    {user.provinceName && (
+                                        <>
+                                            <Col md={1} className="text-center">
+                                                <i className="fas fa-home" />
+                                            </Col>
+                                            <Col md={5}>{user.provinceName}</Col>
+                                        </>
+                                    )}
+                                </Row>
+                                <span className="h4">
+                                    <b>Sở thích</b>
+                                </span>
+                                {user.hobbies.length > 0 ? (
+                                    <Row>
+                                        <Col md={12}>
+                                            {user.hobbies.map((hobby, idx) => (
+                                                <div key={idx} className="profile__hobby">
+                                                    <i className={`${hobby.icon}`} /> {hobby.name}
+                                                </div>
+                                            ))}
+                                        </Col>
+                                    </Row>
+                                ) : (
+                                    <p>- Hiện người dùng này chưa có sở thích nào</p>
+                                )}
+                            </Col>
+                        </Row>
+                    </Col>
+                </Row>
+            )}
         </>
     );
 }

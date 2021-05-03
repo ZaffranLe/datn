@@ -99,8 +99,7 @@ body {
     }
 }
 
-.login-container {
-    background: white;
+.container--p-30 {
     padding: 30px;
 }
 
@@ -125,7 +124,19 @@ body {
     }
 
     &-error {
-        color: red;
+        color: #c22932;
+    }
+
+    &-success {
+        color: #8bc140;
+    }
+
+    &-info {
+        color: #00a4e7;
+    }
+
+    &-pink {
+        color: pink;
     }
 }
 
@@ -191,5 +202,16 @@ body {
 .vertical-align {
     &-middle {
         vertical-align: middle;
+    }
+}
+
+.avatar {
+    border: 5px solid #6c757d;
+    cursor: pointer;
+    transition-property: border-color;
+    transition-duration: 0.3s;
+
+    &:hover {
+        border: 5px solid #e8e8e8 !important;
     }
 }

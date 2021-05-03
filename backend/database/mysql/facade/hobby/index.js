@@ -1,5 +1,5 @@
 const knex = require("../knex-client");
-const { mutableTrimObj } = require("../../../../common/utils/common");
+const { mutableTrimObj, getSlug } = require("../../../../common/utils/common");
 const _ = require("lodash");
 
 async function getAll() {
@@ -17,6 +17,7 @@ async function create(info, transaction = null) {
     const fields = ["name", "icon"];
     const data = _.pick(info, fields);
     mutableTrimObj(data);
+    data.slug = getSlug(data.name);
     await _knex("hobby").insert(data);
 }
 
@@ -25,6 +26,7 @@ async function update(id, info, transaction = null) {
     const fields = ["name", "icon"];
     const data = _.pick(info, fields);
     mutableTrimObj(data);
+    data.slug = getSlug(data.name);
     await _knex("hobby").update(data).where("id", id);
 }
 

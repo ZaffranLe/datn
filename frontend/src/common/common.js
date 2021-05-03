@@ -1,22 +1,4 @@
-const _ = require("lodash");
-
-function mutableTrimObj(obj) {
-    Object.keys(obj).forEach((key) => {
-        if (_.isString(obj[key])) {
-            obj[key] = obj[key].trim();
-        }
-    });
-}
-
-function immutableTrimObj(obj) {
-    const _obj = _.cloneDeep(obj);
-    Object.keys(_obj).forEach((key) => {
-        if (_.isString(_obj[key])) {
-            _obj[key] = _obj[key].trim();
-        }
-    });
-    return _obj;
-}
+import jwt from "jsonwebtoken";
 
 const getSlug = (str) => {
     let _str = str;
@@ -36,8 +18,11 @@ const getSlug = (str) => {
     return _str;
 };
 
-module.exports = {
-    mutableTrimObj,
-    immutableTrimObj,
-    getSlug,
+const appendTokenInfo = (token) => {
+    localStorage.setItem("token", token);
+    const userInfo = jwt.decode(token);
+    userInfo.exp = new Date(userInfo.exp * 1000);
+    window.userInfo = { ...userInfo };
 };
+
+export { getSlug, appendTokenInfo };

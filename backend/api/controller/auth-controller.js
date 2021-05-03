@@ -12,13 +12,14 @@ async function login(req, res) {
     try {
         const { email, password } = req.body;
         const encryptedPassword = md5(password);
-        const userExist = await mysqlUser.getUserByEmail(email);
+        let userExist = await mysqlUser.getUserByEmail(email);
         if (!userExist || !_.isEqual(userExist["password"], encryptedPassword)) {
             throw new UserError(
                 "Sai email hoặc mật khẩu, vui lòng kiểm tra lại.",
                 "WRONG_EMAIL_OR_PASSWORD"
             );
         }
+        userExist = await mysqlUser.getUserById(userExist.id);
         delete userExist["password"];
         delete userExist["createdAt"];
         const token = jwt.sign(JSON.parse(JSON.stringify(userExist)), jwtConfig.tokenSecret, {

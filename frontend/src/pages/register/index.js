@@ -157,7 +157,7 @@ function Register(props) {
                         id="register-page"
                     >
                         <Row className="full-width">
-                            <Col className="text-center login-container border--round" md={{ span: 4, offset: 4 }}>
+                            <Col className="text-center container--p-30 bg-white border--round" md={{ span: 4, offset: 4 }}>
                                 <Row>
                                     <Col md={12}>
                                         <Image src={AppIcon} />
@@ -296,7 +296,7 @@ function Register(props) {
                                                 disabled={!isValid}
                                                 onClick={handleRegister}
                                             >
-                                                Đăng ký
+                                                {isLoading && <i className="fas fa-spinner fa-spin" />} Đăng ký
                                             </Button>
                                             <Link to="/">
                                                 <Form.Text className="clickable__text text-black">

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Row, Col, Image, Navbar, Nav, Form, Button, NavDropdown, Badge, Overlay, Dropdown } from "react-bootstrap";
+import { Container, Row, Col, Image, Navbar, Nav, Form, Button, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import AppThumbnail from "../../assets/img/thumbnail.jpg";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
@@ -9,6 +9,7 @@ import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { history } from "../../pages/history";
 import jwt from "jsonwebtoken";
+import { appendTokenInfo } from "../../common/common";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -16,19 +17,15 @@ function AuthLayout(props) {
         history.push("/login");
     }
 
-    const userInfo = window.userInfo;
+    let userInfo = window.userInfo;
     const token = localStorage.getItem("token");
     if (!token) {
         getTokenByRefreshToken();
     } else if (!userInfo) {
-        const payload = jwt.decode(token);
-        const exp = new Date(payload.exp * 1000);
+        appendTokenInfo(token);
+        userInfo = window.userInfo;
         const now = new Date();
-        window.userInfo = {
-            ...payload,
-            exp,
-        };
-        if (exp < now) {
+        if (userInfo.exp < now) {
             getTokenByRefreshToken();
         }
     }
@@ -61,14 +58,24 @@ function AuthLayout(props) {
 
     return (
         <Container fluid>
-            <Row id="app-header" className="bg-facebook--darker fixed-top ml-0 mr-0 pt-2 pb-2" style={{ color: "white" }}>
+            <Row
+                id="app-header"
+                className="bg-facebook--darker fixed-top ml-0 mr-0 pt-2 pb-2"
+                style={{ color: "white" }}
+            >
                 <Col md="3">
                     <Navbar>
                         <Nav>
                             <Nav.Item>
                                 <Form inline>
                                     <Link to="/">
-                                        <Image src={AppThumbnail} roundedCircle width="40" height="40" className="mr-2" />
+                                        <Image
+                                            src={AppThumbnail}
+                                            roundedCircle
+                                            width="40"
+                                            height="40"
+                                            className="mr-2"
+                                        />
                                     </Link>
                                     <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
                                     <Button variant="outline-info">
@@ -87,9 +94,9 @@ function AuthLayout(props) {
                             </Nav.Item>
                         </Nav>
                         <Nav>
-                            <Nav.Item as={Link} to="/profile" className="text-white mr-4">
+                            <Nav.Item as={Link} to='/profile' className="text-white mr-4">
                                 <Image src={DefaultAvatar} roundedCircle width="40" height="40" />
-                                <span className="ml-2">Sơn Tùng</span>
+                                <span className="ml-2">{`${userInfo.lastName} ${userInfo.firstName}`}</span>
                             </Nav.Item>
                             <Nav.Item>
                                 <div ref={messageRef} className="clickable" onClick={() => handleToggleMenu("message")}>
@@ -103,10 +110,19 @@ function AuthLayout(props) {
                                         </Badge>
                                     )}
                                 </div>
-                                <MessageOverlay show={activeMenu === "message"} target={messageRef.current} marginTop={marginTop} onClose={handleToggleMenu} />
+                                <MessageOverlay
+                                    show={activeMenu === "message"}
+                                    target={messageRef.current}
+                                    marginTop={marginTop}
+                                    onClose={handleToggleMenu}
+                                />
                             </Nav.Item>
                             <Nav.Item>
-                                <div ref={notiRef} className="clickable" onClick={() => handleToggleMenu("notification")}>
+                                <div
+                                    ref={notiRef}
+                                    className="clickable"
+                                    onClick={() => handleToggleMenu("notification")}
+                                >
                                     <span className="fas fa-stack fa-lg">
                                         <i className="fas fa-circle fa-stack-2x text-light" />
                                         <i className="fas fa-bell fa-stack-1x text-dark" />
@@ -126,7 +142,12 @@ function AuthLayout(props) {
                                         <i className="fas fa-caret-down fa-stack-1x text-dark" />
                                     </span>
                                 </div>
-                                <SettingOverlay show={activeMenu === "setting"} target={settingRef.current} marginTop={marginTop} onClose={handleToggleMenu} />
+                                <SettingOverlay
+                                    show={activeMenu === "setting"}
+                                    target={settingRef.current}
+                                    marginTop={marginTop}
+                                    onClose={handleToggleMenu}
+                                />
                             </Nav.Item>
                         </Nav>
                     </Navbar>

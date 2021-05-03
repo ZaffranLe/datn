@@ -26,7 +26,7 @@ function login(email, password) {
     return async (dispatch) => {
         try {
             dispatch(setLoading(true));
-            const { token, refreshToken } = await api.loginApi(email, password);
+            const { token, refreshToken } = await api.login(email, password);
             localStorage.setItem("token", token);
             localStorage.setItem("refreshToken", refreshToken);
             history.push("/");

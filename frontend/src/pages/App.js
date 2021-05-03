@@ -1,17 +1,16 @@
 import React from "react";
-import { Router, Route, Switch } from "react-router-dom";
-import AuthLayout from "../components/layout/AuthLayout";
+import { Router, Route, Switch, Redirect } from "react-router-dom";
+import { AuthLayout } from "../components";
 import { history } from "./history";
 // import pages
 import LoginPage from "./login";
 import ProfilePage from "./profile";
 import RegisterPage from "./register";
-import RegisterUpdateInfoPage from "./register/update-info";
+import RegisterUpdateInfoPage from "./update-info";
 import TermOfUsePage from "./term-of-use";
 import ExplorePage from "./explore";
 
 function AuthRoute({ component: Component, ...rest }) {
-    
     return (
         <Route
             {...rest}
@@ -29,11 +28,12 @@ function App() {
         <div className="app-container">
             <Router history={history}>
                 <Switch>
+                    <AuthRoute exact path="/profile/:slug" component={ProfilePage} />
                     <AuthRoute exact path="/profile" component={ProfilePage} />
                     <AuthRoute exact path="/" component={ExplorePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
-                    <AuthRoute exact path="/register/update-info" component={RegisterUpdateInfoPage} />
+                    <AuthRoute exact path="/update-info" component={RegisterUpdateInfoPage} />
                     <Route exact path="/term-of-use" component={TermOfUsePage} />
                 </Switch>
             </Router>

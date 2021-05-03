@@ -50,7 +50,7 @@ function Login(props) {
                     >
                         <Row className="full-width">
                             <Col
-                                className="text-center login-container border--round"
+                                className="text-center container--p-30 bg-white border--round"
                                 md={{ span: 4, offset: 4 }}
                             >
                                 <Row>

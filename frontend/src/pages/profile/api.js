@@ -1,15 +1,11 @@
 import APICall from "../../utils/api/api-call";
 import constants from "../../common/constants";
 
-async function login(email, password) {
+async function getUserBySlug(slug) {
     try {
         const resp = await APICall({
-            url: "/api/login",
-            method: constants.HTTP_METHOD.POST,
-            data: {
-                email,
-                password,
-            },
+            url: `/api/user/url/${slug}`,
+            method: constants.HTTP_METHOD.GET,
         });
         return resp.data.data;
     } catch (e) {
@@ -17,4 +13,4 @@ async function login(email, password) {
     }
 }
 
-export { login };
+export { getUserBySlug };

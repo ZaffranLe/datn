@@ -1,6 +1,6 @@
 import APICall from "../api/api-call";
-import jwt from "jsonwebtoken";
 import constants from "../../common/constants";
+import { appendTokenInfo } from "../../common/common";
 
 async function getTokenByRefreshToken() {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -13,18 +13,11 @@ async function getTokenByRefreshToken() {
             },
         });
         const token = resp.data.data;
-        localStorage.setItem("token", token);
-        const userInfo = jwt.decode(token);
-        window.userInfo = { ...userInfo };
+        appendTokenInfo(token);
         return token;
     } else {
         throw new Error("Refresh token invalid");
     }
-}
-
-function appendTokenPayload() {
-    const token = localStorage.getItem("token");
-    const payload = jwt.decode(token);
 }
 
 export { getTokenByRefreshToken };

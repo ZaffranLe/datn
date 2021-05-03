@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import * as api from "./api";
 import { history } from "../history";
+
 export const registerSlice = createSlice({
     name: "register",
     initialState: {
@@ -50,10 +51,10 @@ function register(email, password) {
     return async (dispatch) => {
         try {
             dispatch(setLoading(true));
-            const { token, refreshToken } = await api.registerApi(email, password);
+            const { token, refreshToken } = await api.register(email, password);
             localStorage.setItem("token", token);
             localStorage.setItem("refreshToken", refreshToken);
-            history.push("/register/update-info");
+            history.push("/update-info");
         } catch (e) {
             dispatch(setErrorMsg(e));
             clearTimeout(removeErrorMsgTimeoutId);

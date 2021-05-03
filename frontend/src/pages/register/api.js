@@ -1,7 +1,7 @@
 import APICall from "../../utils/api/api-call";
 import constants from "../../common/constants";
 
-async function registerApi(email, password) {
+async function register(email, password) {
     try {
         const resp = await APICall({
             url: "/api/register",
@@ -17,4 +17,4 @@ async function registerApi(email, password) {
     }
 }
 
-export { registerApi };
+export { register };

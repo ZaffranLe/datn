@@ -1,16 +1,18 @@
 .profile {
+    &__banner {
+        height: 400px;
+        overflow: hidden;
+        background-size: contain !important;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        z-index: 0;
+    }
+
     &__avatar {
         margin-top: 220px;
         position: relative;
         z-index: 1;
-        border: 5px solid #6c757d;
-        cursor: pointer;
-        transition-property: border-color;
-        transition-duration: 0.3s;
-
-        &:hover {
-            border: 5px solid white !important;
-        }
     }
 
     &__btn {
