@@ -50,8 +50,38 @@ async function getUserBySlug(req, res) {
     }
 }
 
+async function checkFollowUser(req, res) {
+    try {
+        const from = req.user.id;
+        const to = req.params.id;
+        const isFollowing = await mysqlUser.checkFollowUser(from, to);
+        res.status(200).json({
+            data: Boolean(isFollowing),
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, checkFollowUser.name);
+    }
+}
+
+async function changeFollowUser(req, res) {
+    try {
+        const from = req.user.id;
+        const to = req.body.id;
+        const isFollowing = await mysqlUser.changeFollowUser(from, to);
+        res.status(200).json({
+            data: isFollowing,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, changeFollowUser.name);
+    }
+}
+
 module.exports = {
     updateSelf,
     checkSlugExist,
     getUserBySlug,
+    checkFollowUser,
+    changeFollowUser,
 };

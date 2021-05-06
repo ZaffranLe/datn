@@ -2,6 +2,17 @@ const knex = require("../knex-client");
 const _ = require("lodash");
 const { v4 } = require("uuid");
 
+async function getUserBasicInfoById(id) {
+    const fields = {
+        id: "t1.id",
+        avatar: "t1.avatar",
+        firstName: "t1.firstName",
+        lastName: "t1.lastName",
+    };
+    const user = await knex("user AS t1").where("id", id).column(fields).first();
+    return user;
+}
+
 async function getUserByEmail(email) {
     const user = await knex("user").where({ email: email }).first();
     return user;
@@ -39,6 +50,22 @@ async function getUserById(id) {
 
     const province = await knex("province").where("id", user.idProvince).first();
     user.provinceName = province ? province.name : "";
+
+    const following = await knex("user_follow").where("idUserFrom", user.id);
+    const followingPromise = [];
+    for (let follower of following) {
+        followingPromise.push(getUserBasicInfoById(follower.idUserTo));
+    }
+    const followingResult = await Promise.all(followingPromise);
+    user.following = followingResult;
+
+    const followedPromise = [];
+    const followed = await knex("user_follow").where("idUserTo", user.id);
+    for (let follower of followed) {
+        followedPromise.push(getUserBasicInfoById(follower.idUserFrom));
+    }
+    const followedResult = await Promise.all(followedPromise);
+    user.followed = followedResult;
 
     return user;
 }
@@ -101,6 +128,37 @@ async function checkSlugExist(slug) {
     return slugExist;
 }
 
+async function checkFollowUser(from, to) {
+    const isFollowing = await knex("user_follow")
+        .where({
+            idUserFrom: from,
+            idUserTo: to,
+        })
+        .first();
+    return isFollowing;
+}
+
+async function changeFollowUser(from, to, transaction = null) {
+    const _knex = transaction || knex;
+    const isFollowing = await _knex("user_follow")
+        .where({
+            idUserFrom: from,
+            idUserTo: to,
+        })
+        .first();
+    if (isFollowing) {
+        await _knex("user_follow")
+            .where({
+                idUserFrom: from,
+                idUserTo: to,
+            })
+            .del();
+    } else {
+        await _knex("user_follow").insert({ idUserFrom: from, idUserTo: to });
+    }
+    return !isFollowing;
+}
+
 module.exports = {
     getUserByEmail,
     getUserById,
@@ -108,4 +166,6 @@ module.exports = {
     update,
     checkSlugExist,
     getUserBySlug,
+    checkFollowUser,
+    changeFollowUser,
 };

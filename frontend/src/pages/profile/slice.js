@@ -8,6 +8,8 @@ export const profileSlice = createSlice({
         user: null,
         isLoading: false,
         isError: false,
+        isFollowLoading: false,
+        isFollowing: false,
     },
     reducers: {
         setUser: (state, action) => {
@@ -16,14 +18,20 @@ export const profileSlice = createSlice({
         setLoading: (state, action) => {
             state.isLoading = action.payload;
         },
+        setFollowLoading: (state, action) => {
+            state.isFollowLoading = action.payload;
+        },
         setError: (state, action) => {
             state.isError = action.payload;
+        },
+        setFollowing: (state, action) => {
+            state.isFollowing = action.payload;
         },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setLoading, setError } = profileSlice.actions;
+export const { setUser, setLoading, setError, setFollowLoading, setFollowing } = profileSlice.actions;
 
 function getUserBySlug(slug) {
     return async (dispatch) => {
@@ -41,6 +49,34 @@ function getUserBySlug(slug) {
     };
 }
 
-export { getUserBySlug };
+function checkFollowUser(id) {
+    return async (dispatch) => {
+        try {
+            dispatch(setFollowLoading(true));
+            const isFollowing = await api.checkFollowUser(id);
+            dispatch(setFollowing(isFollowing));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau/");
+        } finally {
+            dispatch(setFollowLoading(false));
+        }
+    };
+}
+
+function changeFollowUser(id) {
+    return async (dispatch) => {
+        try {
+            dispatch(setFollowLoading(true));
+            const isFollowing = await api.changeFollowUser(id);
+            dispatch(setFollowing(isFollowing));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau/");
+        } finally {
+            dispatch(setFollowLoading(false));
+        }
+    };
+}
+
+export { getUserBySlug, changeFollowUser, checkFollowUser };
 
 export default profileSlice.reducer;

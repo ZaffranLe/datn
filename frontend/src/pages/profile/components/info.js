@@ -2,7 +2,7 @@ import React from "react";
 import { Row, Col } from "react-bootstrap";
 import moment from "moment";
 
-function Info({ user }) {
+function Info({ user, handleShowUserList }) {
     return (
         <>
             {user && (
@@ -50,6 +50,28 @@ function Info({ user }) {
                                             <Col md={5}>{user.provinceName}</Col>
                                         </>
                                     )}
+                                </Row>
+                                <Row>
+                                    <Col md={12}>
+                                        <span className="clickable" onClick={() => handleShowUserList(user.following)}>
+                                            Đang theo dõi{" "}
+                                            <b>
+                                                <u>{user.following.length}</u>
+                                            </b>{" "}
+                                            người
+                                        </span>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={12}>
+                                        <span className="clickable" onClick={() => handleShowUserList(user.followed)}>
+                                            Có{" "}
+                                            <b>
+                                                <u>{user.followed.length}</u>
+                                            </b>{" "}
+                                            người theo dõi
+                                        </span>
+                                    </Col>
                                 </Row>
                                 <span className="h4">
                                     <b>Sở thích</b>

@@ -8,7 +8,6 @@ import NotificationOverlay from "./NotificationOverlay";
 import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { history } from "../../pages/history";
-import jwt from "jsonwebtoken";
 import { appendTokenInfo } from "../../common/common";
 
 function AuthLayout(props) {

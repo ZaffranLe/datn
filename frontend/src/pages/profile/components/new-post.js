@@ -1,18 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
-import DefaultAvatar from "../../assets/img/default-avatar.png";
+import DefaultAvatar from "../../../assets/img/default-avatar.png";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "react-toastify";
 import { v4 } from "uuid";
 
 function NewPost(props) {
     const IMG_RATIO = 1; // ratio = width / height
-
-    const QUOTES = [
-        "Bạn có muốn chia sẻ điều gì không?",
-        "Bạn đang suy nghĩ về gì vậy?",
-        "Bạn vừa gặp chuyện vui? Hãy để chúng tôi cùng biết và chúc mừng",
-    ];
 
     const [imgHeight, setImgHeight] = useState(40);
     const [newPostModal, setNewPostModal] = useState(false);
@@ -40,11 +34,6 @@ function NewPost(props) {
 
     const handleCloseNewPost = () => {
         setNewPostModal(false);
-    };
-
-    const pickRandomQuote = () => {
-        const random = Math.floor(Math.random() * QUOTES.length);
-        return QUOTES[random];
     };
 
     const handleAddImage = (e) => {
@@ -76,7 +65,7 @@ function NewPost(props) {
         }
     };
 
-    const newPostPlaceholder = pickRandomQuote();
+    const NEW_POST_PLACEHOLDER = "Bạn đang suy nghĩ về gì vậy?";
 
     const inputRef = useRef(null);
 
@@ -99,7 +88,7 @@ function NewPost(props) {
                                 id="new-post-btn"
                                 onClick={handleSelectNewPost}
                             >
-                                <span>{content ? content : newPostPlaceholder}</span>
+                                <span>{content ? content : NEW_POST_PLACEHOLDER}</span>
                             </div>
                         </Col>
                     </Row>
@@ -128,7 +117,7 @@ function NewPost(props) {
                     <Form>
                         <Form.Group controlId="newPostContent">
                             <Form.Control
-                                placeholder={newPostPlaceholder}
+                                placeholder={NEW_POST_PLACEHOLDER}
                                 className="bg-facebook--dark new-post-modal__body__input-content"
                                 as={TextareaAutosize}
                                 minRows={6}
