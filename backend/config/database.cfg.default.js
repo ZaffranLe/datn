@@ -8,6 +8,7 @@ const config = {
             database: "DEFAULT_DATABASE",
         },
     },
+    environment: "development",
 };
 
 module.exports = config;

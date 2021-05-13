@@ -1,6 +1,6 @@
 const knex = require("knex");
 const databaseConfigs = require("../../../config/database.cfg");
-const env = process.env.ENV;
+const env = databaseConfigs.environment;
 const databaseConfig = databaseConfigs[env].mysql;
 
 const knexClient = knex({
