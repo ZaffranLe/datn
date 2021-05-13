@@ -2,7 +2,7 @@
     &__banner {
         height: 400px;
         overflow: hidden;
-        background-size: contain !important;
+        background-size: cover !important;
         width: 100%;
         position: absolute;
         left: 0;
@@ -13,6 +13,8 @@
         margin-top: 220px;
         position: relative;
         z-index: 1;
+        background-size: cover !important;
+        overflow: hidden;
     }
 
     &__btn {

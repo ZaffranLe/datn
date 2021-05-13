@@ -8,7 +8,6 @@ import { Transition } from "react-transition-group";
 import { useDispatch, useSelector } from "react-redux";
 import { handleInputNumber } from "../../common/handle-input";
 import { duration, defaultStyle, transitionStyles } from "../../common/transition-style";
-import DefaultAvatar from "../../assets/img/default-avatar.png";
 import constants from "../../common/constants";
 import * as provinceActions from "../province/slice";
 import * as genderActions from "../gender/slice";
@@ -17,6 +16,7 @@ import * as hobbyActions from "../hobby/slice";
 import * as updateInfoActions from "./slice";
 import * as updateInfoApi from "./api";
 import { Link } from "react-router-dom";
+import UploadAvatar from "./upload-avatar";
 
 function UpdateInfo(props) {
     const TODAY = new Date();
@@ -274,6 +274,13 @@ function UpdateInfo(props) {
         });
     };
 
+    const handleChangeAvatar = (id) => {
+        setProfileInfo({
+            ...profileInfo,
+            avatar: id,
+        });
+    };
+
     const slugRef = useRef(null);
 
     return (
@@ -301,22 +308,7 @@ function UpdateInfo(props) {
                                             <Row className="full-height pb-15">
                                                 <Col md={12} className="full-height">
                                                     <div className="full-height display--table text-center">
-                                                        <FormFile.Label
-                                                            htmlFor="avatar-file"
-                                                            className="display--table-cell vertical-align-middle clickable"
-                                                        >
-                                                            <Image
-                                                                id="avatar"
-                                                                src={DefaultAvatar}
-                                                                alt="Default avatar"
-                                                                className="avatar"
-                                                                fluid
-                                                                roundedCircle
-                                                                thumbnail
-                                                            />
-                                                            <span>Ảnh đại diện</span>
-                                                        </FormFile.Label>
-                                                        <FormFile.Input id="avatar-file" style={{ display: "none" }} />
+                                                        <UploadAvatar handleChangeAvatar={handleChangeAvatar} />
                                                     </div>
                                                 </Col>
                                             </Row>

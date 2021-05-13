@@ -5,18 +5,18 @@ import DefaultAvatar from "../../assets/img/default-avatar.png";
 import DefaultBanner from "../../assets/img/default-banner.jpg";
 import { ProfileNonExist } from "../../components";
 import { history } from "../history";
-import BannerModal from "./components/banner-modal";
 import "./index.scss";
 import Info from "./components/info";
 import NewPost from "./components/new-post";
 import * as profileActions from "./slice";
+import * as imageModalActions from "../../components/album/image-modal/slice";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { Link } from "react-router-dom";
 import UserListModal from "./components/user-list-modal";
+import { getImageUrl } from "../../common/common";
 
 function Profile(props) {
     const userInfo = window.userInfo;
-    const [showBannerImg, setShowBannerImg] = useState(false);
     const [showUserList, setShowUserList] = useState(false);
     const [userList, setUserList] = useState([]);
 
@@ -24,6 +24,7 @@ function Profile(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        setShowUserList(false);
         const _slug = props.match.params.slug;
         if (!_slug) {
             history.push(`/profile/${window.userInfo.slug}`);
@@ -45,6 +46,7 @@ function Profile(props) {
 
     const handleShowUserList = (_userList) => {
         setShowUserList(true);
+        console.log(_userList);
         setUserList(_userList);
     };
 
@@ -52,7 +54,11 @@ function Profile(props) {
         setShowUserList(false);
     };
 
-    if (isError) {
+    const handleViewImage = (idImage) => {
+        dispatch(imageModalActions.openModal(idImage));
+    };
+
+    if (isError || !user) {
         return <ProfileNonExist />;
     }
 
@@ -67,17 +73,20 @@ function Profile(props) {
                                     <Col md={12} className="text-center">
                                         <div
                                             className="profile__banner"
-                                            onClick={() => setShowBannerImg(true)}
+                                            onClick={() => handleViewImage(user.banner ? user.banner.id : null)}
                                             style={{
-                                                background: `url(${DefaultBanner})`,
+                                                background: `url(${
+                                                    user.banner ? getImageUrl(user.banner.fileName) : DefaultBanner
+                                                })`,
                                             }}
                                         ></div>
                                         <Image
-                                            src={DefaultAvatar}
+                                            src={user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar}
                                             width={200}
                                             height={200}
                                             roundedCircle
                                             className="avatar profile__avatar"
+                                            onClick={() => handleViewImage(user.avatar ? user.avatar.id : null)}
                                         />
                                     </Col>
                                 </Row>
@@ -86,19 +95,13 @@ function Profile(props) {
                                         <Row>
                                             <Col md={12}>
                                                 <span className="font-weight-bold h1">
-                                                    {isLoading ? (
-                                                        <Skeleton />
-                                                    ) : (
-                                                        user && `${user.lastName} ${user.firstName}`
-                                                    )}
+                                                    {isLoading ? <Skeleton /> : `${user.lastName} ${user.firstName}`}
                                                 </span>
                                             </Col>
                                         </Row>
                                         <Row>
                                             <Col md={12}>
-                                                <span className="h5">
-                                                    {isLoading ? <Skeleton /> : user && user.bio}
-                                                </span>
+                                                <span className="h5">{isLoading ? <Skeleton /> : user.bio}</span>
                                             </Col>
                                         </Row>
                                     </Col>
@@ -112,7 +115,7 @@ function Profile(props) {
                                                 <span className="profile__btn">Ảnh</span>
                                             </Col>
                                             <Col md={6} className="text-right">
-                                                {user && userInfo.id === user.id ? (
+                                                {userInfo.id === user.id ? (
                                                     <Link to="/update-info">
                                                         <Button variant="dark">
                                                             <i className="fas fa-pencil-alt" /> Sửa thông tin cá nhân
@@ -173,7 +176,6 @@ function Profile(props) {
                         </Row>
                     </Col>
                 </Row>
-                <BannerModal show={showBannerImg} onHide={() => setShowBannerImg(false)} imgSrc={DefaultBanner} />
                 <UserListModal open={showUserList} onClose={handleCloseUserList} users={userList} />
             </SkeletonTheme>
         </>

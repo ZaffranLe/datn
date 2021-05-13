@@ -56,7 +56,7 @@ function checkFollowUser(id) {
             const isFollowing = await api.checkFollowUser(id);
             dispatch(setFollowing(isFollowing));
         } catch (e) {
-            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau/");
+            dispatch(setFollowing(false));
         } finally {
             dispatch(setFollowLoading(false));
         }
@@ -70,7 +70,7 @@ function changeFollowUser(id) {
             const isFollowing = await api.changeFollowUser(id);
             dispatch(setFollowing(isFollowing));
         } catch (e) {
-            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau/");
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         } finally {
             dispatch(setFollowLoading(false));
         }

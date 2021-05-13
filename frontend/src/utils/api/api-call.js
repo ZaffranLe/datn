@@ -1,4 +1,6 @@
 import axios from "axios";
+import { toast } from "react-toastify";
+import { history } from "../../pages/history";
 import config from "../config/cfg";
 import { getTokenByRefreshToken } from "./common";
 
@@ -31,6 +33,11 @@ instance.interceptors.response.use(
                 const token = await getTokenByRefreshToken();
                 errorResponse.config.headers["token"] = token;
             } catch (e) {
+                toast.error("Phiên đăng nhập đã hết hạn.");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("token");
+                window.userInfo = undefined;
+                history.push("/login");
                 return Promise.reject(e);
             }
 

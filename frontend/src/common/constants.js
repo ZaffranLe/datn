@@ -10,6 +10,7 @@ const constants = {
         PUT: "PUT",
         PATCH: "PATCH",
     },
+    MAX_FILE_SIZE: 1024 * 1024 * 5, // 5MB
 };
 
 export default constants;

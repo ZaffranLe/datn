@@ -138,6 +138,9 @@ body {
     &-pink {
         color: pink;
     }
+    &-bold {
+        font-weight: bold;
+    }
 }
 
 .border {
@@ -150,6 +153,18 @@ body {
     &-90w {
         width: 90%;
         max-width: none !important;
+    }
+
+    &-100w {
+        width: 100%;
+        max-width: none !important;
+    }
+
+    &-80h {
+        height: 80vh;
+        & .modal-content {
+            height: 80vh;
+        }
     }
 }
 

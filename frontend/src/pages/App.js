@@ -1,6 +1,6 @@
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
-import { AuthLayout } from "../components";
+import { AuthLayout, ImageModal } from "../components";
 import { history } from "./history";
 // import pages
 import LoginPage from "./login";
@@ -36,6 +36,7 @@ function App() {
                     <AuthRoute exact path="/update-info" component={RegisterUpdateInfoPage} />
                     <Route exact path="/term-of-use" component={TermOfUsePage} />
                 </Switch>
+                <ImageModal />
             </Router>
         </div>
     );

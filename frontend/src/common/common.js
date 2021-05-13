@@ -1,4 +1,7 @@
 import jwt from "jsonwebtoken";
+import config from "../utils/config/cfg";
+
+const _config = config[config.environment];
 
 const getSlug = (str) => {
     let _str = str;
@@ -25,4 +28,8 @@ const appendTokenInfo = (token) => {
     window.userInfo = { ...userInfo };
 };
 
-export { getSlug, appendTokenInfo };
+const getImageUrl = (name) => {
+    return `${_config.originBackend}/images/${name}`;
+};
+
+export { getSlug, appendTokenInfo, getImageUrl };

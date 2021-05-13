@@ -1,6 +1,7 @@
 const knex = require("../knex-client");
 const _ = require("lodash");
 const { v4 } = require("uuid");
+const { mutableTrimObj } = require("../../../../common/utils/common");
 
 async function getUserBasicInfoById(id) {
     const fields = {
@@ -8,6 +9,7 @@ async function getUserBasicInfoById(id) {
         avatar: "t1.avatar",
         firstName: "t1.firstName",
         lastName: "t1.lastName",
+        slug: "t1.slug",
     };
     const user = await knex("user AS t1").where("id", id).column(fields).first();
     return user;
@@ -67,6 +69,12 @@ async function getUserById(id) {
     const followedResult = await Promise.all(followedPromise);
     user.followed = followedResult;
 
+    const avatar = await knex("image").where("id", user.avatar).first();
+    user.avatar = avatar;
+
+    const banner = await knex("image").where("id", user.banner).first();
+    user.banner = banner;
+
     return user;
 }
 
@@ -87,10 +95,23 @@ async function register(info, transaction = null) {
 async function update(id, info, transaction = null) {
     const _knex = transaction || (await knex.transaction());
     try {
-        const fields = ["firstName", "lastName", "dob", "idGender", "idPreference", "weight", "height", "bio", "slug"];
+        const fields = [
+            "firstName",
+            "lastName",
+            "dob",
+            "idGender",
+            "idPreference",
+            "weight",
+            "height",
+            "bio",
+            "slug",
+            "avatar",
+            "banner",
+        ];
         const data = _.pick(info, fields);
         data.idProvince = info.province ? info.province.value : undefined;
         data.dob = new Date(data.dob);
+        mutableTrimObj(data);
         await _knex("user").update(data).where("id", id);
 
         const _hobbies = info.hobbies.map((_hobby) => _hobby.id);

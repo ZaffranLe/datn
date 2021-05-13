@@ -4,6 +4,9 @@ function mutableTrimObj(obj) {
     Object.keys(obj).forEach((key) => {
         if (_.isString(obj[key])) {
             obj[key] = obj[key].trim();
+            if (!obj[key]) {
+                obj[key] = null;
+            }
         }
     });
 }
@@ -13,6 +16,9 @@ function immutableTrimObj(obj) {
     Object.keys(_obj).forEach((key) => {
         if (_.isString(_obj[key])) {
             _obj[key] = _obj[key].trim();
+            if (!_obj[key]) {
+                _obj[key] = null;
+            }
         }
     });
     return _obj;

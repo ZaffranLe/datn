@@ -7,6 +7,7 @@ import genderReducer from "./gender/slice";
 import hobbyReducer from "./hobby/slice";
 import preferenceReducer from "./preference/slice";
 import provinceReducer from "./province/slice";
+import imageModalReducer from "../components/album/image-modal/slice";
 
 export default configureStore({
     reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
         hobby: hobbyReducer,
         preference: preferenceReducer,
         province: provinceReducer,
+        imageModal: imageModalReducer,
     },
 });
