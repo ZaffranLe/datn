@@ -131,6 +131,14 @@ async function update(id, info, transaction = null) {
         if (_deleteHobbies.length > 0) {
             await _knex("user_hobby").whereIn("idHobby", _deleteHobbies).del();
         }
+
+        if (data.avatar) {
+            await _knex("image").update({ idUser: id }).where("id", data.avatar);
+        }
+        if (data.banner) {
+            await _knex("image").update({ idUser: id }).where("id", data.banner);
+        }
+
         if (!transaction) {
             await _knex.commit();
         }

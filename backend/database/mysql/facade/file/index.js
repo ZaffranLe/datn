@@ -27,7 +27,13 @@ async function getImage(id) {
     return image;
 }
 
+async function getImageByUserId(id) {
+    const images = await knex("image").where("idUser", id);
+    return images;
+}
+
 module.exports = {
     uploadImages,
     getImage,
+    getImageByUserId,
 };

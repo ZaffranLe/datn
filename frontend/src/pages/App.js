@@ -25,7 +25,7 @@ function AuthRoute({ component: Component, ...rest }) {
 
 function App() {
     return (
-        <div className="app-container">
+        <div className="app-container bg-img">
             <Router history={history}>
                 <Switch>
                     <AuthRoute exact path="/profile/:slug" component={ProfilePage} />

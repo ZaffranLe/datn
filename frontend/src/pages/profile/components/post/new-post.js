@@ -1,12 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
-import DefaultAvatar from "../../../assets/img/default-avatar.png";
+import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "react-toastify";
 import { v4 } from "uuid";
+import { getImageUrl } from "../../../../common/common";
 
 function NewPost(props) {
-    const IMG_RATIO = 1; // ratio = width / height
+    const userInfo = window.userInfo;
 
     const [imgHeight, setImgHeight] = useState(40);
     const [newPostModal, setNewPostModal] = useState(false);
@@ -75,12 +76,18 @@ function NewPost(props) {
                 <Col md={12} className="bg-facebook--dark br-10 p-3">
                     <Row>
                         <Col md={2} className="text-center">
-                            <Image
-                                src={DefaultAvatar}
-                                roundedCircle
-                                width={imgHeight * IMG_RATIO}
-                                height={imgHeight}
-                            />
+                            <div
+                                style={{
+                                    width: imgHeight,
+                                    height: imgHeight,
+                                    borderRadius: imgHeight,
+                                    margin: "auto",
+                                    background: `url(${
+                                        userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
+                                    })`,
+                                }}
+                                className="bg-img"
+                            ></div>
                         </Col>
                         <Col md={10} className="pl-0">
                             <div
@@ -95,23 +102,31 @@ function NewPost(props) {
                 </Col>
             </Row>
             {/* New post modal */}
-            <Modal
-                show={newPostModal}
-                onHide={handleCloseNewPost}
-                centered
-                size="lg"
-                className="new-post-modal"
-            >
+            <Modal show={newPostModal} onHide={handleCloseNewPost} centered size="lg" className="new-post-modal">
                 <Modal.Header closeButton className="bg-facebook--dark new-post-modal__header p-4">
                     <Modal.Title>Đăng bài</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="bg-facebook--dark new-post-modal__body p-4">
                     <Row className="mb-4">
                         <Col md={12}>
-                            <span style={{ fontSize: 20 }}>
-                                <Image src={DefaultAvatar} roundedCircle width={50} height={50} />{" "}
-                                Sơn Tùng
-                            </span>
+                            <div style={{ display: "flex" }}>
+                                <div
+                                    style={{
+                                        width: 50,
+                                        height: 50,
+                                        borderRadius: 50,
+                                        background: `url(${
+                                            userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
+                                        })`,
+                                    }}
+                                    className="bg-img"
+                                ></div>
+                                <div style={{ fontSize: 20, height: 50 }} className="display--table ml-2">
+                                    <span className="display--table-cell vertical-align-middle">
+                                        {userInfo.lastName} {userInfo.firstName}
+                                    </span>
+                                </div>
+                            </div>
                         </Col>
                     </Row>
                     <Form>
@@ -137,7 +152,7 @@ function NewPost(props) {
                                 delay={{ show: 400, hide: 200 }}
                                 overlay={(_props) => <Tooltip {..._props}>Ảnh</Tooltip>}
                             >
-                                <label for="upload-image" className="mb-0">
+                                <label htmlFor="upload-image" className="mb-0">
                                     <i className="fas fa-image text-success fa-2x clickable" />
                                 </label>
                             </OverlayTrigger>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Col, Image, Modal, Row } from "react-bootstrap";
-import DefaultAvatar from "../../../assets/img/default-avatar.png";
-import { history } from "../../history";
+import DefaultAvatar from "../../../../assets/img/default-avatar.png";
+import { history } from "../../../history";
 
 function UserListModal({ open, onClose, users = [] }) {
     const handleNavigateProfile = (slug) => {

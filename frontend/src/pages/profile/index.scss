@@ -2,7 +2,6 @@
     &__banner {
         height: 400px;
         overflow: hidden;
-        background-size: cover !important;
         width: 100%;
         position: absolute;
         left: 0;
@@ -11,9 +10,10 @@
 
     &__avatar {
         margin-top: 220px;
+        margin-left: auto;
+        margin-right: auto;
         position: relative;
         z-index: 1;
-        background-size: cover !important;
         overflow: hidden;
     }
 
@@ -26,7 +26,7 @@
 
         cursor: pointer;
 
-        &:hover {
+        &:hover:not(.active) {
             background-color: #545b62;
             border-radius: 15px !important;
             border: 0px !important;
@@ -68,6 +68,16 @@
 
         &:hover {
             background-color: #4e4f50;
+        }
+    }
+
+    &__img {
+        width: 200px;
+        height: 200px;
+        cursor: pointer;
+
+        &:hover {
+            border: 1px solid black;
         }
     }
 }

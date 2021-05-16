@@ -40,4 +40,16 @@ async function changeFollowUser(id) {
     }
 }
 
-export { getUserBySlug, checkFollowUser, changeFollowUser };
+async function getImagesByUserId(id) {
+    try {
+        const resp = await APICall({
+            url: `/api/file/image/user/${id}`,
+            method: constants.HTTP_METHOD.GET,
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
+export { getUserBySlug, checkFollowUser, changeFollowUser, getImagesByUserId };

@@ -8,7 +8,7 @@ import NotificationOverlay from "./NotificationOverlay";
 import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { history } from "../../pages/history";
-import { appendTokenInfo } from "../../common/common";
+import { appendTokenInfo, getImageUrl } from "../../common/common";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -56,7 +56,7 @@ function AuthLayout(props) {
     };
 
     return (
-        <Container fluid>
+        <Container fluid className="h-100">
             <Row
                 id="app-header"
                 className="bg-facebook--darker fixed-top ml-0 mr-0 pt-2 pb-2"
@@ -93,9 +93,25 @@ function AuthLayout(props) {
                             </Nav.Item>
                         </Nav>
                         <Nav>
-                            <Nav.Item as={Link} to='/profile' className="text-white mr-4">
-                                <Image src={DefaultAvatar} roundedCircle width="40" height="40" />
-                                <span className="ml-2">{`${userInfo.lastName} ${userInfo.firstName}`}</span>
+                            <Nav.Item as={Link} to="/profile" className="text-white mr-4">
+                                <div style={{ display: "flex" }}>
+                                    <div
+                                        style={{
+                                            width: 40,
+                                            height: 40,
+                                            borderRadius: 40,
+                                            background: `url(${
+                                                userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
+                                            })`,
+                                        }}
+                                        className="bg-img"
+                                    ></div>
+                                    <div style={{ height: 40 }} className="display--table ml-2">
+                                        <span className="display--table-cell vertical-align-middle">
+                                            {userInfo.lastName} {userInfo.firstName}
+                                        </span>
+                                    </div>
+                                </div>
                             </Nav.Item>
                             <Nav.Item>
                                 <div ref={messageRef} className="clickable" onClick={() => handleToggleMenu("message")}>
@@ -152,7 +168,7 @@ function AuthLayout(props) {
                     </Navbar>
                 </Col>
             </Row>
-            <Row style={{ marginTop: marginTop }}>
+            <Row style={{ marginTop: marginTop }} className="h-100">
                 <Col md="12">{props.children}</Col>
             </Row>
         </Container>

@@ -6,6 +6,7 @@ export const profileSlice = createSlice({
     name: "profile",
     initialState: {
         user: null,
+        images: [],
         isLoading: false,
         isError: false,
         isFollowLoading: false,
@@ -27,11 +28,14 @@ export const profileSlice = createSlice({
         setFollowing: (state, action) => {
             state.isFollowing = action.payload;
         },
+        setImages: (state, action) => {
+            state.images = action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setLoading, setError, setFollowLoading, setFollowing } = profileSlice.actions;
+export const { setUser, setLoading, setError, setFollowLoading, setFollowing, setImages } = profileSlice.actions;
 
 function getUserBySlug(slug) {
     return async (dispatch) => {
@@ -41,6 +45,7 @@ function getUserBySlug(slug) {
             dispatch(setUser(null));
             const user = await api.getUserBySlug(slug);
             dispatch(setUser(user));
+            dispatch(setImages([]));
         } catch (e) {
             dispatch(setError(true));
         } finally {
@@ -77,6 +82,20 @@ function changeFollowUser(id) {
     };
 }
 
-export { getUserBySlug, changeFollowUser, checkFollowUser };
+function getImagesByUserId(id) {
+    return async (dispatch) => {
+        try {
+            dispatch(setFollowing(true));
+            const images = await api.getImagesByUserId(id);
+            dispatch(setImages(images));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        } finally {
+            dispatch(setFollowing(false));
+        }
+    };
+}
+
+export { getUserBySlug, changeFollowUser, checkFollowUser, getImagesByUserId };
 
 export default profileSlice.reducer;
