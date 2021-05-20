@@ -18,6 +18,7 @@ const upload = multer({ storage: storage });
 
 router.post("/upload/image", upload.array("images", 10), fileController.uploadImages);
 router.get("/image/:id", fileController.getImage);
+router.post("/image/get-list", fileController.getImages);
 router.get("/image/user/:id", fileController.getImageByUserId);
 
 module.exports = router;

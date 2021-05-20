@@ -3,7 +3,7 @@ import { Overlay, Container, Row, Col, Image } from "react-bootstrap";
 import APICall from "../../utils/api/api-call";
 import constants from "../../common/constants";
 import { history } from "../../pages/history";
-import { getImageUrl } from "../../common/common";
+import { getImageUrl, getUserInfoFromToken } from "../../common/common";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import { Link } from "react-router-dom";
 
@@ -18,11 +18,10 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
         });
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
-        delete window.userInfo;
         history.push("/login");
     };
 
-    const userInfo = window.userInfo;
+    const userInfo = getUserInfoFromToken();
 
     return (
         <Overlay placement="bottom-end" show={show} target={target}>

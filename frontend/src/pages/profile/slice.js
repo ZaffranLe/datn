@@ -11,6 +11,8 @@ export const profileSlice = createSlice({
         isError: false,
         isFollowLoading: false,
         isFollowing: false,
+        posts: [],
+        isActionSucceed: false,
     },
     reducers: {
         setUser: (state, action) => {
@@ -31,11 +33,18 @@ export const profileSlice = createSlice({
         setImages: (state, action) => {
             state.images = action.payload;
         },
+        setPosts: (state, action) => {
+            state.posts = action.payload;
+        },
+        setActionSucceed: (state, action) => {
+            state.isActionSucceed = action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setLoading, setError, setFollowLoading, setFollowing, setImages } = profileSlice.actions;
+export const { setUser, setLoading, setError, setFollowLoading, setFollowing, setImages, setPosts, setActionSucceed } =
+    profileSlice.actions;
 
 function getUserBySlug(slug) {
     return async (dispatch) => {
@@ -96,6 +105,33 @@ function getImagesByUserId(id) {
     };
 }
 
-export { getUserBySlug, changeFollowUser, checkFollowUser, getImagesByUserId };
+function getPostByUserId() {
+    return async (dispatch, getState) => {
+        try {
+            const stateRedux = getState();
+            const user = stateRedux.profile.user;
+            const data = await api.getPostByUserId(user.id);
+            dispatch(setPosts(data));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        }
+    };
+}
+
+function createPost(images, content) {
+    return async (dispatch) => {
+        try {
+            dispatch(setLoading(true));
+            await api.createPost(images, content);
+            dispatch(setActionSucceed(true));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        } finally {
+            dispatch(setLoading(false));
+        }
+    };
+}
+
+export { getUserBySlug, changeFollowUser, checkFollowUser, getImagesByUserId, createPost, getPostByUserId };
 
 export default profileSlice.reducer;

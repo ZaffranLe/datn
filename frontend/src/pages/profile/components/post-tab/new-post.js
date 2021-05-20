@@ -3,21 +3,32 @@ import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip, Button } from "r
 import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "react-toastify";
-import { v4 } from "uuid";
-import { getImageUrl } from "../../../../common/common";
+import { getImageUrl, getUserInfoFromToken } from "../../../../common/common";
+import { uploadImages } from "../../../../utils/api/common";
+import constants from "../../../../common/constants";
+import { useDispatch, useSelector } from "react-redux";
+import * as profileActions from "../../slice";
 
 function NewPost(props) {
-    const userInfo = window.userInfo;
+    const userInfo = getUserInfoFromToken();
 
-    const [imgHeight, setImgHeight] = useState(40);
+    const { isLoading, isActionSucceed } = useSelector((state) => state.profile);
+
     const [newPostModal, setNewPostModal] = useState(false);
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
 
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        const newPostBtn = document.getElementById("new-post-btn");
-        setImgHeight(newPostBtn.clientHeight);
-    }, []);
+        if (isActionSucceed) {
+            setNewPostModal(false);
+            setImages([]);
+            setContent("");
+            dispatch(profileActions.setActionSucceed(false));
+            dispatch(profileActions.getPostByUserId());
+        }
+    }, [isActionSucceed, dispatch]);
 
     useEffect(() => {
         if (newPostModal) {
@@ -37,33 +48,29 @@ function NewPost(props) {
         setNewPostModal(false);
     };
 
-    const handleAddImage = (e) => {
-        const _images = e.target.files;
-        const imagesPreview = [];
-        const imagesBase64 = [];
-        if (_images.length > 0) {
-            for (let _image of _images) {
-                const name = v4();
-                imagesPreview.push({
-                    url: URL.createObjectURL(_image),
-                    name,
-                    error: false,
-                });
-                const reader = new FileReader();
-                reader.readAsDataURL(_image);
-                reader.onload = function () {
-                    imagesBase64.push({
-                        base64: reader.result,
-                        name,
-                    });
-                };
-                reader.onerror = function (error) {
-                    toast.error("Upload ảnh lỗi!");
-                };
+    const handleAddImage = async (e) => {
+        try {
+            let images = null;
+            if (e.target.files.length > 0) {
+                images = [...e.target.files];
+            } else {
+                return null;
             }
-
-            setImages(imagesPreview);
+            const exceedSizeImg = images.find((img) => img.size > constants.MAX_FILE_SIZE);
+            if (exceedSizeImg) {
+                toast.error("Ảnh vượt quá kích thước tối đa 5MB!");
+                return null;
+            }
+            const uploadedImages = await uploadImages(images);
+            setImages(uploadedImages);
+        } catch (e) {
+            console.error(e);
+            toast.error(e.response.data.message);
         }
+    };
+
+    const handleCreateNewPost = () => {
+        dispatch(profileActions.createPost(images, content));
     };
 
     const NEW_POST_PLACEHOLDER = "Bạn đang suy nghĩ về gì vậy?";
@@ -75,27 +82,37 @@ function NewPost(props) {
             <Row>
                 <Col md={12} className="bg-facebook--dark br-10 p-3">
                     <Row>
-                        <Col md={2} className="text-center">
-                            <div
-                                style={{
-                                    width: imgHeight,
-                                    height: imgHeight,
-                                    borderRadius: imgHeight,
-                                    margin: "auto",
-                                    background: `url(${
-                                        userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
-                                    })`,
-                                }}
-                                className="bg-img"
-                            ></div>
-                        </Col>
-                        <Col md={10} className="pl-0">
-                            <div
-                                className="br-50 w-100 p-3 profile__new-post-btn text-truncate"
-                                id="new-post-btn"
-                                onClick={handleSelectNewPost}
-                            >
-                                <span>{content ? content : NEW_POST_PLACEHOLDER}</span>
+                        <Col md={12}>
+                            <div className="display--flex">
+                                <span>
+                                    <div className="h-100 display--table">
+                                        <span className="display--table-cell vertical-align-middle">
+                                            <div
+                                                style={{
+                                                    width: 50,
+                                                    height: 50,
+                                                    borderRadius: 50,
+                                                    margin: "auto",
+                                                    background: `url(${
+                                                        userInfo.avatar
+                                                            ? getImageUrl(userInfo.avatar.fileName)
+                                                            : DefaultAvatar
+                                                    })`,
+                                                }}
+                                                className="bg-img"
+                                            ></div>
+                                        </span>
+                                    </div>
+                                </span>
+                                <span className="w-100 ml-3">
+                                    <div
+                                        className="br-50 w-100 p-3 profile__new-post-btn text-truncate"
+                                        id="new-post-btn"
+                                        onClick={handleSelectNewPost}
+                                    >
+                                        <span>{content ? content : NEW_POST_PLACEHOLDER}</span>
+                                    </div>
+                                </span>
                             </div>
                         </Col>
                     </Row>
@@ -109,7 +126,7 @@ function NewPost(props) {
                 <Modal.Body className="bg-facebook--dark new-post-modal__body p-4">
                     <Row className="mb-4">
                         <Col md={12}>
-                            <div style={{ display: "flex" }}>
+                            <div className="display--flex">
                                 <div
                                     style={{
                                         width: 50,
@@ -142,6 +159,20 @@ function NewPost(props) {
                             />
                         </Form.Group>
                     </Form>
+                    <div style={{ overflowX: "auto", maxWidth: "100%" }} className="display--flex">
+                        {images.map((img) => (
+                            <span key={img.id} className="display--inherit">
+                                <div
+                                    className="bg-img m-2 avatar"
+                                    style={{
+                                        width: 200,
+                                        height: 200,
+                                        background: `url(${getImageUrl(img.fileName)})`,
+                                    }}
+                                ></div>
+                            </span>
+                        ))}
+                    </div>
                     <Row className="br-10 border border-secondary p-3 m-0 mb-3 display--table">
                         <Col md={6} className="display--table-cell vertical-align-middle">
                             <span style={{ fontSize: 20 }}>Thêm vào bài đăng</span>
@@ -161,12 +192,19 @@ function NewPost(props) {
                                 className="d-none"
                                 id="upload-image"
                                 multiple
+                                accept="image/*"
                                 onChange={handleAddImage}
                             />
                         </Col>
                     </Row>
-                    <Button block disabled={!content} variant="primary" className="br-10">
-                        Đăng
+                    <Button
+                        block
+                        disabled={(!content && images.length === 0) || isLoading}
+                        variant="primary"
+                        className="br-10"
+                        onClick={handleCreateNewPost}
+                    >
+                        {isLoading && <i className="fas fa-spinner fa-spin" />} Đăng
                     </Button>
                 </Modal.Body>
             </Modal>

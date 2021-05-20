@@ -8,6 +8,7 @@ const hobbyRouter = require("./hobby");
 const preferenceRouter = require("./preference");
 const userRouter = require("./user");
 const provinceRouter = require("./province");
+const postRouter = require("./post");
 // etc
 const verifyToken = require("../api/middleware/verify-token");
 
@@ -24,5 +25,6 @@ router.use("/hobby", hobbyRouter);
 router.use("/preference", preferenceRouter);
 router.use("/user", userRouter);
 router.use("/province", provinceRouter);
+router.use("/post", postRouter);
 
 module.exports = router;

@@ -39,6 +39,19 @@ async function getImage(req, res) {
     }
 }
 
+async function getImages(req, res) {
+    try {
+        const { idList } = req.body;
+        const data = await mysqlFile.getImageList(idList);
+        res.status(200).json({
+            data,
+            message: null
+        })
+    } catch (e) {
+        res.sendError(e, FILE_NAME, getImages.name)
+    }
+}
+
 async function getImageByUserId(req, res) {
     try {
         const { id } = req.params;
@@ -52,4 +65,4 @@ async function getImageByUserId(req, res) {
     }
 }
 
-module.exports = { uploadImages, getImage, getImageByUserId };
+module.exports = { uploadImages, getImage, getImageByUserId, getImages };

@@ -7,7 +7,7 @@ import axios from "axios";
 const env = config.environment;
 const origin = config[env].originBackend;
 
-async function uploadImages(images, callback = null) {
+async function uploadImages(images) {
     const formData = new FormData();
     for (let image of images) {
         formData.append("images", image);
@@ -16,9 +16,6 @@ async function uploadImages(images, callback = null) {
         url: "/api/file/upload/image",
         method: constants.HTTP_METHOD.POST,
         data: formData,
-        onUploadProgress: (progressEvent) => {
-            console.log(progressEvent);
-        },
     });
     return resp.data.data;
 }

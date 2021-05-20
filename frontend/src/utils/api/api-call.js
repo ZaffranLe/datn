@@ -36,7 +36,6 @@ instance.interceptors.response.use(
                 toast.error("Phiên đăng nhập đã hết hạn.");
                 localStorage.removeItem("refreshToken");
                 localStorage.removeItem("token");
-                window.userInfo = undefined;
                 history.push("/login");
                 return Promise.reject(e);
             }

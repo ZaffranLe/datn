@@ -211,6 +211,14 @@ body {
             display: table-cell;
         }
     }
+
+    &--flex {
+        display: flex;
+    }
+
+    &--inherit {
+        display: inherit;
+    }
 }
 
 .vertical-align {

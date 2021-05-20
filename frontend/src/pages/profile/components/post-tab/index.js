@@ -5,12 +5,14 @@ import Info from "./info";
 import Skeleton from "react-loading-skeleton";
 import UserListModal from "./user-list-modal";
 import { useState } from "react";
+import { getUserInfoFromToken } from "../../../../common/common";
+import Post from "./post";
 
 function ProfilePost(props) {
     const [showUserList, setShowUserList] = useState(false);
     const [userList, setUserList] = useState([]);
-    const { isLoading, user } = useSelector((state) => state.profile);
-    const userInfo = window.userInfo;
+    const { isLoading, user, posts } = useSelector((state) => state.profile);
+    const userInfo = getUserInfoFromToken();
     const handleShowUserList = (_userList) => {
         setShowUserList(true);
         setUserList(_userList);
@@ -33,6 +35,9 @@ function ProfilePost(props) {
                             </Col>
                         </Row>
                     )}
+                    {posts.map((post) => (
+                        <Post key={post.id} post={post} user={user} />
+                    ))}
                 </Col>
             </Row>
             <UserListModal open={showUserList} onClose={handleCloseUserList} users={userList} />

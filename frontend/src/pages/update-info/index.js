@@ -17,6 +17,7 @@ import * as updateInfoActions from "./slice";
 import * as updateInfoApi from "./api";
 import { Link } from "react-router-dom";
 import UploadAvatar from "./upload-avatar";
+import { getUserInfoFromToken } from "../../common/common";
 
 function UpdateInfo(props) {
     const TODAY = new Date();
@@ -75,7 +76,7 @@ function UpdateInfo(props) {
     } = profileInfoValidation;
 
     useEffect(() => {
-        const _userInfo = window.userInfo;
+        const _userInfo = getUserInfoFromToken();
         Object.keys(_userInfo).forEach((_key) => {
             if (_userInfo[_key] === null) {
                 _userInfo[_key] = "";
@@ -199,11 +200,12 @@ function UpdateInfo(props) {
         let _isValid = true;
         let _msg = "";
         const _slug = profileInfo.slug;
+        const userInfo = getUserInfoFromToken();
         if (!_slug) {
             _isValid = false;
             _msg = "Đường dẫn tới trang cá nhân không được để trống.";
         } else {
-            if (_slug !== window.userInfo.slug) {
+            if (_slug !== userInfo.slug) {
                 try {
                     _isValid = await updateInfoApi.checkSlug(_slug);
                 } catch (e) {

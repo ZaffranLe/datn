@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import config from "../utils/config/cfg";
+import moment from "moment";
 
 const _config = config[config.environment];
 
-const getSlug = (str) => {
+function getSlug(str) {
     let _str = str;
     _str = _str.toLowerCase();
     _str = _str.replace(/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/g, "a");
@@ -19,17 +20,76 @@ const getSlug = (str) => {
     _str = _str.replace(/^-+/g, "");
     _str = _str.replace(/-+$/g, "");
     return _str;
-};
+}
 
-const appendTokenInfo = (token) => {
+function appendTokenInfo(token) {
     localStorage.setItem("token", token);
     const userInfo = jwt.decode(token);
     userInfo.exp = new Date(userInfo.exp * 1000);
-    window.userInfo = { ...userInfo };
-};
+}
 
-const getImageUrl = (name) => {
+function getUserInfoFromToken() {
+    const token = localStorage.getItem("token");
+    if (token) {
+        const userInfo = jwt.decode(token);
+        return userInfo;
+    } else {
+        return null;
+    }
+}
+
+function getImageUrl(name) {
     return `${_config.originBackend}/images/${name}`;
-};
+}
 
-export { getSlug, appendTokenInfo, getImageUrl };
+function calcTimeDifferenceFromNow(time) {
+    const timeConverter = [
+        {
+            label: "ngày trước",
+            ms: 86400000,
+            maxValue: 7,
+            minValue: 1,
+        },
+        {
+            label: "giờ trước",
+            ms: 3600000,
+            maxValue: 23,
+            minValue: 1,
+        },
+        {
+            label: "phút trước",
+            ms: 60000,
+            maxValue: 59,
+            minValue: 1,
+        },
+        {
+            label: "giây trước",
+            ms: 1000,
+            maxValue: 59,
+            minValue: 0,
+        },
+    ];
+    const now = new Date();
+    const _time = new Date(time);
+    const timeDifference = now.getTime() - _time.getTime();
+    let result = {
+        display: "",
+        isFitInTimeConverter: false, // if time
+    };
+    for (let i = 0; i < timeConverter.length; ++i) {
+        const _timeValue = Math.floor(timeDifference / timeConverter[i].ms);
+        if (_timeValue >= timeConverter[i].minValue && _timeValue <= timeConverter[i].maxValue) {
+            result.display = `${_timeValue} ${timeConverter[i].label}`;
+            result.isFitInTimeConverter = true;
+            break;
+        }
+    }
+
+    if (!result.isFitInTimeConverter) {
+        result.display = moment(_time).format("DD/MM/YYYY");
+    }
+
+    return result.display;
+}
+
+export { getSlug, appendTokenInfo, getImageUrl, getUserInfoFromToken, calcTimeDifferenceFromNow };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Image, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import DefaultBanner from "../../assets/img/default-banner.jpg";
@@ -9,14 +9,14 @@ import "./index.scss";
 import * as profileActions from "./slice";
 import * as imageModalActions from "../../components/album/image-modal/slice";
 import { Link } from "react-router-dom";
-import { getImageUrl } from "../../common/common";
+import { getImageUrl, getUserInfoFromToken } from "../../common/common";
 import classNames from "classnames";
-import ProfilePost from "./components/post";
+import ProfilePost from "./components/post-tab";
 import ProfilePanes from "./components/panes";
-import ProfileImage from "./components/image";
+import ProfileImage from "./components/image-tab";
 
 function Profile(props) {
-    const userInfo = window.userInfo;
+    const userInfo = getUserInfoFromToken();
     const [activePane, setActivePane] = useState("post");
 
     const { user, isError, isFollowLoading, isFollowing } = useSelector((state) => state.profile);
@@ -25,16 +25,20 @@ function Profile(props) {
     useEffect(() => {
         const _slug = props.match.params.slug;
         if (!_slug) {
-            history.push(`/profile/${window.userInfo.slug}`);
+            history.push(`/profile/${userInfo.slug}`);
         } else {
             dispatch(profileActions.getUserBySlug(_slug));
         }
         setActivePane("post");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.match.params.slug, dispatch]);
 
     useEffect(() => {
-        if (user && userInfo.id !== user.id) {
-            dispatch(profileActions.checkFollowUser(user.id));
+        if (user) {
+            dispatch(profileActions.getPostByUserId());
+            if (userInfo.id !== user.id) {
+                dispatch(profileActions.checkFollowUser(user.id));
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user, dispatch]);

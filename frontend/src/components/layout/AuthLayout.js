@@ -8,7 +8,7 @@ import NotificationOverlay from "./NotificationOverlay";
 import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { history } from "../../pages/history";
-import { appendTokenInfo, getImageUrl } from "../../common/common";
+import { appendTokenInfo, getImageUrl, getUserInfoFromToken } from "../../common/common";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -16,13 +16,13 @@ function AuthLayout(props) {
         history.push("/login");
     }
 
-    let userInfo = window.userInfo;
+    let userInfo = getUserInfoFromToken();
     const token = localStorage.getItem("token");
     if (!token) {
         getTokenByRefreshToken();
     } else if (!userInfo) {
         appendTokenInfo(token);
-        userInfo = window.userInfo;
+        userInfo = getUserInfoFromToken();
         const now = new Date();
         if (userInfo.exp < now) {
             getTokenByRefreshToken();
@@ -94,7 +94,7 @@ function AuthLayout(props) {
                         </Nav>
                         <Nav>
                             <Nav.Item as={Link} to="/profile" className="text-white mr-4">
-                                <div style={{ display: "flex" }}>
+                                <div className="display--flex">
                                     <div
                                         style={{
                                             width: 40,
