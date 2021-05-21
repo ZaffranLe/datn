@@ -7,13 +7,12 @@ import MessageOverlay from "./MessageOverlay";
 import NotificationOverlay from "./NotificationOverlay";
 import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
-import { history } from "../../pages/history";
 import { appendTokenInfo, getImageUrl, getUserInfoFromToken } from "../../common/common";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) {
-        history.push("/login");
+        window.location.replace("/login");
     }
 
     let userInfo = getUserInfoFromToken();

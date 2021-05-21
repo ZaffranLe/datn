@@ -12,8 +12,8 @@ async function getByUserId(id) {
         imgId: "t3.id",
     };
     const data = await knex("post AS t1")
-        .join("post_image AS t2", "t1.id", "t2.idPost")
-        .join("image AS t3", "t2.idImage", "t3.id")
+        .leftJoin("post_image AS t2", "t1.id", "t2.idPost")
+        .leftJoin("image AS t3", "t2.idImage", "t3.id")
         .where("t1.idUser", id)
         .columns(columns);
     let result = {};
@@ -30,16 +30,18 @@ async function getByUserId(id) {
                 idUser: post.idUser,
                 createdAt: post.createdAt,
                 updatedAt: post.updatedAt,
-                images: [
-                    {
-                        id: post.imgId,
-                        fileName: post.imgFileName,
-                    },
-                ],
+                images: post.imgId
+                    ? [
+                          {
+                              id: post.imgId,
+                              fileName: post.imgFileName,
+                          },
+                      ]
+                    : [],
             };
         }
     });
-    return Object.keys(result).map((key) => result[key]);
+    return _.sortBy(Object.keys(result).map((key) => result[key]), ["createdAt"]).reverse();
 }
 
 async function create(info, transaction = null) {
