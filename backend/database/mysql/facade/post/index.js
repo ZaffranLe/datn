@@ -9,6 +9,7 @@ async function getByUserId(id) {
         createdAt: "t1.createdAt",
         updatedAt: "t1.updatedAt",
         imgFileName: "t3.fileName",
+        imgId: "t3.id",
     };
     const data = await knex("post AS t1")
         .join("post_image AS t2", "t1.id", "t2.idPost")
@@ -19,16 +20,19 @@ async function getByUserId(id) {
     data.forEach((post) => {
         if (result.hasOwnProperty(post.id)) {
             result[post.id].images.push({
+                id: post.imgId,
                 fileName: post.imgFileName,
             });
         } else {
             result[post.id] = {
+                id: post.id,
                 content: post.content,
                 idUser: post.idUser,
                 createdAt: post.createdAt,
                 updatedAt: post.updatedAt,
                 images: [
                     {
+                        id: post.imgId,
                         fileName: post.imgFileName,
                     },
                 ],

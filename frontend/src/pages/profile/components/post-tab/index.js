@@ -35,7 +35,7 @@ function ProfilePost(props) {
                             </Col>
                         </Row>
                     )}
-                    {posts.map((post) => (
+                    {posts.map((post, idx) => (
                         <Post key={post.id} post={post} user={user} />
                     ))}
                 </Col>

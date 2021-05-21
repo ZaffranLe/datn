@@ -1,8 +1,9 @@
-import { Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Row, Col, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
 import { calcTimeDifferenceFromNow, getImageUrl } from "../../../../common/common";
 import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import "./index.scss";
 
 function Post({ post, user }) {
     return (
@@ -67,6 +68,17 @@ function Post({ post, user }) {
                                             </div>
                                         </span>
                                     </div>
+                                </Col>
+                            </Row>
+                            <Row className="border-bottom">
+                                <Col md={12} className="pl-4 pt-3 pr-4">
+                                    {/* <p className="post-content--truncate">{post.content}</p> */}
+                                    <p>{post.content}</p>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col md={3} className="text-center p-2">
+                                    <Button className="bg-facebook--dark" block><i className="fas fa-thumbs-up" /> Thích</Button>
                                 </Col>
                             </Row>
                         </Col>
