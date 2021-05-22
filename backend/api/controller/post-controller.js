@@ -15,6 +15,20 @@ async function getByUserId(req, res) {
     }
 }
 
+async function getById(req, res) {
+    const { id } = req.params;
+    const { id: idCurrentUser } = req.user;
+    try {
+        const data = await mysqlPost.getById(id, idCurrentUser);
+        res.status(200).json({
+            data,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, getById.name);
+    }
+}
+
 async function create(req, res) {
     try {
         const { images, content } = req.body;
@@ -42,4 +56,4 @@ async function changeLikeStatus(req, res) {
     }
 }
 
-module.exports = { create, getByUserId, changeLikeStatus };
+module.exports = { create, getByUserId, changeLikeStatus, getById };

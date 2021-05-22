@@ -5,9 +5,29 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import "./index.scss";
 import PhotoSection from "./photo-section";
-// import FbImageLibrary from "react-fb-image-grid";
+import * as api from "../../api";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 function Post({ post, user }) {
+    const [_post, setPost] = useState({});
+    const [isLikeBtnLoading, setLikeBtnLoading] = useState(false);
+
+    useEffect(() => {
+        setPost({ ...post });
+    }, [post]);
+
+    const changeLikeStatus = async () => {
+        setLikeBtnLoading(true);
+        try {
+            const isLiked = await api.changeLikeStatus(_post.id);
+            setPost({ ..._post, isLiked });
+        } catch (e) {
+            toast.error("Hệ thống gặp sự cố! Vui lòng thử lại sau.");
+        }
+        setLikeBtnLoading(false);
+    };
+
     return (
         <>
             <Row className="justify-content-center pl-3 mt-3">
@@ -25,9 +45,7 @@ function Post({ post, user }) {
                                                     borderRadius: 50,
                                                     margin: "auto",
                                                     background: `url(${
-                                                        user.avatar
-                                                            ? getImageUrl(user.avatar.fileName)
-                                                            : DefaultAvatar
+                                                        user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar
                                                     })`,
                                                 }}
                                                 className="bg-img"
@@ -55,9 +73,7 @@ function Post({ post, user }) {
                                                                 overlay={
                                                                     <Tooltip>
                                                                         <span>
-                                                                            {moment(
-                                                                                post.createdAt
-                                                                            ).format(
+                                                                            {moment(_post.createdAt).format(
                                                                                 "DD/MM/YYYY HH:mm"
                                                                             )}
                                                                         </span>
@@ -65,9 +81,7 @@ function Post({ post, user }) {
                                                                 }
                                                             >
                                                                 <span className="text-white-50">
-                                                                    {calcTimeDifferenceFromNow(
-                                                                        post.createdAt
-                                                                    )}
+                                                                    {calcTimeDifferenceFromNow(_post.createdAt)}
                                                                 </span>
                                                             </OverlayTrigger>
                                                         </Col>
@@ -80,20 +94,29 @@ function Post({ post, user }) {
                             </Row>
                             <Row className="border-bottom">
                                 <Col md={12} className="pl-4 pt-3 pr-4">
-                                    {/* <p className="post-content--truncate">{post.content}</p> */}
-                                    <p>{post.content}</p>
+                                    {/* <p className="post-content--truncate">{_post.content}</p> */}
+                                    <p>{_post.content}</p>
                                 </Col>
                             </Row>
-                            {post.images.length > 0 && (
-                                <PhotoSection images={post.images.map(img => getImageUrl(img.fileName))} />
+                            {_post.images.length > 0 && (
+                                <PhotoSection images={_post.images.map((img) => getImageUrl(img.fileName))} />
                             )}
                             <Row>
                                 <Col md={3} className="text-center p-2">
                                     <Button
-                                        className="bg-facebook--dark border-0 post-btn-like"
+                                        className={`bg-facebook--dark border-0 ${
+                                            _post.isLiked ? "post-btn-liked" : "post-btn-like"
+                                        }`}
                                         block
+                                        disabled={isLikeBtnLoading}
+                                        onClick={changeLikeStatus}
                                     >
-                                        <i className="fas fa-thumbs-up" /> Thích
+                                        <i
+                                            className={`fas ${
+                                                isLikeBtnLoading ? "fa-spin fa-spinner" : "fa-thumbs-up"
+                                            }`}
+                                        />{" "}
+                                        {_post.isLiked ? "Đã thích" : "Thích"}
                                     </Button>
                                 </Col>
                             </Row>

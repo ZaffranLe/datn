@@ -63,6 +63,17 @@ async function getPostByUserId(id) {
         throw e.response.data.message;
     }
 }
+async function getPostById(id) {
+    try {
+        const resp = await APICall({
+            url: `/api/post/${id}`,
+            method: constants.HTTP_METHOD.GET,
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
 
 async function createPost(images, content) {
     try {
@@ -102,4 +113,5 @@ export {
     getImagesByUserId,
     createPost,
     changeLikeStatus,
+    getPostById,
 };

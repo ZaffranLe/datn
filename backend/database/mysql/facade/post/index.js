@@ -10,10 +10,7 @@ async function getByUserId(id, idCurrentUser) {
         createdAt: "t1.createdAt",
         updatedAt: "t1.updatedAt",
     };
-    const posts = await knex("post AS t1")
-        .where("idUser", id)
-        .orderBy("createdAt", "desc")
-        .columns(postColumns);
+    const posts = await knex("post AS t1").where("idUser", id).orderBy("createdAt", "desc").columns(postColumns);
     const imgPromises = [];
     const likeStatusPromises = [];
     const imgColumns = {
@@ -27,9 +24,7 @@ async function getByUserId(id, idCurrentUser) {
                 .where("idPost", post.id)
                 .columns(imgColumns)
         );
-        likeStatusPromises.push(
-            knex("user_like_post").where({ idUser: idCurrentUser, idPost: post.id }).first()
-        );
+        likeStatusPromises.push(knex("user_like_post").where({ idUser: idCurrentUser, idPost: post.id }).first());
     });
 
     const imgData = await Promise.all(imgPromises);
@@ -40,6 +35,31 @@ async function getByUserId(id, idCurrentUser) {
     }
 
     return posts;
+}
+
+async function getById(id, idCurrentUser) {
+    const postColumns = {
+        id: "t1.id",
+        content: "t1.content",
+        idUser: "t1.idUser",
+        createdAt: "t1.createdAt",
+        updatedAt: "t1.updatedAt",
+    };
+    const post = await knex("post AS t1").where("id", id).columns(postColumns).first();
+    const imgColumns = {
+        id: "t2.id",
+        fileName: "t2.fileName",
+    };
+    const images = await knex("post_image AS t1")
+        .join("image AS t2", "t1.idImage", "t2.id")
+        .where("idPost", id)
+        .columns(imgColumns);
+    const isLiked = await knex("user_like_post").where({ idUser: idCurrentUser, idPost: id }).first();
+
+    post.images = images;
+    post.isLiked = Boolean(isLiked);
+
+    return post;
 }
 
 async function create(info, transaction = null) {
@@ -91,4 +111,5 @@ module.exports = {
     create,
     getByUserId,
     changeLikeStatus,
+    getById,
 };

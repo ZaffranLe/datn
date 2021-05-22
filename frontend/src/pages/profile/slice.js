@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import _ from "lodash";
 import { toast } from "react-toastify";
 import * as api from "./api";
 
@@ -39,6 +40,11 @@ export const profileSlice = createSlice({
         setActionSucceed: (state, action) => {
             state.isActionSucceed = action.payload;
         },
+        setSpecificPost: (state, action) => {
+            const { idPost, data } = action.payload;
+            const existPostIdx = state.posts.findIndex((_p) => _p.id === idPost);
+            state.post[existPostIdx] = data;
+        },
     },
 });
 
@@ -52,6 +58,7 @@ export const {
     setImages,
     setPosts,
     setActionSucceed,
+    setSpecificPost,
 } = profileSlice.actions;
 
 function getUserBySlug(slug) {
@@ -126,6 +133,17 @@ function getPostByUserId() {
     };
 }
 
+function getPostById(id) {
+    return async (dispatch) => {
+        try {
+            const data = await api.getPostById(id);
+            dispatch(setSpecificPost({ idPost: id, data }));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        }
+    };
+}
+
 function createPost(images, content) {
     return async (dispatch) => {
         try {
@@ -140,15 +158,6 @@ function createPost(images, content) {
     };
 }
 
-function changeLikeStatus(idPost) {
-    return async (dispatch) => {
-        try {
-        } catch (e) {
-        } finally {
-        }
-    };
-}
-
 export {
     getUserBySlug,
     changeFollowUser,
@@ -156,7 +165,7 @@ export {
     getImagesByUserId,
     createPost,
     getPostByUserId,
-    changeLikeStatus,
+    getPostById,
 };
 
 export default profileSlice.reducer;
