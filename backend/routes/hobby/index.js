@@ -1,11 +1,12 @@
 const express = require("express");
+const verifyToken = require("../../api/middleware/verify-token");
 const hobbyController = require("../../api/controller/hobby-controller");
 const router = express.Router();
 
-router.get("/", hobbyController.getAll);
-router.get("/:id", hobbyController.getById);
-router.post("/", hobbyController.create);
-router.put("/:id", hobbyController.update);
-router.delete("/:id", hobbyController.remove);
+router.get("/", verifyToken, hobbyController.getAll);
+router.get("/:id", verifyToken, hobbyController.getById);
+router.post("/", verifyToken, hobbyController.create);
+router.put("/:id", verifyToken, hobbyController.update);
+router.delete("/:id", verifyToken, hobbyController.remove);
 
 module.exports = router;

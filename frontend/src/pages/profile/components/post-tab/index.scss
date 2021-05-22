@@ -8,4 +8,15 @@
             text-overflow: ellipsis;
         }
     }
+
+    &-btn {
+        &-like {
+            transition-property: color;
+            transition-duration: 0.2s;
+            &:hover {
+                color: #007bff;
+                background-color: transparent;
+            }
+        }
+    }
 }

@@ -79,4 +79,27 @@ async function createPost(images, content) {
     }
 }
 
-export { getPostByUserId, getUserBySlug, checkFollowUser, changeFollowUser, getImagesByUserId, createPost };
+async function changeLikeStatus(idPost) {
+    try {
+        const resp = await APICall({
+            url: "/api/post/like",
+            method: constants.HTTP_METHOD.POST,
+            data: {
+                id: idPost,
+            },
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
+export {
+    getPostByUserId,
+    getUserBySlug,
+    checkFollowUser,
+    changeFollowUser,
+    getImagesByUserId,
+    createPost,
+    changeLikeStatus,
+};

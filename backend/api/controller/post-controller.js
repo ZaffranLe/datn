@@ -3,7 +3,8 @@ const FILE_NAME = module.filename.split("\\").slice(-1)[0];
 
 async function getByUserId(req, res) {
     const { id } = req.params;
-    const data = await mysqlPost.getByUserId(id);
+    const { id: idCurrentUser } = req.user;
+    const data = await mysqlPost.getByUserId(id, idCurrentUser);
     try {
         res.status(200).json({
             data,
@@ -27,4 +28,18 @@ async function create(req, res) {
     }
 }
 
-module.exports = { create, getByUserId };
+async function changeLikeStatus(req, res) {
+    try {
+        const { id: idUser } = req.user;
+        const { id: idPost } = req.body;
+        const newStatus = await mysqlPost.changeLikeStatus(idUser, idPost);
+        res.status(201).json({
+            data: newStatus,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, changeLikeStatus.name);
+    }
+}
+
+module.exports = { create, getByUserId, changeLikeStatus };

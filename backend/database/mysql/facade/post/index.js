@@ -1,47 +1,45 @@
 const knex = require("../knex-client");
 const _ = require("lodash");
 
-async function getByUserId(id) {
-    const columns = {
+// id current user is for checking liking status
+async function getByUserId(id, idCurrentUser) {
+    const postColumns = {
         id: "t1.id",
         content: "t1.content",
         idUser: "t1.idUser",
         createdAt: "t1.createdAt",
         updatedAt: "t1.updatedAt",
-        imgFileName: "t3.fileName",
-        imgId: "t3.id",
     };
-    const data = await knex("post AS t1")
-        .leftJoin("post_image AS t2", "t1.id", "t2.idPost")
-        .leftJoin("image AS t3", "t2.idImage", "t3.id")
-        .where("t1.idUser", id)
-        .columns(columns);
-    let result = {};
-    data.forEach((post) => {
-        if (result.hasOwnProperty(post.id)) {
-            result[post.id].images.push({
-                id: post.imgId,
-                fileName: post.imgFileName,
-            });
-        } else {
-            result[post.id] = {
-                id: post.id,
-                content: post.content,
-                idUser: post.idUser,
-                createdAt: post.createdAt,
-                updatedAt: post.updatedAt,
-                images: post.imgId
-                    ? [
-                          {
-                              id: post.imgId,
-                              fileName: post.imgFileName,
-                          },
-                      ]
-                    : [],
-            };
-        }
+    const posts = await knex("post AS t1")
+        .where("idUser", id)
+        .orderBy("createdAt", "desc")
+        .columns(postColumns);
+    const imgPromises = [];
+    const likeStatusPromises = [];
+    const imgColumns = {
+        id: "t2.id",
+        fileName: "t2.fileName",
+    };
+    posts.forEach((post) => {
+        imgPromises.push(
+            knex("post_image AS t1")
+                .join("image AS t2", "t1.idImage", "t2.id")
+                .where("idPost", post.id)
+                .columns(imgColumns)
+        );
+        likeStatusPromises.push(
+            knex("user_like_post").where({ idUser: idCurrentUser, idPost: post.id }).first()
+        );
     });
-    return _.sortBy(Object.keys(result).map((key) => result[key]), ["createdAt"]).reverse();
+
+    const imgData = await Promise.all(imgPromises);
+    const likeStatusData = await Promise.all(likeStatusPromises);
+    for (let i = 0; i < posts.length; ++i) {
+        posts[i].images = imgData[i];
+        posts[i].isLiked = Boolean(likeStatusData[i]);
+    }
+
+    return posts;
 }
 
 async function create(info, transaction = null) {
@@ -72,7 +70,25 @@ async function create(info, transaction = null) {
     }
 }
 
+async function changeLikeStatus(idUser, idPost, transaction = null) {
+    const _knex = transaction || knex;
+    const getLikeStatus = _knex("user_like_post").where({
+        idUser: idUser,
+        idPost: idPost,
+    });
+    let newStatus = true;
+    const didLike = await getLikeStatus.first();
+    if (didLike) {
+        await getLikeStatus.del();
+        newStatus = false;
+    } else {
+        await _knex("user_like_post").insert({ idUser, idPost });
+    }
+    return newStatus;
+}
+
 module.exports = {
     create,
     getByUserId,
+    changeLikeStatus,
 };

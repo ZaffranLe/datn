@@ -43,8 +43,16 @@ export const profileSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUser, setLoading, setError, setFollowLoading, setFollowing, setImages, setPosts, setActionSucceed } =
-    profileSlice.actions;
+export const {
+    setUser,
+    setLoading,
+    setError,
+    setFollowLoading,
+    setFollowing,
+    setImages,
+    setPosts,
+    setActionSucceed,
+} = profileSlice.actions;
 
 function getUserBySlug(slug) {
     return async (dispatch) => {
@@ -132,6 +140,23 @@ function createPost(images, content) {
     };
 }
 
-export { getUserBySlug, changeFollowUser, checkFollowUser, getImagesByUserId, createPost, getPostByUserId };
+function changeLikeStatus(idPost) {
+    return async (dispatch) => {
+        try {
+        } catch (e) {
+        } finally {
+        }
+    };
+}
+
+export {
+    getUserBySlug,
+    changeFollowUser,
+    checkFollowUser,
+    getImagesByUserId,
+    createPost,
+    getPostByUserId,
+    changeLikeStatus,
+};
 
 export default profileSlice.reducer;

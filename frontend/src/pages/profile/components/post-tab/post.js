@@ -4,6 +4,8 @@ import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import "./index.scss";
+import PhotoSection from "./photo-section";
+// import FbImageLibrary from "react-fb-image-grid";
 
 function Post({ post, user }) {
     return (
@@ -23,7 +25,9 @@ function Post({ post, user }) {
                                                     borderRadius: 50,
                                                     margin: "auto",
                                                     background: `url(${
-                                                        user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar
+                                                        user.avatar
+                                                            ? getImageUrl(user.avatar.fileName)
+                                                            : DefaultAvatar
                                                     })`,
                                                 }}
                                                 className="bg-img"
@@ -51,7 +55,9 @@ function Post({ post, user }) {
                                                                 overlay={
                                                                     <Tooltip>
                                                                         <span>
-                                                                            {moment(post.createdAt).format(
+                                                                            {moment(
+                                                                                post.createdAt
+                                                                            ).format(
                                                                                 "DD/MM/YYYY HH:mm"
                                                                             )}
                                                                         </span>
@@ -59,7 +65,9 @@ function Post({ post, user }) {
                                                                 }
                                                             >
                                                                 <span className="text-white-50">
-                                                                    {calcTimeDifferenceFromNow(post.createdAt)}
+                                                                    {calcTimeDifferenceFromNow(
+                                                                        post.createdAt
+                                                                    )}
                                                                 </span>
                                                             </OverlayTrigger>
                                                         </Col>
@@ -76,9 +84,17 @@ function Post({ post, user }) {
                                     <p>{post.content}</p>
                                 </Col>
                             </Row>
+                            {post.images.length > 0 && (
+                                <PhotoSection images={post.images.map(img => getImageUrl(img.fileName))} />
+                            )}
                             <Row>
                                 <Col md={3} className="text-center p-2">
-                                    <Button className="bg-facebook--dark" block><i className="fas fa-thumbs-up" /> Thích</Button>
+                                    <Button
+                                        className="bg-facebook--dark border-0 post-btn-like"
+                                        block
+                                    >
+                                        <i className="fas fa-thumbs-up" /> Thích
+                                    </Button>
                                 </Col>
                             </Row>
                         </Col>
