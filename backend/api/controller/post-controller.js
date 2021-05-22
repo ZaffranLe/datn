@@ -46,9 +46,9 @@ async function changeLikeStatus(req, res) {
     try {
         const { id: idUser } = req.user;
         const { id: idPost } = req.body;
-        const newStatus = await mysqlPost.changeLikeStatus(idUser, idPost);
+        const data = await mysqlPost.changeLikeStatus(idUser, idPost);
         res.status(201).json({
-            data: newStatus,
+            data,
             message: null,
         });
     } catch (e) {

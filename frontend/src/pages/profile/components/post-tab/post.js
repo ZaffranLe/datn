@@ -20,8 +20,8 @@ function Post({ post, user }) {
     const changeLikeStatus = async () => {
         setLikeBtnLoading(true);
         try {
-            const isLiked = await api.changeLikeStatus(_post.id);
-            setPost({ ..._post, isLiked });
+            const data = await api.changeLikeStatus(_post.id);
+            setPost({ ..._post, isLiked: data.isLiked, numOfLike: data.numOfLike });
         } catch (e) {
             toast.error("Hệ thống gặp sự cố! Vui lòng thử lại sau.");
         }
@@ -131,6 +131,15 @@ function Post({ post, user }) {
                                             />{" "}
                                             {_post.isLiked ? "Đã thích" : "Thích"}
                                         </Button>
+                                    </Col>
+                                    <Col md={9}>
+                                        <div className="h-100 display--table">
+                                            <span className="display--table-cell vertical-align-middle">
+                                                {_post.numOfLike === 0
+                                                    ? "Chưa có ai thích bài này"
+                                                    : `${_post.numOfLike} người thích bài này`}
+                                            </span>
+                                        </div>
                                     </Col>
                                 </Row>
                             </Col>

@@ -66,10 +66,11 @@ async function getById(id, idCurrentUser) {
     const isLiked = await knex("user_like_post")
         .where({ idUser: idCurrentUser, idPost: id })
         .first();
+    const numOfLike = await knex("user_like_post").where("idPost", id);
 
     post.images = images;
     post.isLiked = Boolean(isLiked);
-
+    post.numOfLike = numOfLike.length;
     return post;
 }
 
@@ -103,6 +104,8 @@ async function create(info, transaction = null) {
 
 async function changeLikeStatus(idUser, idPost, transaction = null) {
     const _knex = transaction || knex;
+    let numOfLike = await _knex("user_like_post").where("idPost", idPost);
+    numOfLike = numOfLike.length;
     const getLikeStatus = _knex("user_like_post").where({
         idUser: idUser,
         idPost: idPost,
@@ -112,10 +115,15 @@ async function changeLikeStatus(idUser, idPost, transaction = null) {
     if (didLike) {
         await getLikeStatus.del();
         newStatus = false;
+        numOfLike -= 1;
     } else {
         await _knex("user_like_post").insert({ idUser, idPost });
+        numOfLike += 1;
     }
-    return newStatus;
+    return {
+        isLiked: newStatus,
+        numOfLike,
+    };
 }
 
 module.exports = {
