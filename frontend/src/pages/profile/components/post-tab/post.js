@@ -8,11 +8,7 @@ import * as api from "../../api";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import TextareaAutosize from "react-textarea-autosize";
-import {
-    getImageUrl,
-    getUserInfoFromToken,
-    calcTimeDifferenceFromNow,
-} from "../../../../common/common";
+import { getImageUrl, getUserInfoFromToken, calcTimeDifferenceFromNow } from "../../../../common/common";
 import { uploadImages } from "../../../../utils/api/common";
 import constants from "../../../../common/constants";
 
@@ -66,8 +62,14 @@ function Post({ post, user }) {
         }
     };
 
-    const submitComment = () => {
-        
+    const submitComment = async () => {
+        try {
+            await api.submitCommentToPost(_post.id, comment.trim(), image);
+            setComment("");
+            setImage(null);
+        } catch (e) {
+            toast.error("Hệ thống gặp sự cố! Vui lòng thử lại sau.");
+        }
     };
 
     return (
@@ -118,9 +120,7 @@ function Post({ post, user }) {
                                                                     overlay={
                                                                         <Tooltip>
                                                                             <span>
-                                                                                {moment(
-                                                                                    _post.createdAt
-                                                                                ).format(
+                                                                                {moment(_post.createdAt).format(
                                                                                     "DD/MM/YYYY HH:mm"
                                                                                 )}
                                                                             </span>
@@ -128,9 +128,7 @@ function Post({ post, user }) {
                                                                     }
                                                                 >
                                                                     <span className="text-white-50">
-                                                                        {calcTimeDifferenceFromNow(
-                                                                            _post.createdAt
-                                                                        )}
+                                                                        {calcTimeDifferenceFromNow(_post.createdAt)}
                                                                     </span>
                                                                 </OverlayTrigger>
                                                             </Col>
@@ -148,11 +146,7 @@ function Post({ post, user }) {
                                     </Col>
                                 </Row>
                                 {_post.images.length > 0 && (
-                                    <PhotoSection
-                                        images={_post.images.map((img) =>
-                                            getImageUrl(img.fileName)
-                                        )}
-                                    />
+                                    <PhotoSection images={_post.images.map((img) => getImageUrl(img.fileName))} />
                                 )}
                                 <Row>
                                     <Col md={3} className="text-center p-3">
@@ -166,9 +160,7 @@ function Post({ post, user }) {
                                         >
                                             <i
                                                 className={`fas ${
-                                                    isLikeBtnLoading
-                                                        ? "fa-spin fa-spinner"
-                                                        : "fa-thumbs-up"
+                                                    isLikeBtnLoading ? "fa-spin fa-spinner" : "fa-thumbs-up"
                                                 }`}
                                             />{" "}
                                             {_post.isLiked ? "Đã thích" : "Thích"}
@@ -179,8 +171,7 @@ function Post({ post, user }) {
                                             <span className="display--table-cell vertical-align-middle">
                                                 {_post.numOfLike !== 0 && (
                                                     <span className="text-primary">
-                                                        <i className="fas fa-thumbs-up" />{" "}
-                                                        {_post.numOfLike}
+                                                        <i className="fas fa-thumbs-up" /> {_post.numOfLike}
                                                     </span>
                                                 )}
                                             </span>
@@ -227,9 +218,7 @@ function Post({ post, user }) {
                                                 style={{
                                                     width: 300,
                                                     height: 225,
-                                                    background: `url(${getImageUrl(
-                                                        image.fileName
-                                                    )})`,
+                                                    background: `url(${getImageUrl(image.fileName)})`,
                                                 }}
                                             />
                                         </Col>
