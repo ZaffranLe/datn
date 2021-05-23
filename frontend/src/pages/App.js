@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { AuthLayout, ImageModal } from "../components";
 import { history } from "./history";
@@ -24,6 +24,11 @@ function AuthRoute({ component: Component, ...rest }) {
 }
 
 function App() {
+
+    useEffect(() => {
+        document.title = "Soulatte"
+    }, []);
+
     return (
         <div className="app-container bg-img">
             <Router history={history}>

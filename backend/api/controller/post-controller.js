@@ -56,4 +56,18 @@ async function changeLikeStatus(req, res) {
     }
 }
 
-module.exports = { create, getByUserId, changeLikeStatus, getById };
+async function submitCommentToPost(req, res) {
+    try {
+        const { id: idUser } = req.user;
+        const { idPost, comment } = req.body;
+        await mysqlPost.submitCommentToPost(idPost, idUser, comment);
+        res.status(201).json({
+            data: {},
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, submitCommentToPost.name);
+    }
+}
+
+module.exports = { create, getByUserId, changeLikeStatus, getById, submitCommentToPost };

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Row, Col, Image, Modal, Form, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
+import { Row, Col, Modal, Form, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
 import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import TextareaAutosize from "react-textarea-autosize";
 import { toast } from "react-toastify";

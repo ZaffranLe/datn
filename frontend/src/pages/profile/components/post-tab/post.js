@@ -1,5 +1,4 @@
 import { Row, Col, OverlayTrigger, Tooltip, Button, FormGroup, FormControl } from "react-bootstrap";
-import { calcTimeDifferenceFromNow, getImageUrl } from "../../../../common/common";
 import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -8,10 +7,20 @@ import PhotoSection from "./photo-section";
 import * as api from "../../api";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import TextareaAutosize from "react-textarea-autosize";
+import {
+    getImageUrl,
+    getUserInfoFromToken,
+    calcTimeDifferenceFromNow,
+} from "../../../../common/common";
+import { uploadImages } from "../../../../utils/api/common";
+import constants from "../../../../common/constants";
 
 function Post({ post, user }) {
     const [_post, setPost] = useState(null);
     const [isLikeBtnLoading, setLikeBtnLoading] = useState(false);
+    const [comment, setComment] = useState("");
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         setPost({ ...post });
@@ -26,6 +35,39 @@ function Post({ post, user }) {
             toast.error("Hệ thống gặp sự cố! Vui lòng thử lại sau.");
         }
         setLikeBtnLoading(false);
+    };
+
+    const handleKeyUp = (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            if (comment || image) {
+                submitComment();
+            }
+        }
+    };
+
+    const handleAddImage = async (e) => {
+        try {
+            let image = null;
+            if (e.target.files.length > 0) {
+                image = e.target.files[0];
+            } else {
+                return null;
+            }
+            const exceedSizeImg = image.size > constants.MAX_FILE_SIZE;
+            if (exceedSizeImg) {
+                toast.error("Ảnh vượt quá kích thước tối đa 5MB!");
+                return null;
+            }
+            const uploadedImages = await uploadImages([image]);
+            setImage(uploadedImages[0]);
+        } catch (e) {
+            console.error(e);
+            toast.error(e.response.data.message);
+        }
+    };
+
+    const submitComment = () => {
+        
     };
 
     return (
@@ -146,13 +188,53 @@ function Post({ post, user }) {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col md={12}>
+                                    <Col md={11}>
                                         <FormControl
                                             className="bg-facebook--darker border-0 br-10"
                                             placeholder="Để lại bình luận của bạn"
+                                            value={comment}
+                                            onChange={(e) => setComment(e.target.value)}
+                                            onKeyUp={handleKeyUp}
+                                            as={TextareaAutosize}
+                                            minRows={1}
+                                        />
+                                    </Col>
+                                    <Col md={1}>
+                                        <OverlayTrigger
+                                            placement="top"
+                                            delay={{ show: 400, hide: 200 }}
+                                            overlay={(_props) => <Tooltip {..._props}>Ảnh</Tooltip>}
+                                        >
+                                            <label htmlFor="upload-image" className="mb-0">
+                                                <i className="fas fa-image text-success fa-2x clickable" />
+                                            </label>
+                                        </OverlayTrigger>
+                                        <input
+                                            type="file"
+                                            className="d-none"
+                                            id="upload-image"
+                                            multiple
+                                            accept="image/*"
+                                            onChange={handleAddImage}
                                         />
                                     </Col>
                                 </Row>
+                                {image && (
+                                    <Row>
+                                        <Col md={12}>
+                                            <div
+                                                className="bg-img br-10 mt-2"
+                                                style={{
+                                                    width: 300,
+                                                    height: 225,
+                                                    background: `url(${getImageUrl(
+                                                        image.fileName
+                                                    )})`,
+                                                }}
+                                            />
+                                        </Col>
+                                    </Row>
+                                )}
                             </Col>
                         </Row>
                     </Col>

@@ -126,9 +126,37 @@ async function changeLikeStatus(idUser, idPost, transaction = null) {
     };
 }
 
+async function submitCommentToPost(idPost, idUser, comment, transaction = null) {
+    const _knex = transaction || (await knex.transaction());
+    const { content, image = null } = comment;
+    try {
+        const data = {
+            idPost,
+            idUser,
+            content,
+        };
+        const _comment = await _knex("post_comment").insert(data);
+        const idComment = _comment[0];
+        if (image) {
+            await _knex("comment_image").insert({
+                idComment,
+                idImage: image.id,
+            });
+        }
+        if (!transaction) {
+            await _knex.commit();
+        }
+    } catch (e) {
+        if (!transaction) {
+            await _knex.rollback();
+        }
+    }
+}
+
 module.exports = {
     create,
     getByUserId,
     changeLikeStatus,
     getById,
+    submitCommentToPost,
 };

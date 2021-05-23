@@ -105,6 +105,24 @@ async function changeLikeStatus(idPost) {
     }
 }
 
+async function submitCommentToPost(idPost, comment, image) {
+    try {
+        await APICall({
+            url: "/api/post/comment",
+            method: constants.HTTP_METHOD.POST,
+            data: {
+                idPost,
+                comment: {
+                    content: comment,
+                    image,
+                },
+            },
+        });
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
 export {
     getPostByUserId,
     getUserBySlug,
@@ -114,4 +132,5 @@ export {
     createPost,
     changeLikeStatus,
     getPostById,
+    submitCommentToPost,
 };
