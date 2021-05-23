@@ -1,4 +1,4 @@
-import { Row, Col, OverlayTrigger, Tooltip, Button } from "react-bootstrap";
+import { Row, Col, OverlayTrigger, Tooltip, Button, FormGroup, FormControl } from "react-bootstrap";
 import { calcTimeDifferenceFromNow, getImageUrl } from "../../../../common/common";
 import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import moment from "moment";
@@ -99,7 +99,7 @@ function Post({ post, user }) {
                                         </div>
                                     </Col>
                                 </Row>
-                                <Row className="border-bottom">
+                                <Row>
                                     <Col md={12} className="pl-4 pt-3 pr-4">
                                         {/* <p className="post-content--truncate">{_post.content}</p> */}
                                         <p>{_post.content}</p>
@@ -113,7 +113,7 @@ function Post({ post, user }) {
                                     />
                                 )}
                                 <Row>
-                                    <Col md={3} className="text-center p-2">
+                                    <Col md={3} className="text-center p-3">
                                         <Button
                                             className={`bg-facebook--dark border-0 ${
                                                 _post.isLiked ? "post-btn-liked" : "post-btn-like"
@@ -135,11 +135,22 @@ function Post({ post, user }) {
                                     <Col md={9}>
                                         <div className="h-100 display--table">
                                             <span className="display--table-cell vertical-align-middle">
-                                                {_post.numOfLike === 0
-                                                    ? "Chưa có ai thích bài này"
-                                                    : `${_post.numOfLike} người thích bài này`}
+                                                {_post.numOfLike !== 0 && (
+                                                    <span className="text-primary">
+                                                        <i className="fas fa-thumbs-up" />{" "}
+                                                        {_post.numOfLike}
+                                                    </span>
+                                                )}
                                             </span>
                                         </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col md={12}>
+                                        <FormControl
+                                            className="bg-facebook--darker border-0 br-10"
+                                            placeholder="Để lại bình luận của bạn"
+                                        />
                                     </Col>
                                 </Row>
                             </Col>
