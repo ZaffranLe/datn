@@ -17,9 +17,19 @@ async function getByUserId(id, idCurrentUser) {
     const imgPromises = [];
     const likeStatusPromises = [];
     const numOfLikePromises = [];
+    const commentPromises = [];
     const imgColumns = {
         id: "t2.id",
         fileName: "t2.fileName",
+    };
+    const commentColumns = {
+        content: "t1.content",
+        imgFileName: "t3.fileName",
+        imgId: "t3.id",
+        userAvatar: "t5.fileName",
+        userFirstName: "t4.firstName",
+        userLastName: "t4.lastName",
+        userSlug: "t4.slug",
     };
     posts.forEach((post) => {
         imgPromises.push(
@@ -32,15 +42,26 @@ async function getByUserId(id, idCurrentUser) {
             knex("user_like_post").where({ idUser: idCurrentUser, idPost: post.id }).first()
         );
         numOfLikePromises.push(knex("user_like_post").where({ idPost: post.id }));
+        commentPromises.push(
+            knex("post_comment AS t1")
+                .join("user AS t4", "t1.idUser", "t4.id")
+                .leftJoin("image AS t5", "t4.avatar", "t5.id")
+                .leftJoin("comment_image AS t2", "t1.id", "t2.idComment")
+                .leftJoin("image AS t3", "t2.idImage", "t3.id")
+                .where("idPost", post.id)
+                .columns(commentColumns)
+        );
     });
 
     const imgData = await Promise.all(imgPromises);
     const likeStatusData = await Promise.all(likeStatusPromises);
     const numOfLikeData = await Promise.all(numOfLikePromises);
+    const commentData = await Promise.all(commentPromises);
     for (let i = 0; i < posts.length; ++i) {
         posts[i].images = imgData[i];
         posts[i].isLiked = Boolean(likeStatusData[i]);
         posts[i].numOfLike = numOfLikeData[i].length;
+        posts[i].comments = commentData[i];
     }
 
     return posts;
