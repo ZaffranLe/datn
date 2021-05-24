@@ -15,6 +15,7 @@ import {
 } from "../../../../common/common";
 import { uploadImages } from "../../../../utils/api/common";
 import constants from "../../../../common/constants";
+import Comment from "./comment";
 
 function Post({ post, user }) {
     const [_post, setPost] = useState(null);
@@ -197,6 +198,9 @@ function Post({ post, user }) {
                                         </div>
                                     </Col>
                                 </Row>
+                                {_post.comments.map((_comment, idx) => (
+                                    <Comment key={idx} comment={_comment} />
+                                ))}
                                 <Row>
                                     <Col md={11}>
                                         <FormControl
