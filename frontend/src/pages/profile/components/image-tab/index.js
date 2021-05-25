@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import * as profileActions from "../../slice";
 import { getImageUrl } from "../../../../common/common";
 import * as imageModalActions from "../../../../components/album/image-modal/slice";
+import { LazyImage } from "../../../../components";
 
 function ProfileImage(props) {
     const { images, user } = useSelector((state) => state.profile);
@@ -29,11 +30,11 @@ function ProfileImage(props) {
                         {images.length > 0 ? (
                             images.map((img, idx) => (
                                 <Col md={2} key={idx} className="p-3">
-                                    <div
+                                    <LazyImage
                                         onClick={() => handleViewImage(img.id)}
-                                        className="profile__img bg-img border--round"
-                                        style={{ background: `url(${getImageUrl(img.fileName)})` }}
-                                    ></div>
+                                        src={getImageUrl(img.fileName)}
+                                        className="profile__img border--round"
+                                    />
                                 </Col>
                             ))
                         ) : (

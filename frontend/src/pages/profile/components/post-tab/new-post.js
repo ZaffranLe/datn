@@ -8,6 +8,7 @@ import { uploadImages } from "../../../../utils/api/common";
 import constants from "../../../../common/constants";
 import { useDispatch, useSelector } from "react-redux";
 import * as profileActions from "../../slice";
+import { LazyImage } from "../../../../components";
 
 function NewPost(props) {
     const userInfo = getUserInfoFromToken();
@@ -87,20 +88,19 @@ function NewPost(props) {
                                 <span>
                                     <div className="h-100 display--table">
                                         <span className="display--table-cell vertical-align-middle">
-                                            <div
+                                            <LazyImage
                                                 style={{
                                                     width: 50,
                                                     height: 50,
                                                     borderRadius: 50,
                                                     margin: "auto",
-                                                    background: `url(${
-                                                        userInfo.avatar
-                                                            ? getImageUrl(userInfo.avatar.fileName)
-                                                            : DefaultAvatar
-                                                    })`,
                                                 }}
-                                                className="bg-img"
-                                            ></div>
+                                                src={
+                                                    userInfo.avatar
+                                                        ? getImageUrl(userInfo.avatar.fileName)
+                                                        : DefaultAvatar
+                                                }
+                                            />
                                         </span>
                                     </div>
                                 </span>
@@ -119,7 +119,13 @@ function NewPost(props) {
                 </Col>
             </Row>
             {/* New post modal */}
-            <Modal show={newPostModal} onHide={handleCloseNewPost} centered size="lg" className="new-post-modal">
+            <Modal
+                show={newPostModal}
+                onHide={handleCloseNewPost}
+                centered
+                size="lg"
+                className="new-post-modal"
+            >
                 <Modal.Header closeButton className="bg-facebook--dark new-post-modal__header p-4">
                     <Modal.Title>Đăng bài</Modal.Title>
                 </Modal.Header>
@@ -127,18 +133,22 @@ function NewPost(props) {
                     <Row className="mb-4">
                         <Col md={12}>
                             <div className="display--flex">
-                                <div
+                                <LazyImage
                                     style={{
                                         width: 50,
                                         height: 50,
                                         borderRadius: 50,
-                                        background: `url(${
-                                            userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
-                                        })`,
                                     }}
-                                    className="bg-img"
-                                ></div>
-                                <div style={{ fontSize: 20, height: 50 }} className="display--table ml-2">
+                                    src={
+                                        userInfo.avatar
+                                            ? getImageUrl(userInfo.avatar.fileName)
+                                            : DefaultAvatar
+                                    }
+                                />
+                                <div
+                                    style={{ fontSize: 20, height: 50 }}
+                                    className="display--table ml-2"
+                                >
                                     <span className="display--table-cell vertical-align-middle">
                                         {userInfo.lastName} {userInfo.firstName}
                                     </span>
@@ -162,14 +172,14 @@ function NewPost(props) {
                     <div style={{ overflowX: "auto", maxWidth: "100%" }} className="display--flex">
                         {images.map((img) => (
                             <span key={img.id} className="display--inherit">
-                                <div
-                                    className="bg-img m-2 avatar"
+                                <LazyImage
+                                    src={getImageUrl(img.fileName)}
+                                    className="m-2 avatar"
                                     style={{
                                         width: 200,
                                         height: 200,
-                                        background: `url(${getImageUrl(img.fileName)})`,
                                     }}
-                                ></div>
+                                />
                             </span>
                         ))}
                     </div>
@@ -177,7 +187,10 @@ function NewPost(props) {
                         <Col md={6} className="display--table-cell vertical-align-middle">
                             <span style={{ fontSize: 20 }}>Thêm vào bài đăng</span>
                         </Col>
-                        <Col md={6} className="text-right display--table-cell vertical-align-middle">
+                        <Col
+                            md={6}
+                            className="text-right display--table-cell vertical-align-middle"
+                        >
                             <OverlayTrigger
                                 placement="top"
                                 delay={{ show: 400, hide: 200 }}

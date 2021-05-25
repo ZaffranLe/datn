@@ -8,6 +8,7 @@ import NotificationOverlay from "./NotificationOverlay";
 import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { appendTokenInfo, getImageUrl, getUserInfoFromToken } from "../../common/common";
+import { LazyImage } from "..";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -75,7 +76,11 @@ function AuthLayout(props) {
                                             className="mr-2"
                                         />
                                     </Link>
-                                    <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Tìm kiếm"
+                                        className="fluid"
+                                    />
                                     <Button variant="outline-info">
                                         <i className="fas fa-search" />
                                     </Button>
@@ -94,17 +99,18 @@ function AuthLayout(props) {
                         <Nav>
                             <Nav.Item as={Link} to="/profile" className="text-white mr-4">
                                 <div className="display--flex">
-                                    <div
+                                    <LazyImage
                                         style={{
                                             width: 40,
                                             height: 40,
                                             borderRadius: 40,
-                                            background: `url(${
-                                                userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
-                                            })`,
                                         }}
-                                        className="bg-img"
-                                    ></div>
+                                        src={
+                                            userInfo.avatar
+                                                ? getImageUrl(userInfo.avatar.fileName)
+                                                : DefaultAvatar
+                                        }
+                                    />
                                     <div style={{ height: 40 }} className="display--table ml-2">
                                         <span className="display--table-cell vertical-align-middle">
                                             {userInfo.lastName} {userInfo.firstName}
@@ -113,13 +119,20 @@ function AuthLayout(props) {
                                 </div>
                             </Nav.Item>
                             <Nav.Item>
-                                <div ref={messageRef} className="clickable" onClick={() => handleToggleMenu("message")}>
+                                <div
+                                    ref={messageRef}
+                                    className="clickable"
+                                    onClick={() => handleToggleMenu("message")}
+                                >
                                     <span className="fas fa-stack fa-lg">
                                         <i className="fas fa-circle fa-stack-2x text-light" />
                                         <i className="fas fa-comments fa-stack-1x text-dark" />
                                     </span>
                                     {messageData.havingUnseen && (
-                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
+                                        <Badge
+                                            style={{ position: "relative", bottom: 10, right: 10 }}
+                                            variant="danger"
+                                        >
                                             {messageData.unseenAmount}
                                         </Badge>
                                     )}
@@ -142,15 +155,25 @@ function AuthLayout(props) {
                                         <i className="fas fa-bell fa-stack-1x text-dark" />
                                     </span>
                                     {notificationData.havingUnseen && (
-                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
+                                        <Badge
+                                            style={{ position: "relative", bottom: 10, right: 10 }}
+                                            variant="danger"
+                                        >
                                             {notificationData.unseenAmount}
                                         </Badge>
                                     )}
                                 </div>
-                                <NotificationOverlay show={activeMenu === "notification"} target={notiRef.current} />
+                                <NotificationOverlay
+                                    show={activeMenu === "notification"}
+                                    target={notiRef.current}
+                                />
                             </Nav.Item>
                             <Nav.Item>
-                                <div ref={settingRef} className="clickable" onClick={() => handleToggleMenu("setting")}>
+                                <div
+                                    ref={settingRef}
+                                    className="clickable"
+                                    onClick={() => handleToggleMenu("setting")}
+                                >
                                     <span className="fas fa-stack fa-lg">
                                         <i className="fas fa-circle fa-stack-2x text-light" />
                                         <i className="fas fa-caret-down fa-stack-1x text-dark" />

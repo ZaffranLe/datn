@@ -1,4 +1,4 @@
-import { Row, Col, OverlayTrigger, Tooltip, Button, FormGroup, FormControl } from "react-bootstrap";
+import { Row, Col, OverlayTrigger, Tooltip, Button, FormControl } from "react-bootstrap";
 import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
@@ -16,6 +16,7 @@ import {
 import { uploadImages } from "../../../../utils/api/common";
 import constants from "../../../../common/constants";
 import Comment from "./comment";
+import { LazyImage } from "../../../../components";
 
 function Post({ post, user }) {
     const [_post, setPost] = useState(null);
@@ -92,20 +93,19 @@ function Post({ post, user }) {
                                     <Col md={12}>
                                         <div className="display--flex">
                                             <span>
-                                                <div
+                                                <LazyImage
                                                     style={{
                                                         width: 50,
                                                         height: 50,
                                                         borderRadius: 50,
                                                         margin: "auto",
-                                                        background: `url(${
-                                                            user.avatar
-                                                                ? getImageUrl(user.avatar.fileName)
-                                                                : DefaultAvatar
-                                                        })`,
                                                     }}
-                                                    className="bg-img"
-                                                ></div>
+                                                    src={
+                                                        user.avatar
+                                                            ? getImageUrl(user.avatar.fileName)
+                                                            : null
+                                                    }
+                                                />
                                             </span>
                                             <span className="w-100 ml-3">
                                                 <div className="display--table h-100">
@@ -245,15 +245,13 @@ function Post({ post, user }) {
                                 {image && (
                                     <Row>
                                         <Col md={12}>
-                                            <div
-                                                className="bg-img br-10 mt-2"
+                                            <LazyImage
+                                                className="br-10 mt-2"
                                                 style={{
                                                     width: 300,
                                                     height: 225,
-                                                    background: `url(${getImageUrl(
-                                                        image.fileName
-                                                    )})`,
                                                 }}
+                                                src={getImageUrl(image.fileName)}
                                             />
                                         </Col>
                                     </Row>

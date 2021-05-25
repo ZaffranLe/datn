@@ -6,6 +6,7 @@ import { history } from "../../pages/history";
 import { getImageUrl, getUserInfoFromToken } from "../../common/common";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import { Link } from "react-router-dom";
+import { LazyImage } from "..";
 
 function SettingOverlay({ show, target, marginTop, onClose }) {
     const handleLogout = async () => {
@@ -43,7 +44,10 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                             <h2 className="mb-3">Tuỳ chỉnh</h2>
                         </Col>
                         <Col md={6} className="text-right">
-                            <i onClick={() => onClose("setting")} className="fas fa-times-circle fa-2x clickable" />
+                            <i
+                                onClick={() => onClose("setting")}
+                                className="fas fa-times-circle fa-2x clickable"
+                            />
                         </Col>
                     </Row>
                     <hr className="bg-light" />
@@ -51,17 +55,18 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                         <Col md={12}>
                             <Row as={Link} to="/profile" className="text-white">
                                 <Col md={2}>
-                                    <div
-                                        className="bg-img"
+                                    <LazyImage
                                         style={{
                                             width: 60,
                                             height: 60,
                                             borderRadius: 60,
-                                            background: `url(${
-                                                userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar
-                                            })`,
                                         }}
-                                    ></div>
+                                        src={
+                                            userInfo.avatar
+                                                ? getImageUrl(userInfo.avatar.fileName)
+                                                : DefaultAvatar
+                                        }
+                                    />
                                 </Col>
                                 <Col md={10} className="align-self-center">
                                     <Row>
@@ -78,7 +83,11 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                             </Row>
                         </Col>
                     </Row>
-                    <Row className="mb-3 pb-3 pt-3 notification-item" style={{ fontSize: 20 }} onClick={handleLogout}>
+                    <Row
+                        className="mb-3 pb-3 pt-3 notification-item"
+                        style={{ fontSize: 20 }}
+                        onClick={handleLogout}
+                    >
                         <Col md={2} className="text-center">
                             <span className="fas fa-stack fa-lg">
                                 <i className="fas fa-circle fa-stack-2x text-black-50" />

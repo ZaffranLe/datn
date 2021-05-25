@@ -3,6 +3,7 @@ import { Image, FormFile, Form } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import { getImageUrl, getUserInfoFromToken } from "../../common/common";
 import constants from "../../common/constants";
+import { LazyImage } from "../../components";
 import { uploadImages } from "../../utils/api/common";
 
 function UploadAvatar({ handleChangeAvatar }) {
@@ -47,16 +48,19 @@ function UploadAvatar({ handleChangeAvatar }) {
 
     return (
         <>
-            <FormFile.Label htmlFor="avatar-file" className="display--table-cell vertical-align-middle clickable">
-                <div
+            <FormFile.Label
+                htmlFor="avatar-file"
+                className="display--table-cell vertical-align-middle clickable"
+            >
+                <LazyImage
                     id="avatar"
                     style={{
                         width: 200,
                         height: 200,
                         borderRadius: 200,
-                        background: `url(${avatarUrl ? getImageUrl(avatarUrl) : DefaultAvatar})`,
                     }}
-                    className="avatar bg-img"
+                    className="avatar"
+                    src={avatarUrl ? getImageUrl(avatarUrl) : DefaultAvatar}
                 />
                 <span>Ảnh đại diện</span>
                 {errorMsg && <Form.Text className="text-error text-bold">{errorMsg}</Form.Text>}

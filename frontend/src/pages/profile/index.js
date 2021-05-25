@@ -3,7 +3,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import DefaultBanner from "../../assets/img/default-banner.jpg";
-import { ProfileNonExist } from "../../components";
+import { LazyImage, ProfileNonExist } from "../../components";
 import { history } from "../history";
 import "./index.scss";
 import * as profileActions from "./slice";
@@ -30,7 +30,7 @@ function Profile(props) {
             dispatch(profileActions.getUserBySlug(_slug));
         }
         setActivePane("post");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.match.params.slug, dispatch]);
 
     useEffect(() => {
@@ -80,27 +80,29 @@ function Profile(props) {
                         <Col md={9} className="bg-facebook--dark br-10">
                             <Row>
                                 <Col md={12} className="text-center">
-                                    <div
-                                        className="profile__banner bg-img"
-                                        onClick={() => handleViewImage(user.banner ? user.banner.id : null)}
-                                        style={{
-                                            background: `url(${
-                                                user.banner ? getImageUrl(user.banner.fileName) : DefaultBanner
-                                            })`,
-                                        }}
-                                    ></div>
-                                    <div
-                                        className="avatar profile__avatar bg-img"
-                                        style={{
-                                            background: `url(${
-                                                user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar
-                                            })`,
-                                            width: 200,
-                                            height: 200,
-                                            borderRadius: 500,
-                                        }}
-                                        onClick={() => handleViewImage(user.avatar ? user.avatar.id : null)}
-                                    ></div>
+                                    <LazyImage
+                                        onClick={() =>
+                                            handleViewImage(user.banner ? user.banner.id : null)
+                                        }
+                                        className="profile__banner"
+                                        src={
+                                            user.banner
+                                                ? getImageUrl(user.banner.fileName)
+                                                : DefaultBanner
+                                        }
+                                    />
+                                    <LazyImage
+                                        onClick={() =>
+                                            handleViewImage(user.avatar ? user.avatar.id : null)
+                                        }
+                                        className="avatar profile__avatar"
+                                        src={
+                                            user.avatar
+                                                ? getImageUrl(user.avatar.fileName)
+                                                : DefaultAvatar
+                                        }
+                                        style={{ width: 200, height: 200, borderRadius: 500 }}
+                                    />
                                 </Col>
                             </Row>
                             <Row>
@@ -141,7 +143,8 @@ function Profile(props) {
                                             {userInfo.id === user.id ? (
                                                 <Link to="/update-info">
                                                     <Button variant="dark">
-                                                        <i className="fas fa-pencil-alt" /> Sửa thông tin cá nhân
+                                                        <i className="fas fa-pencil-alt" /> Sửa
+                                                        thông tin cá nhân
                                                     </Button>
                                                 </Link>
                                             ) : (
@@ -157,10 +160,14 @@ function Profile(props) {
                                                             <>
                                                                 <i
                                                                     className={`fas ${
-                                                                        isFollowing ? "fa-user-minus" : "fa-user-plus"
+                                                                        isFollowing
+                                                                            ? "fa-user-minus"
+                                                                            : "fa-user-plus"
                                                                     }`}
                                                                 />{" "}
-                                                                {isFollowing ? "Huỷ theo dõi" : "Theo dõi"}
+                                                                {isFollowing
+                                                                    ? "Huỷ theo dõi"
+                                                                    : "Theo dõi"}
                                                             </>
                                                         )}
                                                     </Button>

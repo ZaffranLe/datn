@@ -30,7 +30,7 @@ async function getByUserId(id, idCurrentUser) {
         userFirstName: "t4.firstName",
         userLastName: "t4.lastName",
         userSlug: "t4.slug",
-        createdAt: "t1.createdAt"
+        createdAt: "t1.createdAt",
     };
     posts.forEach((post) => {
         imgPromises.push(

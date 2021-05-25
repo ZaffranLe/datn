@@ -6,6 +6,7 @@ import {
     getUserInfoFromToken,
     calcTimeDifferenceFromNow,
 } from "../../../../common/common";
+import { LazyImage } from "../../../../components";
 import * as imageModalActions from "../../../../components/album/image-modal/slice";
 
 function Comment({ comment }) {
@@ -19,17 +20,17 @@ function Comment({ comment }) {
         <>
             <Row className="mt-2 mb-2 p-2">
                 <Col md={1}>
-                    <div
-                        className="bg-img clickable"
+                    <LazyImage
+                        className="clickable"
                         as={Link}
                         to={`/profile/${comment.userSlug}`}
                         style={{
                             width: 40,
                             height: 40,
                             borderRadius: 40,
-                            background: `url(${getImageUrl(comment.userAvatar)})`,
                         }}
-                    ></div>
+                        src={getImageUrl(comment.userAvatar)}
+                    />
                 </Col>
                 <Col md={11} className="bg-facebook--darker br-10 pt-2 pb-2">
                     <Row>
@@ -53,21 +54,23 @@ function Comment({ comment }) {
                     {comment.imgFileName && (
                         <Row className="mt-2">
                             <Col md={12}>
-                                <div
+                                <LazyImage
+                                    src={getImageUrl(comment.imgFileName)}
                                     onClick={() => handleViewImage(comment.imgId)}
-                                    className="bg-img clickable br-10"
+                                    className="clickable br-10"
                                     style={{
                                         width: 300,
                                         height: 225,
-                                        background: `url(${getImageUrl(comment.imgFileName)})`,
                                     }}
-                                ></div>
+                                />
                             </Col>
                         </Row>
                     )}
                     <Row className="mb-2 mt-2">
                         <Col md={12}>
-                            <small className="text-white-50">{calcTimeDifferenceFromNow(comment.createdAt)}</small>
+                            <small className="text-white-50">
+                                {calcTimeDifferenceFromNow(comment.createdAt)}
+                            </small>
                         </Col>
                     </Row>
                 </Col>
