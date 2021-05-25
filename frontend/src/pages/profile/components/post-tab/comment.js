@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
     getImageUrl,
-    getUserInfoFromToken,
     calcTimeDifferenceFromNow,
 } from "../../../../common/common";
 import { LazyImage } from "../../../../components";

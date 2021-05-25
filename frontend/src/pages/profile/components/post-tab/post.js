@@ -75,6 +75,23 @@ function Post({ post, user }) {
             await api.submitCommentToPost(_post.id, comment.trim(), image);
             setComment("");
             setImage(null);
+            const userInfo = getUserInfoFromToken();
+            setPost({
+                ..._post,
+                comments: [
+                    ..._post.comments,
+                    {
+                        content: comment.trim(),
+                        imgFileName: image ? image.fileName : null,
+                        imgId: image ? image.id : null,
+                        createdAt: new Date(),
+                        userSlug: userInfo.slug,
+                        userFirstName: userInfo.firstName,
+                        userLastName: userInfo.lastName,
+                        userAvatar: userInfo.avatar ? userInfo.avatar.fileName : null,
+                    },
+                ],
+            });
         } catch (e) {
             toast.error("Hệ thống gặp sự cố! Vui lòng thử lại sau.");
         } finally {
