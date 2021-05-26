@@ -111,7 +111,7 @@ async function create(info, transaction = null) {
             }));
             await _knex("post_image").insert(imageList);
             const imageIdList = images.map((img) => img.id);
-            await _knex("image").update({ idUser: data.idUser }).whereIn("id", imageIdList);
+            await _knex("image").update({ idUser: data.idUser, isUsing: 1 }).whereIn("id", imageIdList);
         }
         if (!transaction) {
             await _knex.commit();
@@ -164,6 +164,7 @@ async function submitCommentToPost(idPost, idUser, comment, transaction = null) 
                 idComment,
                 idImage: image.id,
             });
+            await _knex("image").update({ idUser: idUser }).where("id", image.id);
         }
         if (!transaction) {
             await _knex.commit();
