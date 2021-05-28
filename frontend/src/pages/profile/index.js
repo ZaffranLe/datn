@@ -101,7 +101,7 @@ function Profile(props) {
                                                 ? getImageUrl(user.avatar.fileName)
                                                 : DefaultAvatar
                                         }
-                                        style={{ width: 200, height: 200, borderRadius: 500 }}
+                                        style={{ width: 200, height: 200, borderRadius: 200 }}
                                     />
                                 </Col>
                             </Row>

@@ -1,7 +1,10 @@
 import React from "react";
-import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as exploreActions from "./slice";
+import UserCard from "./user-card";
+import UserGrid from "./user-grid";
+import "./index.scss";
 
 function Explore(props) {
     const { layout } = useSelector((state) => state.explore);
@@ -15,7 +18,11 @@ function Explore(props) {
         <>
             <Row className="mt-2">
                 <Col md={2}>
-                    <Button variant="dark" disabled={layout === "grid"} onClick={() => handleChangeLayout("grid")}>
+                    <Button
+                        variant="dark"
+                        disabled={layout === "grid"}
+                        onClick={() => handleChangeLayout("grid")}
+                    >
                         <i className="fas fa-th" />
                     </Button>
                     <Button
@@ -29,7 +36,10 @@ function Explore(props) {
                 </Col>
             </Row>
             <Row className="justify-content-center mt-5">
-                <Col md={11}></Col>
+                <Col md={11}>
+                    {layout === "grid" && <UserGrid />}
+                    {layout === "swipe" && <UserCard />}
+                </Col>
             </Row>
         </>
     );

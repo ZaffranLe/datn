@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Image, Row, Col, Button, Form, InputGroup, FormFile, Tooltip, Overlay } from "react-bootstrap";
+import { Container, Row, Col, Button, Form, InputGroup, Tooltip, Overlay } from "react-bootstrap";
 import { HobbyPill } from "../../components";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
@@ -310,7 +310,9 @@ function UpdateInfo(props) {
                                             <Row className="full-height pb-15">
                                                 <Col md={12} className="full-height">
                                                     <div className="full-height display--table text-center">
-                                                        <UploadAvatar handleChangeAvatar={handleChangeAvatar} />
+                                                        <UploadAvatar
+                                                            handleChangeAvatar={handleChangeAvatar}
+                                                        />
                                                     </div>
                                                 </Col>
                                             </Row>
@@ -323,7 +325,9 @@ function UpdateInfo(props) {
                                                             <Form.Label>Họ</Form.Label>
                                                             <Form.Control
                                                                 type="text"
-                                                                onChange={handleChangeInfo("lastName")}
+                                                                onChange={handleChangeInfo(
+                                                                    "lastName"
+                                                                )}
                                                                 value={profileInfo.lastName}
                                                             />
                                                         </Form.Group>
@@ -331,14 +335,18 @@ function UpdateInfo(props) {
                                                             <Form.Label>Tên</Form.Label>
                                                             <Form.Control
                                                                 type="text"
-                                                                onChange={handleChangeInfo("firstName")}
+                                                                onChange={handleChangeInfo(
+                                                                    "firstName"
+                                                                )}
                                                                 value={profileInfo.firstName}
                                                             />
                                                         </Form.Group>
                                                     </Form.Row>
                                                     <Form.Row>
                                                         <Form.Group as={Col} controlId="slug">
-                                                            <Form.Label>Đường dẫn tới trang cá nhân</Form.Label>
+                                                            <Form.Label>
+                                                                Đường dẫn tới trang cá nhân
+                                                            </Form.Label>
                                                             <InputGroup>
                                                                 <Form.Control
                                                                     ref={slugRef}
@@ -348,7 +356,8 @@ function UpdateInfo(props) {
                                                                     onBlur={handleCheckSlug}
                                                                     onFocus={handleFocusSlug}
                                                                     className={
-                                                                        !isSlugValid && !isFocusingSlug
+                                                                        !isSlugValid &&
+                                                                        !isFocusingSlug
                                                                             ? `border-danger`
                                                                             : ""
                                                                     }
@@ -360,7 +369,10 @@ function UpdateInfo(props) {
                                                                 >
                                                                     <Tooltip id="password-tooltip">
                                                                         <div className="text-left">
-                                                                            <span>- Chỉ nhập ký tự chữ và số</span>
+                                                                            <span>
+                                                                                - Chỉ nhập ký tự chữ
+                                                                                và số
+                                                                            </span>
                                                                         </div>
                                                                     </Tooltip>
                                                                 </Overlay>
@@ -422,7 +434,10 @@ function UpdateInfo(props) {
                                                         value={profileInfo.idGender}
                                                     >
                                                         {genderOptions.map((_option) => (
-                                                            <option key={_option.key} value={_option.value}>
+                                                            <option
+                                                                key={_option.key}
+                                                                value={_option.value}
+                                                            >
                                                                 {_option.label}
                                                             </option>
                                                         ))}
@@ -436,7 +451,10 @@ function UpdateInfo(props) {
                                                         value={profileInfo.idPreference}
                                                     >
                                                         {preferenceOptions.map((_option) => (
-                                                            <option key={_option.key} value={_option.value}>
+                                                            <option
+                                                                key={_option.key}
+                                                                value={_option.value}
+                                                            >
                                                                 {_option.label}
                                                             </option>
                                                         ))}
@@ -546,9 +564,16 @@ function UpdateInfo(props) {
                                                 <Button variant="link">Bỏ qua</Button>
                                             </Link>
                                         </Col>
-                                        <Col md={9} className="text-right" onClick={handleUpdateInfo}>
+                                        <Col
+                                            md={9}
+                                            className="text-right"
+                                            onClick={handleUpdateInfo}
+                                        >
                                             <Button variant="info" disabled={isLoading}>
-                                                {isLoading && <i className="fas fa-spinner fa-spin" />} Hoàn tất
+                                                {isLoading && (
+                                                    <i className="fas fa-spinner fa-spin" />
+                                                )}{" "}
+                                                Hoàn tất
                                             </Button>
                                         </Col>
                                     </Row>
