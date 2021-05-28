@@ -5,9 +5,11 @@ const router = express.Router();
 const path = require("path");
 const multer = require("multer");
 const { v4 } = require("uuid");
+const commonCfg = require("../../config/common.cfg");
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "public/images");
+        cb(null, commonCfg.filePath);
     },
     filename: function (req, file, cb) {
         cb(null, `${v4()}${path.extname(file.originalname)}`);

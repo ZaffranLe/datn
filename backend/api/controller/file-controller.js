@@ -1,6 +1,7 @@
 const { UserError } = require("../../common/utils/custom-errors");
 const mysqlFile = require("../../database/mysql/facade/file");
 const fs = require("fs");
+const commonCfg = require("../../config/common.cfg");
 const FILE_NAME = module.filename.split("\\").slice(-1)[0];
 
 async function uploadImages(req, res) {
@@ -19,7 +20,7 @@ async function uploadImages(req, res) {
     } catch (e) {
         const promises = [];
         for (let image of images) {
-            promises.push(fs.promises.unlink(`public/images/${image.fileName}`));
+            promises.push(fs.promises.unlink(`${commonCfg.filePath}/${image.fileName}`));
         }
         await Promise.all(promises);
         res.sendError(e, FILE_NAME, uploadImages.name);
