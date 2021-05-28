@@ -164,7 +164,7 @@ async function submitCommentToPost(idPost, idUser, comment, transaction = null) 
                 idComment,
                 idImage: image.id,
             });
-            await _knex("image").update({ idUser: idUser }).where("id", image.id);
+            await _knex("image").update({ idUser: idUser, isUsing: 1 }).where("id", image.id);
         }
         if (!transaction) {
             await _knex.commit();

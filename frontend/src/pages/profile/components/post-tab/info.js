@@ -6,7 +6,10 @@ function Info({ user, handleShowUserList }) {
     return (
         <>
             {user && (
-                <Row className="justify-content-center pr-2">
+                <Row
+                    style={{ position: "sticky", top: 100 }}
+                    className="justify-content-center pr-2"
+                >
                     <Col md={12} className="bg-facebook--dark br-10">
                         <Row className="p-3 profile__info">
                             <Col md={12}>
@@ -26,7 +29,8 @@ function Info({ user, handleShowUserList }) {
                                         Xu hướng:
                                     </Col>
                                     <Col md={9}>
-                                        {user.preference.name} <i className={`${user.preference.icon}`} />
+                                        {user.preference.name}{" "}
+                                        <i className={`${user.preference.icon}`} />
                                     </Col>
                                 </Row>
                                 <Row>
@@ -39,7 +43,9 @@ function Info({ user, handleShowUserList }) {
                                             <Col md={1} className="text-center">
                                                 <i className="fas fa-birthday-cake" />
                                             </Col>
-                                            <Col md={5}>{moment(user.dob).format("DD-MM-YYYY")}</Col>
+                                            <Col md={5}>
+                                                {moment(user.dob).format("DD-MM-YYYY")}
+                                            </Col>
                                         </>
                                     )}
                                     {user.provinceName && (
@@ -53,7 +59,10 @@ function Info({ user, handleShowUserList }) {
                                 </Row>
                                 <Row>
                                     <Col md={12}>
-                                        <span className="clickable" onClick={() => handleShowUserList(user.following)}>
+                                        <span
+                                            className="clickable"
+                                            onClick={() => handleShowUserList(user.following)}
+                                        >
                                             Đang theo dõi{" "}
                                             <b>
                                                 <u>{user.following.length}</u>
@@ -64,7 +73,10 @@ function Info({ user, handleShowUserList }) {
                                 </Row>
                                 <Row>
                                     <Col md={12}>
-                                        <span className="clickable" onClick={() => handleShowUserList(user.followed)}>
+                                        <span
+                                            className="clickable"
+                                            onClick={() => handleShowUserList(user.followed)}
+                                        >
                                             Có{" "}
                                             <b>
                                                 <u>{user.followed.length}</u>

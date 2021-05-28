@@ -4,7 +4,7 @@ import constants from "../../common/constants";
 async function getAll() {
     try {
         const resp = await APICall({
-            url: "/api/preference",
+            url: "/api/messaage",
             method: constants.HTTP_METHOD.GET,
         });
         return resp.data.data;

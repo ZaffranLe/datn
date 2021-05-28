@@ -9,6 +9,7 @@ const preferenceRouter = require("./preference");
 const userRouter = require("./user");
 const provinceRouter = require("./province");
 const postRouter = require("./post");
+const messageRouter = require("./message");
 // etc
 const verifyToken = require("../api/middleware/verify-token");
 
@@ -26,5 +27,6 @@ router.use("/preference", preferenceRouter);
 router.use("/user", userRouter);
 router.use("/province", provinceRouter);
 router.use("/post", postRouter);
+router.use("/message", messageRouter);
 
 module.exports = router;

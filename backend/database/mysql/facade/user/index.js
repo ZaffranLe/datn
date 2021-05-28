@@ -118,7 +118,9 @@ async function update(id, info, transaction = null) {
         let _currentHobbies = await knex("user_hobby").where("idUser", id);
         _currentHobbies = _currentHobbies.map((_hobby) => _hobby.idHobby);
 
-        let _newHobbies = _hobbies.filter((_hobby) => !_currentHobbies.find((_id) => _id === _hobby));
+        let _newHobbies = _hobbies.filter(
+            (_hobby) => !_currentHobbies.find((_id) => _id === _hobby)
+        );
         _newHobbies = _newHobbies.map((_idHobby) => ({
             idUser: id,
             idHobby: _idHobby,
@@ -127,16 +129,18 @@ async function update(id, info, transaction = null) {
             await _knex("user_hobby").insert(_newHobbies);
         }
 
-        const _deleteHobbies = _currentHobbies.filter((_id) => !_hobbies.find((_hobby) => _id === _hobby));
+        const _deleteHobbies = _currentHobbies.filter(
+            (_id) => !_hobbies.find((_hobby) => _id === _hobby)
+        );
         if (_deleteHobbies.length > 0) {
             await _knex("user_hobby").whereIn("idHobby", _deleteHobbies).del();
         }
 
         if (data.avatar) {
-            await _knex("image").update({ idUser: id }).where("id", data.avatar);
+            await _knex("image").update({ idUser: id, isUsing: 1 }).where("id", data.avatar);
         }
         if (data.banner) {
-            await _knex("image").update({ idUser: id }).where("id", data.banner);
+            await _knex("image").update({ idUser: id, isUsing: 1 }).where("id", data.banner);
         }
 
         if (!transaction) {
