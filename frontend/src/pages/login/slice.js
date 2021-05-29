@@ -29,7 +29,7 @@ function login(email, password) {
             const { token, refreshToken } = await api.login(email, password);
             localStorage.setItem("token", token);
             localStorage.setItem("refreshToken", refreshToken);
-            history.push("/");
+            history.push("/profile");
         } catch (e) {
             dispatch(setErrorMsg(e));
             clearTimeout(removeErrorMsgTimeoutId);

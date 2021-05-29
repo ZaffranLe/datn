@@ -8,5 +8,7 @@ router.post("/check-slug", verifyToken, userController.checkSlugExist);
 router.get("/url/:slug", verifyToken, userController.getUserBySlug);
 router.get("/follow/:id", verifyToken, userController.checkFollowUser);
 router.post("/follow", verifyToken, userController.changeFollowUser);
+router.post("/skip", verifyToken, userController.changeSkipUser);
+router.get("/suggestion", verifyToken, userController.getUserSuggestions);
 
 module.exports = router;

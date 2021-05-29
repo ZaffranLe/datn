@@ -1,4 +1,5 @@
 const knex = require("../knex-client");
+const constants = require("../../../../common/constants");
 const _ = require("lodash");
 const { v4 } = require("uuid");
 const { mutableTrimObj } = require("../../../../common/utils/common");
@@ -192,6 +193,102 @@ async function changeFollowUser(from, to, transaction = null) {
     return !isFollowing;
 }
 
+async function changeSkipUser(from, skipped, transaction = null) {
+    const _knex = transaction || knex;
+    const isSkipped = await _knex("user_skip")
+        .where({
+            idUserFrom: from,
+            idUserSkipped: skipped,
+        })
+        .first();
+    if (isSkipped) {
+        await _knex("user_skip")
+            .where({
+                idUserFrom: from,
+                idUserSkipped: skipped,
+            })
+            .del();
+    } else {
+        await _knex("user_skip").insert({ idUserFrom: from, idUserSkipped: skipped });
+    }
+    return !isSkipped;
+}
+
+async function getUserSuggestions(idCurrentUser) {
+    const currentUser = await knex("user").where("id", idCurrentUser).first();
+    if (!currentUser) {
+        throw new UserError("Không tồn tại người dùng.", "USER_NOT_EXIST");
+    }
+    delete currentUser.password;
+    const hobbies = await knex("user_hobby").where("idUser", idCurrentUser);
+    currentUser.hobbies = hobbies;
+
+    let userSuggestions = knex("user AS t1")
+        .whereNotExists((builder) =>
+            builder
+                .select("*")
+                .from("user_skip")
+                .where({ idUserFrom: idCurrentUser, idUserSkipped: "t1.id" })
+        )
+        .andWhereNot("t1.id", idCurrentUser);
+
+    switch (currentUser.idPreference) {
+        case constants.PREFERENCE.STRAIGHT:
+            userSuggestions = userSuggestions.andWhereIn("idPreference", [
+                constants.PREFERENCE.BISEXUAL,
+                constants.PREFERENCE.STRAIGHT,
+            ]);
+            switch (currentUser.idGender) {
+                case constants.GENDER.FEMALE:
+                case constants.GENDER.TRANS_FEMALE:
+                    userSuggestions = userSuggestions.andWhereIn("idGender", [
+                        constants.GENDER.MALE,
+                        constants.GENDER.TRANS_MALE,
+                    ]);
+                    break;
+                case constants.GENDER.MALE:
+                case constants.GENDER.TRANS_MALE:
+                    userSuggestions = userSuggestions.andWhereIn("idGender", [
+                        constants.GENDER.FEMALE,
+                        constants.GENDER.TRANS_FEMALE,
+                    ]);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case constants.PREFERENCE.GAY:
+            userSuggestions = userSuggestions.andWhereIn("idPreference", [
+                constants.PREFERENCE.BISEXUAL,
+                constants.PREFERENCE.GAY,
+            ]);
+            switch (currentUser.idGender) {
+                case constants.GENDER.FEMALE:
+                case constants.GENDER.TRANS_FEMALE:
+                    userSuggestions = userSuggestions.andWhereIn("idGender", [
+                        constants.GENDER.FEMALE,
+                        constants.GENDER.TRANS_FEMALE,
+                    ]);
+                    break;
+                case constants.GENDER.MALE:
+                case constants.GENDER.TRANS_MALE:
+                    userSuggestions = userSuggestions.andWhereIn("idGender", [
+                        constants.GENDER.MALE,
+                        constants.GENDER.TRANS_MALE,
+                    ]);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+
+    userSuggestions = await userSuggestions;
+    return userSuggestions;
+}
+
 module.exports = {
     getUserByEmail,
     getUserById,
@@ -201,4 +298,6 @@ module.exports = {
     getUserBySlug,
     checkFollowUser,
     changeFollowUser,
+    changeSkipUser,
+    getUserSuggestions,
 };

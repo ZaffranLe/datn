@@ -78,10 +78,39 @@ async function changeFollowUser(req, res) {
     }
 }
 
+async function changeSkipUser(req, res) {
+    try {
+        const from = req.user.id;
+        const to = req.body.id;
+        const isSkipped = await mysqlUser.changeSkipUser(from, to);
+        res.status(200).json({
+            data: isSkipped,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, changeSkipUser.name);
+    }
+}
+
+async function getUserSuggestions(req, res) {
+    try {
+        const { id: idUser } = req.user;
+        const suggestions = await mysqlUser.getUserSuggestions(idUser);
+        res.status(200).json({
+            data: suggestions,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, getUserSuggestions.name);
+    }
+}
+
 module.exports = {
     updateSelf,
     checkSlugExist,
     getUserBySlug,
     checkFollowUser,
     changeFollowUser,
+    changeSkipUser,
+    getUserSuggestions,
 };
