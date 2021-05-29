@@ -10,7 +10,7 @@ function MessageList(props) {
                 style={{ overflowY: "auto" }}
                 className="bg-facebook--dark m-2 p-4 br-10 h-75"
             >
-                
+                <Col md={12}></Col>
             </Row>
         </>
     );

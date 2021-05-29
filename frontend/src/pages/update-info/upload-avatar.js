@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Image, FormFile, Form } from "react-bootstrap";
+import { FormFile, Form } from "react-bootstrap";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import { getImageUrl, getUserInfoFromToken } from "../../common/common";
 import constants from "../../common/constants";

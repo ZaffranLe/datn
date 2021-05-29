@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import { Transition } from "react-transition-group";
 import { duration, defaultStyle, transitionStyles } from "../../common/transition-style";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import * as imageModalActions from "../../components/album/image-modal/slice";
 
 function UserCard(props) {
     return (
@@ -19,11 +21,16 @@ function UserCard(props) {
 
 function UserInfo(props) {
     const [inProp, setInProp] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setInProp(true);
         return () => setInProp(false);
     }, []);
+
+    const handleViewImage = (idImage) => {
+        dispatch(imageModalActions.openModal(idImage));
+    };
 
     const user = getUserInfoFromToken();
 
@@ -33,13 +40,11 @@ function UserInfo(props) {
                 {(state) => (
                     <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
                         <Row>
-                            <Col
-                                className="bg-facebook--darker br-10 pb-4 pt-0 pl-4 pr-4"
-                                md={{ span: 6, offset: 3 }}
-                            >
+                            <Col className="bg-facebook--darker br-10 pb-4 pt-0 pl-4 pr-4" md={{ span: 6, offset: 3 }}>
                                 <Row>
                                     <Col md={12} className="p-2 mb-4">
                                         <LazyImage
+                                            onClick={() => handleViewImage(user.banner ? user.banner.id : null)}
                                             className="w-100"
                                             style={{
                                                 height: 200,
@@ -48,13 +53,10 @@ function UserInfo(props) {
                                                 left: 0,
                                                 zIndex: 0,
                                             }}
-                                            src={
-                                                user.banner
-                                                    ? getImageUrl(user.banner.fileName)
-                                                    : DefaultBanner
-                                            }
+                                            src={user.banner ? getImageUrl(user.banner.fileName) : DefaultBanner}
                                         />
                                         <LazyImage
+                                            onClick={() => handleViewImage(user.avatar ? user.avatar.id : null)}
                                             className="avatar"
                                             style={{
                                                 height: 200,
@@ -65,11 +67,7 @@ function UserInfo(props) {
                                                 zIndex: 1,
                                                 overflow: "hidden",
                                             }}
-                                            src={
-                                                user.avatar
-                                                    ? getImageUrl(user.avatar.fileName)
-                                                    : DefaultAvatar
-                                            }
+                                            src={user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar}
                                         />
                                     </Col>
                                 </Row>
@@ -82,14 +80,12 @@ function UserInfo(props) {
                                         <p>
                                             {user.gender && (
                                                 <>
-                                                    <i className={`${user.gender.icon}`} />{" "}
-                                                    {user.gender.name} -{" "}
+                                                    <i className={`${user.gender.icon}`} /> {user.gender.name} -{" "}
                                                 </>
                                             )}
                                             {user.preference && (
                                                 <>
-                                                    <i className={`${user.preference.icon}`} />{" "}
-                                                    {user.preference.name}
+                                                    <i className={`${user.preference.icon}`} /> {user.preference.name}
                                                 </>
                                             )}
                                         </p>
@@ -130,10 +126,7 @@ function UserInfo(props) {
                                 )}
                                 <Row className="mt-3">
                                     <Col md={3}>
-                                        <OverlayTrigger
-                                            placement="top"
-                                            overlay={<Tooltip>Bỏ qua</Tooltip>}
-                                        >
+                                        <OverlayTrigger placement="top" overlay={<Tooltip>Bỏ qua</Tooltip>}>
                                             <Button variant="danger" className="user-card__btn">
                                                 <i className="fas fa-thumbs-down fa-2x" />
                                             </Button>
@@ -153,10 +146,7 @@ function UserInfo(props) {
                                     </Col>
                                     <Col md={3} className="text-center">
                                         <Link to={`/messages/${user.slug}`}>
-                                            <OverlayTrigger
-                                                placement="top"
-                                                overlay={<Tooltip>Nhắn tin</Tooltip>}
-                                            >
+                                            <OverlayTrigger placement="top" overlay={<Tooltip>Nhắn tin</Tooltip>}>
                                                 <Button variant="info" className="user-card__btn">
                                                     <i className="fas fa-comment-dots fa-2x" />
                                                 </Button>

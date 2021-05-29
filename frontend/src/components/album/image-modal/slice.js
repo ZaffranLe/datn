@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { toast } from "react-toastify";
 import * as api from "./api";
 
 export const imageModalSlice = createSlice({

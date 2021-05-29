@@ -1,5 +1,5 @@
 import React from "react";
-import { Overlay, Container, Row, Col, Image } from "react-bootstrap";
+import { Overlay, Container, Row, Col } from "react-bootstrap";
 import APICall from "../../utils/api/api-call";
 import constants from "../../common/constants";
 import { history } from "../../pages/history";

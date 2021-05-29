@@ -1,5 +1,4 @@
 import { Row, Col, OverlayTrigger, Tooltip, Button, FormControl } from "react-bootstrap";
-import DefaultAvatar from "../../../../assets/img/default-avatar.png";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import "./index.scss";

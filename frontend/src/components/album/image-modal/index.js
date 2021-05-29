@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Button, Col, Image, Modal, Row } from "react-bootstrap";
+import { Col, Image, Modal, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { CustomLoader } from "../..";
 import { getImageUrl } from "../../../common/common";
@@ -29,15 +29,18 @@ function ImageModal(props) {
         >
             <Modal.Body className="modal-80h bg-facebook--dark">
                 {isLoading ? (
-                    <CustomLoader />
+                    <Row className="h-100">
+                        <Col md={12} className="text-center display--table h-100">
+                            <div className="vertical-align-middle display--table-cell">
+                                <CustomLoader />
+                            </div>
+                        </Col>
+                    </Row>
                 ) : image ? (
                     <Row style={{ height: "inherit" }}>
                         <Col md={12} className="text-center p-5 border-right" style={{ maxHeight: "90%" }}>
                             <Image src={getImageUrl(image.fileName)} fluid style={{ maxHeight: "90%" }} />
                         </Col>
-                        {/* <Col md={3} className="pl-5 pt-3" style={{ maxHeight: "90%", overflowY: "auto" }}>
-                            <Image src={getImageUrl(image.fileName)} width={50} height={50} roundedCircle /> Sơn Tùng
-                        </Col> */}
                     </Row>
                 ) : (
                     <Row className="h-100">
