@@ -5,21 +5,21 @@ import * as profileApi from "../profile/api";
 export const exploreSlice = createSlice({
     name: "explore",
     initialState: {
-        layout: "swipe",
-        currentUser: null,
+        layout: "grid",
+        users: [],
     },
     reducers: {
         setLayout: (state, action) => {
             state.layout = action.payload;
         },
-        setCurrentUser: (state, action) => {
-            state.currentUser = action.payload;
-        }
+        setUsers: (state, action) => {
+            state.users = action.payload;
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setLayout, setCurrentUser } = exploreSlice.actions;
+export const { setLayout, setUsers } = exploreSlice.actions;
 
 function changeSkipUser(id) {
     return async (dispatch) => {
@@ -31,6 +31,17 @@ function changeSkipUser(id) {
     };
 }
 
-export { changeSkipUser }
+function getUserSuggestions() {
+    return async (dispatch) => {
+        try {
+            const users = await api.getUserSuggestions();
+            dispatch(setUsers(users));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        }
+    };
+}
+
+export { changeSkipUser, getUserSuggestions };
 
 export default exploreSlice.reducer;

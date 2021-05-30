@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Col, OverlayTrigger, Row, Tooltip } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import * as exploreActions from "./slice";
@@ -9,6 +9,10 @@ import "./index.scss";
 function Explore(props) {
     const { layout } = useSelector((state) => state.explore);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(exploreActions.getUserSuggestions());
+    }, [])
 
     const handleChangeLayout = (name) => {
         dispatch(exploreActions.setLayout(name));

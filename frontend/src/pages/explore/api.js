@@ -16,4 +16,16 @@ async function changeSkipUser(id) {
     }
 }
 
-export { changeSkipUser };
+async function getUserSuggestions() {
+    try {
+        const resp = await APICall({
+            url: "/api/user/suggestion",
+            method: constants.HTTP_METHOD.GET,
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
+export { changeSkipUser, getUserSuggestions };
