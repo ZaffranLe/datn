@@ -14,7 +14,22 @@ import * as exploreActions from "./slice";
 
 function UserCard(props) {
     const { users } = useSelector((state) => state.explore);
-    return <>{users.length > 0 ? <UserInfo user={users[0]} key={users[0].id} /> : <p>None</p>}</>;
+    return (
+        <>
+            {users.length > 0 ? (
+                <UserInfo user={users[0]} key={users[0].id} />
+            ) : (
+                <Row>
+                    <Col md={12}>
+                        <span className="h2 bg-facebook--dark">
+                            Hiện chưa có đối tượng phù hợp để bắt cặp với bạn, vui lòng quay lại sau
+                            nha :D
+                        </span>
+                    </Col>
+                </Row>
+            )}
+        </>
+    );
 }
 
 function UserInfo({ user }) {
@@ -33,7 +48,7 @@ function UserInfo({ user }) {
 
     const handleSkipUser = () => {
         dispatch(exploreActions.changeSkipUser(user.id));
-    }
+    };
 
     return (
         <>

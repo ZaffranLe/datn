@@ -30,8 +30,10 @@ export const { setLoading, setImage, setOpen, setIdImage } = imageModalSlice.act
 
 function openModal(id) {
     return (dispatch) => {
-        dispatch(setIdImage(id));
-        dispatch(setOpen(true));
+        if (id) {
+            dispatch(setIdImage(id));
+            dispatch(setOpen(true));
+        }
     };
 }
 

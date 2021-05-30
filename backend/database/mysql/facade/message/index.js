@@ -36,6 +36,20 @@ async function getLatestMessages(idUser) {
     });
 }
 
+async function getMessageByUserId(idUserFrom, idUserTo) {
+    const messages = await knex("message")
+        .where({ idUserFrom: idUserFrom, idUserTo: idUserTo })
+        .orWhere({
+            idUserTo: idUserFrom,
+            idUserFrom: idUserTo,
+        })
+        .sortBy("createdAt", "desc")
+        .limit(10);
+
+    return messages;
+}
+
 module.exports = {
     getLatestMessages,
+    getMessageByUserId,
 };
