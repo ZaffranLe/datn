@@ -25,8 +25,7 @@ function UserInfo({ user }) {
 
     useEffect(() => {
         setInProp(true);
-        return () => setInProp(false);
-    }, []);
+    }, [user]);
 
     const handleViewImage = (idImage) => {
         dispatch(imageModalActions.openModal(idImage));
