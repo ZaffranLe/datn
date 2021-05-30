@@ -7,6 +7,9 @@ export const exploreSlice = createSlice({
     initialState: {
         layout: "grid",
         users: [],
+        currentUser: null,
+        isLoading: false,
+        isSkippedBtnLoading: false,
     },
     reducers: {
         setLayout: (state, action) => {
@@ -15,18 +18,37 @@ export const exploreSlice = createSlice({
         setUsers: (state, action) => {
             state.users = action.payload;
         },
+        setLoading: (state, action) => {
+            state.isLoading = action.payload;
+        },
+        setSkippedBtnLoading: (state, action) => {
+            state.isSkippedBtnLoading = action.payload;
+        },
+        setCurrentUser: (state, action) => {
+            state.currentUser = action.payload;
+        },
+        skipUser: (state, action) => {
+            const newUsers = state.users.filter((user) => user.id != action.payload);
+            state.users = newUsers;
+            state.currentUser = newUsers[0];
+        },
     },
 });
 
 // Action creators are generated for each case reducer function
-export const { setLayout, setUsers } = exploreSlice.actions;
+export const { setLayout, setUsers, setLoading, setSkippedBtnLoading, setCurrentUser, skipUser } =
+    exploreSlice.actions;
 
 function changeSkipUser(id) {
     return async (dispatch) => {
         try {
-            const isSkipped = await api.changeSkipUser(id);
+            dispatch(setSkippedBtnLoading(true));
+            await api.changeSkipUser(id);
+            dispatch(skipUser(id));
         } catch (e) {
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        } finally {
+            dispatch(setSkippedBtnLoading(false));
         }
     };
 }
@@ -34,10 +56,16 @@ function changeSkipUser(id) {
 function getUserSuggestions() {
     return async (dispatch) => {
         try {
+            dispatch(setLoading(true));
             const users = await api.getUserSuggestions();
             dispatch(setUsers(users));
+            if (users.length > 0) {
+                dispatch(setCurrentUser(users[0]));
+            }
         } catch (e) {
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        } finally {
+            dispatch(setLoading(false));
         }
     };
 }

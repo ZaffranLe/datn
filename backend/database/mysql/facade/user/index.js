@@ -233,70 +233,70 @@ async function getUserSuggestions(idCurrentUser) {
         )
         .andWhereNot("t1.id", idCurrentUser);
 
-    switch (currentUser.idPreference) {
-        case constants.PREFERENCE.STRAIGHT:
-            userSuggestions = userSuggestions.andWhere((builder) =>
-                builder.whereIn("idPreference", [
-                    constants.PREFERENCE.BISEXUAL,
-                    constants.PREFERENCE.STRAIGHT,
-                ])
-            );
-            switch (currentUser.idGender) {
-                case constants.GENDER.FEMALE:
-                case constants.GENDER.TRANS_FEMALE:
-                    userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [
-                            constants.GENDER.MALE,
-                            constants.GENDER.TRANS_MALE,
-                        ])
-                    );
-                    break;
-                case constants.GENDER.MALE:
-                case constants.GENDER.TRANS_MALE:
-                    userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [
-                            constants.GENDER.FEMALE,
-                            constants.GENDER.TRANS_FEMALE,
-                        ])
-                    );
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case constants.PREFERENCE.GAY:
-            userSuggestions = userSuggestions.andWhere((builder) =>
-                builder.whereIn("idPreference", [
-                    constants.PREFERENCE.BISEXUAL,
-                    constants.PREFERENCE.GAY,
-                ])
-            );
-            switch (currentUser.idGender) {
-                case constants.GENDER.FEMALE:
-                case constants.GENDER.TRANS_FEMALE:
-                    userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [
-                            constants.GENDER.FEMALE,
-                            constants.GENDER.TRANS_FEMALE,
-                        ])
-                    );
-                    break;
-                case constants.GENDER.MALE:
-                case constants.GENDER.TRANS_MALE:
-                    userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [
-                            constants.GENDER.MALE,
-                            constants.GENDER.TRANS_MALE,
-                        ])
-                    );
-                    break;
-                default:
-                    break;
-            }
-            break;
-        default:
-            break;
-    }
+    // switch (currentUser.idPreference) {
+    //     case constants.PREFERENCE.STRAIGHT:
+    //         userSuggestions = userSuggestions.andWhere((builder) =>
+    //             builder.whereIn("idPreference", [
+    //                 constants.PREFERENCE.BISEXUAL,
+    //                 constants.PREFERENCE.STRAIGHT,
+    //             ])
+    //         );
+    //         switch (currentUser.idGender) {
+    //             case constants.GENDER.FEMALE:
+    //             case constants.GENDER.TRANS_FEMALE:
+    //                 userSuggestions = userSuggestions.andWhere((builder) =>
+    //                     builder.whereIn("idGender", [
+    //                         constants.GENDER.MALE,
+    //                         constants.GENDER.TRANS_MALE,
+    //                     ])
+    //                 );
+    //                 break;
+    //             case constants.GENDER.MALE:
+    //             case constants.GENDER.TRANS_MALE:
+    //                 userSuggestions = userSuggestions.andWhere((builder) =>
+    //                     builder.whereIn("idGender", [
+    //                         constants.GENDER.FEMALE,
+    //                         constants.GENDER.TRANS_FEMALE,
+    //                     ])
+    //                 );
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //         break;
+    //     case constants.PREFERENCE.GAY:
+    //         userSuggestions = userSuggestions.andWhere((builder) =>
+    //             builder.whereIn("idPreference", [
+    //                 constants.PREFERENCE.BISEXUAL,
+    //                 constants.PREFERENCE.GAY,
+    //             ])
+    //         );
+    //         switch (currentUser.idGender) {
+    //             case constants.GENDER.FEMALE:
+    //             case constants.GENDER.TRANS_FEMALE:
+    //                 userSuggestions = userSuggestions.andWhere((builder) =>
+    //                     builder.whereIn("idGender", [
+    //                         constants.GENDER.FEMALE,
+    //                         constants.GENDER.TRANS_FEMALE,
+    //                     ])
+    //                 );
+    //                 break;
+    //             case constants.GENDER.MALE:
+    //             case constants.GENDER.TRANS_MALE:
+    //                 userSuggestions = userSuggestions.andWhere((builder) =>
+    //                     builder.whereIn("idGender", [
+    //                         constants.GENDER.MALE,
+    //                         constants.GENDER.TRANS_MALE,
+    //                     ])
+    //                 );
+    //                 break;
+    //             default:
+    //                 break;
+    //         }
+    //         break;
+    //     default:
+    //         break;
+    // }
 
     userSuggestions = await userSuggestions;
 
@@ -308,6 +308,8 @@ async function getUserSuggestions(idCurrentUser) {
     };
     const userOwnHobbyPromises = [];
     const userSameHobbyPromises = [];
+    const userAvatarPromises = [];
+    const userBannerPromises = [];
     userSuggestions.forEach((user) => {
         userSameHobbyPromises.push(
             knex("user_hobby")
@@ -320,9 +322,13 @@ async function getUserSuggestions(idCurrentUser) {
                 .column(hobbyFields)
                 .where("t1.idUser", user.id)
         );
+        userAvatarPromises.push(knex("image").where("id", user.avatar).first());
+        userBannerPromises.push(knex("image").where("id", user.banner).first());
     });
     const userSameHobbies = await Promise.all(userSameHobbyPromises);
     const userOwnHobbies = await Promise.all(userOwnHobbyPromises);
+    const userAvatars = await Promise.all(userAvatarPromises);
+    const userBanners = await Promise.all(userBannerPromises);
     for (let i = 0; i < userSuggestions.length; ++i) {
         let score = 0;
         if (userSuggestions[i].idProvince == currentUser.idProvince) {
@@ -331,6 +337,8 @@ async function getUserSuggestions(idCurrentUser) {
         score += userSameHobbies[i].length;
         userSuggestions[i].score = score;
         userSuggestions[i].hobbies = userOwnHobbies[i];
+        userSuggestions[i].avatar = userAvatars[i];
+        userSuggestions[i].banner = userBanners[i];
     }
     return _.sortBy(userSuggestions, ["score"]).reverse();
 }

@@ -2,25 +2,25 @@ import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { LazyImage } from "../../components";
 import DefaultBanner from "../../assets/img/default-banner.jpg";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
-import { getImageUrl, getUserInfoFromToken } from "../../common/common";
+import { getImageUrl } from "../../common/common";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { Transition } from "react-transition-group";
 import { duration, defaultStyle, transitionStyles } from "../../common/transition-style";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as imageModalActions from "../../components/album/image-modal/slice";
+import * as exploreActions from "./slice";
 
 function UserCard(props) {
-    return (
-        <>
-            <UserInfo />
-        </>
-    );
+    const { users } = useSelector((state) => state.explore);
+    return <>{users.length > 0 ? <UserInfo user={users[0]} key={users[0].id} /> : <p>None</p>}</>;
 }
 
-function UserInfo(props) {
+function UserInfo({ user }) {
     const [inProp, setInProp] = useState(false);
+    const { isSkippedBtnLoading } = useSelector((state) => state.explore);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -32,7 +32,9 @@ function UserInfo(props) {
         dispatch(imageModalActions.openModal(idImage));
     };
 
-    const user = getUserInfoFromToken();
+    const handleSkipUser = () => {
+        dispatch(exploreActions.changeSkipUser(user.id));
+    }
 
     return (
         <>
@@ -40,11 +42,16 @@ function UserInfo(props) {
                 {(state) => (
                     <div style={{ ...defaultStyle, ...transitionStyles[state] }}>
                         <Row>
-                            <Col className="bg-facebook--darker br-10 pb-4 pt-0 pl-4 pr-4" md={{ span: 6, offset: 3 }}>
+                            <Col
+                                className="bg-facebook--darker br-10 pb-4 pt-0 pl-4 pr-4"
+                                md={{ span: 6, offset: 3 }}
+                            >
                                 <Row>
                                     <Col md={12} className="p-2 mb-4">
                                         <LazyImage
-                                            onClick={() => handleViewImage(user.banner ? user.banner.id : null)}
+                                            onClick={() =>
+                                                handleViewImage(user.banner ? user.banner.id : null)
+                                            }
                                             className="w-100"
                                             style={{
                                                 height: 200,
@@ -53,10 +60,16 @@ function UserInfo(props) {
                                                 left: 0,
                                                 zIndex: 0,
                                             }}
-                                            src={user.banner ? getImageUrl(user.banner.fileName) : DefaultBanner}
+                                            src={
+                                                user.banner
+                                                    ? getImageUrl(user.banner.fileName)
+                                                    : DefaultBanner
+                                            }
                                         />
                                         <LazyImage
-                                            onClick={() => handleViewImage(user.avatar ? user.avatar.id : null)}
+                                            onClick={() =>
+                                                handleViewImage(user.avatar ? user.avatar.id : null)
+                                            }
                                             className="avatar"
                                             style={{
                                                 height: 200,
@@ -67,7 +80,11 @@ function UserInfo(props) {
                                                 zIndex: 1,
                                                 overflow: "hidden",
                                             }}
-                                            src={user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar}
+                                            src={
+                                                user.avatar
+                                                    ? getImageUrl(user.avatar.fileName)
+                                                    : DefaultAvatar
+                                            }
                                         />
                                     </Col>
                                 </Row>
@@ -80,12 +97,14 @@ function UserInfo(props) {
                                         <p>
                                             {user.gender && (
                                                 <>
-                                                    <i className={`${user.gender.icon}`} /> {user.gender.name} -{" "}
+                                                    <i className={`${user.gender.icon}`} />{" "}
+                                                    {user.gender.name} -{" "}
                                                 </>
                                             )}
                                             {user.preference && (
                                                 <>
-                                                    <i className={`${user.preference.icon}`} /> {user.preference.name}
+                                                    <i className={`${user.preference.icon}`} />{" "}
+                                                    {user.preference.name}
                                                 </>
                                             )}
                                         </p>
@@ -126,9 +145,21 @@ function UserInfo(props) {
                                 )}
                                 <Row className="mt-3">
                                     <Col md={3}>
-                                        <OverlayTrigger placement="top" overlay={<Tooltip>Bỏ qua</Tooltip>}>
-                                            <Button variant="danger" className="user-card__btn">
-                                                <i className="fas fa-thumbs-down fa-2x" />
+                                        <OverlayTrigger
+                                            placement="top"
+                                            overlay={<Tooltip>Bỏ qua</Tooltip>}
+                                        >
+                                            <Button
+                                                variant="danger"
+                                                className="user-card__btn"
+                                                disabled={isSkippedBtnLoading}
+                                                onClick={handleSkipUser}
+                                            >
+                                                {isSkippedBtnLoading ? (
+                                                    <i className="fas fa-spin fa-spinner 2x" />
+                                                ) : (
+                                                    <i className="fas fa-thumbs-down fa-2x" />
+                                                )}
                                             </Button>
                                         </OverlayTrigger>
                                     </Col>
@@ -146,7 +177,10 @@ function UserInfo(props) {
                                     </Col>
                                     <Col md={3} className="text-center">
                                         <Link to={`/messages/${user.slug}`}>
-                                            <OverlayTrigger placement="top" overlay={<Tooltip>Nhắn tin</Tooltip>}>
+                                            <OverlayTrigger
+                                                placement="top"
+                                                overlay={<Tooltip>Nhắn tin</Tooltip>}
+                                            >
                                                 <Button variant="info" className="user-card__btn">
                                                     <i className="fas fa-comment-dots fa-2x" />
                                                 </Button>

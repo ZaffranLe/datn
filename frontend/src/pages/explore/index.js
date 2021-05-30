@@ -7,23 +7,23 @@ import UserGrid from "./user-grid";
 import "./index.scss";
 
 function Explore(props) {
-    const { layout } = useSelector((state) => state.explore);
+    const { layout, currentUser } = useSelector((state) => state.explore);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(exploreActions.getUserSuggestions());
-    }, [])
+    }, [dispatch]);
 
     const handleChangeLayout = (name) => {
         dispatch(exploreActions.setLayout(name));
     };
 
     const handleKeyUp = (e) => {
-        if (layout === "swipe") {
+        if (layout === "swipe" && currentUser) {
             const SKIP_KEY_CODE = 37;
             const FOLLOW_N_CONTINUE_KEY_CODE = 39;
             if (e.keyCode === SKIP_KEY_CODE) {
-                alert("Skipped");
+                dispatch(exploreActions.changeSkipUser(currentUser.id));
             }
             if (e.keyCode === FOLLOW_N_CONTINUE_KEY_CODE) {
                 alert("Followed");
@@ -53,23 +53,25 @@ function Explore(props) {
                         </Button>
                     </Col>
                     <Col md={10} className="text-right">
-                        <OverlayTrigger
-                            placement="bottom"
-                            overlay={
-                                <Tooltip className="text-left">
-                                    <span>- Bấm nút mũi tên sang phải để bỏ qua</span>
-                                    <br />
-                                    <span>
-                                        - Bấm nút mũi tên sang trái để theo dõi và tìm kiếm người
-                                        mới
-                                    </span>
-                                </Tooltip>
-                            }
-                        >
-                            <Button variant="dark" className="br-50">
-                                <i className="fas fa-question" />
-                            </Button>
-                        </OverlayTrigger>
+                        {layout === "swipe" && (
+                            <OverlayTrigger
+                                placement="bottom"
+                                overlay={
+                                    <Tooltip className="text-left">
+                                        <span>- Bấm nút mũi tên sang phải để bỏ qua</span>
+                                        <br />
+                                        <span>
+                                            - Bấm nút mũi tên sang trái để theo dõi và tìm kiếm
+                                            người mới
+                                        </span>
+                                    </Tooltip>
+                                }
+                            >
+                                <Button variant="dark" className="br-50">
+                                    <i className="fas fa-question" />
+                                </Button>
+                            </OverlayTrigger>
+                        )}
                     </Col>
                 </Row>
                 <Row className="justify-content-center mt-5">
