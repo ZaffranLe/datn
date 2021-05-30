@@ -5,16 +5,12 @@ import * as profileApi from "../profile/api";
 export const exploreSlice = createSlice({
     name: "explore",
     initialState: {
-        layout: "grid",
         users: [],
         currentUser: null,
         isLoading: false,
         isSkippedBtnLoading: false,
     },
     reducers: {
-        setLayout: (state, action) => {
-            state.layout = action.payload;
-        },
         setUsers: (state, action) => {
             state.users = action.payload;
         },
@@ -36,8 +32,7 @@ export const exploreSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setLayout, setUsers, setLoading, setSkippedBtnLoading, setCurrentUser, skipUser } =
-    exploreSlice.actions;
+export const { setUsers, setLoading, setSkippedBtnLoading, setCurrentUser, skipUser } = exploreSlice.actions;
 
 function changeSkipUser(id) {
     return async (dispatch) => {
