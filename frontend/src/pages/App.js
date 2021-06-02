@@ -25,9 +25,8 @@ function AuthRoute({ component: Component, ...rest }) {
 }
 
 function App() {
-
     useEffect(() => {
-        document.title = "Soulatte"
+        document.title = "Soulatte";
     }, []);
 
     return (

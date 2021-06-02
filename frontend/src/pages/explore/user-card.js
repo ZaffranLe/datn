@@ -1,4 +1,4 @@
-import { Row, Col, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Row, Col, Button, OverlayTrigger, Tooltip, Alert } from "react-bootstrap";
 import { LazyImage } from "../../components";
 import DefaultBanner from "../../assets/img/default-banner.jpg";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
@@ -21,10 +21,10 @@ function UserCard(props) {
             ) : (
                 <Row>
                     <Col md={12}>
-                        <span className="h2 bg-facebook--dark">
+                        <Alert variant="secondary">
                             Hiện chưa có đối tượng phù hợp để bắt cặp với bạn, vui lòng quay lại sau
                             nha :D
-                        </span>
+                        </Alert>
                     </Col>
                 </Row>
             )}

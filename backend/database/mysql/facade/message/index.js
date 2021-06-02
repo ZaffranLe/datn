@@ -4,14 +4,16 @@ const _ = require("lodash");
 const DEFAULT_LIMIT = 10;
 
 async function getLatestMessages(idUser) {
-    const sentMsgQuery = `SELECT * FROM (SELECT *, RANK() OVER(PARTITION BY idUserTo ORDER BY createdAt DESC) AS time_rank 
+    const sentMsgQuery = `SELECT t1.content, t1.createdAt, t1.isSeen, t2.firstName, t2.lastName, t2.slug, t2.avatar, t1.idUserFrom, t1.idUserTo
+                                FROM (SELECT *, RANK() OVER(PARTITION BY idUserTo ORDER BY createdAt DESC) AS time_rank 
                                             FROM message WHERE idUserFrom = ?) t1
                                             JOIN user t2 ON t1.idUserTo = t2.id
                                             WHERE t1.time_rank = 1 
                                             ORDER BY t1.createdAt DESC LIMIT ?`;
     const sentMsgs = await dbClient.query(sentMsgQuery, [idUser, DEFAULT_LIMIT]);
 
-    const receiveMsgQuery = `SELECT * FROM (SELECT *, RANK() OVER(PARTITION BY idUserFrom ORDER BY createdAt DESC) AS time_rank 
+    const receiveMsgQuery = `SELECT t1.content, t1.createdAt, t1.isSeen, t2.firstName, t2.lastName, t2.slug, t2.avatar, t1.idUserFrom, t1.idUserTo
+                                FROM (SELECT *, RANK() OVER(PARTITION BY idUserFrom ORDER BY createdAt DESC) AS time_rank 
                                             FROM message WHERE idUserTo = ?) t1 
                                             JOIN user t2 ON t1.idUserFrom = t2.id
                                             WHERE t1.time_rank = 1 
@@ -20,7 +22,7 @@ async function getLatestMessages(idUser) {
 
     const existUser = [];
     const msgs = _.sortBy(sentMsgs.concat(receiveMsgs), ["createdAt"]).reverse();
-    return msgs.filter((msg) => {
+    const filteredMsgs = msgs.filter((msg) => {
         if (msg.idUserFrom === idUser) {
             if (!existUser.includes(msg.idUserTo)) {
                 existUser.push(msg.idUserTo);
@@ -34,6 +36,16 @@ async function getLatestMessages(idUser) {
         }
         return false;
     });
+    const avatarPromises = [];
+    filteredMsgs.forEach((msg) => {
+        avatarPromises.push(knex("image").where("id", msg.avatar).first());
+    });
+    const avatars = await Promise.all(avatarPromises);
+    for (let i = 0; i < filteredMsgs.length; ++i) {
+        filteredMsgs[i].avatar = avatars[i];
+        filteredMsgs[i].fromSelf = filteredMsgs[i].idUserFrom === idUser ? true : false;
+    }
+    return filteredMsgs;
 }
 
 async function getMessageByUserId(idUserFrom, idUserTo) {

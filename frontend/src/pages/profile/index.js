@@ -7,6 +7,7 @@ import { LazyImage, ProfileNonExist } from "../../components";
 import { history } from "../history";
 import "./index.scss";
 import * as profileActions from "./slice";
+import * as messageActions from "../message/slice";
 import * as imageModalActions from "../../components/album/image-modal/slice";
 import { Link } from "react-router-dom";
 import { getImageUrl, getUserInfoFromToken } from "../../common/common";
@@ -25,6 +26,7 @@ function Profile(props) {
     useEffect(() => {
         const _slug = props.match.params.slug;
         if (!_slug) {
+            dispatch(messageActions.getLatestMessages(1));
             history.push(`/profile/${userInfo.slug}`);
         } else {
             dispatch(profileActions.getUserBySlug(_slug));
