@@ -18,14 +18,20 @@ import Comment from "./comment";
 import { LazyImage } from "../../../../components";
 
 function Post({ post, user }) {
+    const MAX_CONTENT_LENGTH = 300;
     const [_post, setPost] = useState(null);
     const [isLikeBtnLoading, setLikeBtnLoading] = useState(false);
     const [comment, setComment] = useState("");
     const [image, setImage] = useState(null);
     const [isPostingComment, setPostingComment] = useState(false);
+    const [isContentExtended, setContentExtended] = useState(false);
 
     useEffect(() => {
-        setPost({ ...post });
+        const shortedContent =
+            post.content.length > MAX_CONTENT_LENGTH
+                ? `${post.content.slice(0, MAX_CONTENT_LENGTH)}...`
+                : post.content;
+        setPost({ ...post, shortedContent });
     }, [post]);
 
     const changeLikeStatus = async () => {
@@ -170,8 +176,21 @@ function Post({ post, user }) {
                                 </Row>
                                 <Row>
                                     <Col md={12} className="pl-4 pt-3 pr-4">
-                                        {/* <p className="post-content--truncate">{_post.content}</p> */}
-                                        <p>{_post.content}</p>
+                                        <p>
+                                            {isContentExtended
+                                                ? _post.content
+                                                : _post.shortedContent}{" "}
+                                            {_post.content.length > MAX_CONTENT_LENGTH && (
+                                                <span
+                                                    className="clickable"
+                                                    onClick={() =>
+                                                        setContentExtended(!isContentExtended)
+                                                    }
+                                                >
+                                                    {isContentExtended ? "Ẩn bớt" : "Xem thêm"}
+                                                </span>
+                                            )}
+                                        </p>
                                     </Col>
                                 </Row>
                                 {_post.images.length > 0 && (
