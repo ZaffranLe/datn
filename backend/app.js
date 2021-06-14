@@ -6,7 +6,6 @@ const logger = require("morgan");
 const router = require("./routes");
 const responseError = require('./api/middleware/resp-send-error');
 const cors = require("cors");
-
 const app = express();
 
 app.use(cors())
