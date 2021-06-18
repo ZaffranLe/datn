@@ -1,6 +1,6 @@
 function handleSocket(io) {
     io.on("connection", (socket) => {
-        console.log("connected");
+        console.log("A socket client connected");
     });
 }
 

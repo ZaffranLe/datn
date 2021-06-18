@@ -9,6 +9,8 @@ import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { appendTokenInfo, getImageUrl, getUserInfoFromToken } from "../../common/common";
 import { LazyImage } from "..";
+import socketIOClient from "socket.io-client";
+import config from "../../utils/config/cfg";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -34,6 +36,11 @@ function AuthLayout(props) {
     useEffect(() => {
         const headerHeight = document.getElementById("app-header").clientHeight;
         setMarginTop(headerHeight);
+        const socket = socketIOClient(config[config.environment].originBackend);
+        return () => {
+            console.log("Socket disconnected");
+            socket.disconnect();
+        };
     }, []);
 
     // Mock data for notifications
@@ -41,13 +48,8 @@ function AuthLayout(props) {
         havingUnseen: true,
         unseenAmount: 7,
     };
-    const messageData = {
-        havingUnseen: true,
-        unseenAmount: 4,
-    };
 
     const notiRef = useRef(null);
-    const messageRef = useRef(null);
     const settingRef = useRef(null);
     const [activeMenu, setActiveMenu] = useState(null);
 
@@ -76,11 +78,7 @@ function AuthLayout(props) {
                                             className="mr-2"
                                         />
                                     </Link>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Tìm kiếm"
-                                        className="fluid"
-                                    />
+                                    <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
                                     <Button variant="outline-info">
                                         <i className="fas fa-search" />
                                     </Button>
@@ -105,11 +103,7 @@ function AuthLayout(props) {
                                             height: 40,
                                             borderRadius: 40,
                                         }}
-                                        src={
-                                            userInfo.avatar
-                                                ? getImageUrl(userInfo.avatar.fileName)
-                                                : DefaultAvatar
-                                        }
+                                        src={userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar}
                                     />
                                     <div style={{ height: 40 }} className="display--table ml-2">
                                         <span className="display--table-cell vertical-align-middle">
@@ -119,29 +113,10 @@ function AuthLayout(props) {
                                 </div>
                             </Nav.Item>
                             <Nav.Item>
-                                <div
-                                    ref={messageRef}
-                                    className="clickable"
-                                    onClick={() => handleToggleMenu("message")}
-                                >
-                                    <span className="fas fa-stack fa-lg">
-                                        <i className="fas fa-circle fa-stack-2x text-light" />
-                                        <i className="fas fa-comments fa-stack-1x text-dark" />
-                                    </span>
-                                    {messageData.havingUnseen && (
-                                        <Badge
-                                            style={{ position: "relative", bottom: 10, right: 10 }}
-                                            variant="danger"
-                                        >
-                                            {messageData.unseenAmount}
-                                        </Badge>
-                                    )}
-                                </div>
                                 <MessageOverlay
                                     show={activeMenu === "message"}
-                                    target={messageRef.current}
                                     marginTop={marginTop}
-                                    onClose={handleToggleMenu}
+                                    onToggle={handleToggleMenu}
                                 />
                             </Nav.Item>
                             <Nav.Item>
@@ -155,25 +130,15 @@ function AuthLayout(props) {
                                         <i className="fas fa-bell fa-stack-1x text-dark" />
                                     </span>
                                     {notificationData.havingUnseen && (
-                                        <Badge
-                                            style={{ position: "relative", bottom: 10, right: 10 }}
-                                            variant="danger"
-                                        >
+                                        <Badge style={{ position: "relative", bottom: 10, right: 10 }} variant="danger">
                                             {notificationData.unseenAmount}
                                         </Badge>
                                     )}
                                 </div>
-                                <NotificationOverlay
-                                    show={activeMenu === "notification"}
-                                    target={notiRef.current}
-                                />
+                                <NotificationOverlay show={activeMenu === "notification"} target={notiRef.current} />
                             </Nav.Item>
                             <Nav.Item>
-                                <div
-                                    ref={settingRef}
-                                    className="clickable"
-                                    onClick={() => handleToggleMenu("setting")}
-                                >
+                                <div ref={settingRef} className="clickable" onClick={() => handleToggleMenu("setting")}>
                                     <span className="fas fa-stack fa-lg">
                                         <i className="fas fa-circle fa-stack-2x text-light" />
                                         <i className="fas fa-caret-down fa-stack-1x text-dark" />

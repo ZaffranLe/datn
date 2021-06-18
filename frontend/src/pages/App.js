@@ -11,7 +11,12 @@ import TermOfUsePage from "./term-of-use";
 import ExplorePage from "./explore";
 import MessagePage from "./message";
 
-function AuthRoute({ component: Component, ...rest }) {
+function AuthRoute({ component: Component, documentTitle, ...rest }) {
+    useEffect(() => {
+        document.title = `Soulatte - ${documentTitle}` || "Soulatte";
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <Route
             {...rest}
@@ -33,14 +38,14 @@ function App() {
         <div className="app-container bg-img">
             <Router history={history}>
                 <Switch>
-                    <AuthRoute exact path="/profile/:slug" component={ProfilePage} />
-                    <AuthRoute exact path="/profile" component={ProfilePage} />
-                    <AuthRoute exact path="/messages/:slug" component={MessagePage} />
-                    <AuthRoute exact path="/messages" component={MessagePage} />
-                    <AuthRoute exact path="/" component={ExplorePage} />
+                    <AuthRoute documentTitle="Trang cá nhân" exact path="/profile/:slug" component={ProfilePage} />
+                    <AuthRoute documentTitle="Trang cá nhân" exact path="/profile" component={ProfilePage} />
+                    <AuthRoute documentTitle="Tin nhắn" exact path="/messages/:slug" component={MessagePage} />
+                    <AuthRoute documentTitle="Tin nhắn" exact path="/messages" component={MessagePage} />
+                    <AuthRoute documentTitle="Khám phá" exact path="/" component={ExplorePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
-                    <AuthRoute exact path="/update-info" component={RegisterUpdateInfoPage} />
+                    <AuthRoute documentTitle="Cập nhật thông tin" exact path="/update-info" component={RegisterUpdateInfoPage} />
                     <Route exact path="/term-of-use" component={TermOfUsePage} />
                 </Switch>
                 <ImageModal />
