@@ -26,7 +26,6 @@ function Profile(props) {
     useEffect(() => {
         const _slug = props.match.params.slug;
         if (!_slug) {
-            dispatch(messageActions.getLatestMessages(1));
             history.push(`/profile/${userInfo.slug}`);
         } else {
             dispatch(profileActions.getUserBySlug(_slug));
@@ -83,26 +82,14 @@ function Profile(props) {
                             <Row>
                                 <Col md={12} className="text-center">
                                     <LazyImage
-                                        onClick={() =>
-                                            handleViewImage(user.banner ? user.banner.id : null)
-                                        }
+                                        onClick={() => handleViewImage(user.banner ? user.banner.id : null)}
                                         className="profile__banner"
-                                        src={
-                                            user.banner
-                                                ? getImageUrl(user.banner.fileName)
-                                                : DefaultBanner
-                                        }
+                                        src={user.banner ? getImageUrl(user.banner.fileName) : DefaultBanner}
                                     />
                                     <LazyImage
-                                        onClick={() =>
-                                            handleViewImage(user.avatar ? user.avatar.id : null)
-                                        }
+                                        onClick={() => handleViewImage(user.avatar ? user.avatar.id : null)}
                                         className="avatar profile__avatar"
-                                        src={
-                                            user.avatar
-                                                ? getImageUrl(user.avatar.fileName)
-                                                : DefaultAvatar
-                                        }
+                                        src={user.avatar ? getImageUrl(user.avatar.fileName) : DefaultAvatar}
                                         style={{ width: 200, height: 200, borderRadius: 200 }}
                                     />
                                 </Col>
@@ -145,8 +132,7 @@ function Profile(props) {
                                             {userInfo.id === user.id ? (
                                                 <Link to="/update-info">
                                                     <Button variant="dark">
-                                                        <i className="fas fa-pencil-alt" /> Sửa
-                                                        thông tin cá nhân
+                                                        <i className="fas fa-pencil-alt" /> Sửa thông tin cá nhân
                                                     </Button>
                                                 </Link>
                                             ) : (
@@ -162,14 +148,10 @@ function Profile(props) {
                                                             <>
                                                                 <i
                                                                     className={`fas ${
-                                                                        isFollowing
-                                                                            ? "fa-user-minus"
-                                                                            : "fa-user-plus"
+                                                                        isFollowing ? "fa-user-minus" : "fa-user-plus"
                                                                     }`}
                                                                 />{" "}
-                                                                {isFollowing
-                                                                    ? "Huỷ theo dõi"
-                                                                    : "Theo dõi"}
+                                                                {isFollowing ? "Huỷ theo dõi" : "Theo dõi"}
                                                             </>
                                                         )}
                                                     </Button>

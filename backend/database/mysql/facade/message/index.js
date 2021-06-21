@@ -56,7 +56,7 @@ async function getMessageByUserId(idUserFrom, idUserTo) {
             idUserFrom: idUserTo,
         })
         .sortBy("createdAt", "desc")
-        .limit(10);
+        .limit(20);
 
     return messages;
 }

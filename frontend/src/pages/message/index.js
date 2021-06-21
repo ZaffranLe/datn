@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import MessageList from "./components/message-list";
 import { CustomLoader } from "../../components";
 import { useEffect, useState } from "react";
+import * as messageActions from "./slice";
+import MessageWithUser from "./components/message-with-user";
 
 function Message(props) {
     const [messageGroups, setMessageGroups] = useState([]);
@@ -15,18 +17,21 @@ function Message(props) {
         currentMessages.forEach((_msg, _idx) => {
             if (!currentMessages[_idx - 1] || currentMessages[_idx - 1].fromSelf !== _msg.fromSelf) {
                 _messageGroups.push({
-                    // group content
+                    messages: [_msg],
+                    firstName: _msg.firstName,
+                    lastName: _msg.lastName,
                 });
             } else {
                 _messageGroups[_messageGroups.length - 1].messages.push(_msg);
             }
+            setMessageGroups(_messageGroups);
         });
     }, [currentMessages]);
 
     useEffect(() => {
         const _slug = props.match.params.slug;
         if (_slug) {
-            // dispatch(profileActions.getUserBySlug(_slug));
+            dispatch(messageActions.getAllByUserSlug(_slug));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.match.params.slug, dispatch]);
@@ -52,7 +57,7 @@ function Message(props) {
                                     </div>
                                 </div>
                             ) : (
-                                <Row className="bg-facebook--dark m-2 p-4 br-10 h-75">Test</Row>
+                                <MessageWithUser messages={messageGroups} />
                             )}
                         </Col>
                     </Row>

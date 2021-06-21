@@ -21,7 +21,7 @@ async function getMessagesBySlug(req, res) {
         const { id: idCurrentUser } = req.user;
         const { slug } = req.params;
         const targetUser = await mysqlUser.getUserBySlug(slug);
-        if (targetUser) {
+        if (!targetUser) {
             throw new UserError("Không tồn tại người dùng này", "USER_NOT_EXIST");
         }
         const messages = await mysqlMessage.getMessageByUserId(idCurrentUser, targetUser.id);

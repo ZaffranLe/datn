@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Container, Overlay, Row, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserMessage from "../user-message";
+import * as messageActions from "../../pages/message/slice";
 
 function MessageOverlay({ show, marginTop, onToggle }) {
     const [messageData, setMessageData] = useState({
@@ -10,6 +11,12 @@ function MessageOverlay({ show, marginTop, onToggle }) {
         unseenAmount: 0,
     });
     const { messageList } = useSelector((state) => state.message);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(messageActions.getLatestMessages(1));
+    }, [dispatch])
 
     useEffect(() => {
         const _messageData = {

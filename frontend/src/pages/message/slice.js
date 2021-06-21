@@ -43,8 +43,8 @@ function getAllByUserSlug(slug) {
     return async (dispatch) => {
         try {
             dispatch(setLoading(true));
-            // const data = await api.getAllByUserSlug(slug);
-            // dispatch(setCurrentMessages(data));
+            const data = await api.getAllByUserSlug(slug);
+            dispatch(setCurrentMessages(data));
         } catch (e) {
             console.error(e);
         } finally {
