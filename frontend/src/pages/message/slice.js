@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import * as api from "./api";
+import * as userApi from "../profile/api";
 
 export const messageSlice = createSlice({
     name: "message",
@@ -10,6 +11,7 @@ export const messageSlice = createSlice({
         messageList: [],
         isLoading: false,
         isMessageListLoading: false,
+        isUserInfoLoading: false,
     },
     reducers: {
         setCurrentMessages: (state, action) => {
@@ -27,6 +29,9 @@ export const messageSlice = createSlice({
         setMessageListLoading: (state, action) => {
             state.isMessageListLoading = action.payload;
         },
+        setUserInfoLoading: (state, action) => {
+            state.isUserInfoLoading = action.payload;
+        },
     },
 });
 
@@ -37,6 +42,7 @@ export const {
     setMessageList,
     setLoading,
     setMessageListLoading,
+    setUserInfoLoading,
 } = messageSlice.actions;
 
 function getAllByUserSlug(slug) {
@@ -49,6 +55,20 @@ function getAllByUserSlug(slug) {
             console.error(e);
         } finally {
             dispatch(setLoading(false));
+        }
+    };
+}
+
+function getUserBasicInfoBySlug(slug) {
+    return async (dispatch) => {
+        try {
+            dispatch(setUserInfoLoading(true));
+            const user = await userApi.getUserBasicInfoBySlug(slug);
+            dispatch(setCurrentUser(user));
+        } catch (e) {
+            console.error(e);
+        } finally {
+            dispatch(setUserInfoLoading(true));
         }
     };
 }
@@ -70,6 +90,6 @@ function getLatestMessages(page) {
     };
 }
 
-export { getAllByUserSlug, getLatestMessages };
+export { getAllByUserSlug, getLatestMessages, getUserBasicInfoBySlug };
 
 export default messageSlice.reducer;

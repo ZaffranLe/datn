@@ -50,6 +50,20 @@ async function getUserBySlug(req, res) {
     }
 }
 
+async function getUserBasicInfoBySlug(req, res) {
+    try {
+        const { slug } = req.params;
+        let user = await mysqlUser.getUserBySlug(slug);
+        user = await mysqlUser.getUserBasicInfoById(user.id);
+        res.status(200).json({
+            data: user,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, getUserBySlug.name);
+    }
+}
+
 async function checkFollowUser(req, res) {
     try {
         const from = req.user.id;
@@ -113,4 +127,5 @@ module.exports = {
     changeFollowUser,
     changeSkipUser,
     getUserSuggestions,
+    getUserBasicInfoBySlug,
 };

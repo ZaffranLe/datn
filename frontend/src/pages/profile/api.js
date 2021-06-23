@@ -13,6 +13,18 @@ async function getUserBySlug(slug) {
     }
 }
 
+async function getUserBasicInfoBySlug(slug) {
+    try {
+        const resp = await APICall({
+            url: `/api/user/info/${slug}`,
+            method: constants.HTTP_METHOD.GET,
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
 async function checkFollowUser(id) {
     try {
         const resp = await APICall({
@@ -133,4 +145,5 @@ export {
     changeLikeStatus,
     getPostById,
     submitCommentToPost,
+    getUserBasicInfoBySlug,
 };

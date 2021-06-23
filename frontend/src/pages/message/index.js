@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import MessageList from "./components/message-list";
 import { CustomLoader } from "../../components";
 import { useEffect, useState } from "react";
-import * as messageActions from "./slice";
+import { getUserInfoFromToken } from "../../common/common";
 import MessageWithUser from "./components/message-with-user";
+import * as messageActions from "./slice";
+import * as userActions from "../profile/slice";
 
 function Message(props) {
     const [messageGroups, setMessageGroups] = useState([]);
@@ -13,25 +15,31 @@ function Message(props) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const _messageGroups = [];
-        currentMessages.forEach((_msg, _idx) => {
-            if (!currentMessages[_idx - 1] || currentMessages[_idx - 1].fromSelf !== _msg.fromSelf) {
-                _messageGroups.push({
-                    messages: [_msg],
-                    firstName: _msg.firstName,
-                    lastName: _msg.lastName,
-                });
-            } else {
-                _messageGroups[_messageGroups.length - 1].messages.push(_msg);
-            }
-            setMessageGroups(_messageGroups);
-        });
-    }, [currentMessages]);
+        if (currentUser) {
+            const userInfo = getUserInfoFromToken();
+            const _messageGroups = [];
+            currentMessages.forEach((_msg, _idx) => {
+                const FROM_SELF = _msg.idUserFrom === userInfo.id;
+                if (!currentMessages[_idx - 1] || currentMessages[_idx - 1].fromSelf !== _msg.fromSelf) {
+                    _messageGroups.push({
+                        messages: [_msg],
+                        firstName: FROM_SELF ? userInfo.firstName : currentUser.firstName,
+                        lastName: FROM_SELF ? userInfo.lastName : currentUser.lastName,
+                        fromSelf: FROM_SELF,
+                    });
+                } else {
+                    _messageGroups[_messageGroups.length - 1].messages.push(_msg);
+                }
+                setMessageGroups(_messageGroups);
+            });
+        }
+    }, [currentMessages, currentUser]);
 
     useEffect(() => {
         const _slug = props.match.params.slug;
         if (_slug) {
             dispatch(messageActions.getAllByUserSlug(_slug));
+            dispatch(messageActions.getUserBasicInfoBySlug(_slug));
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.match.params.slug, dispatch]);
@@ -57,7 +65,7 @@ function Message(props) {
                                     </div>
                                 </div>
                             ) : (
-                                <MessageWithUser messages={messageGroups} />
+                                <MessageWithUser messageGroups={messageGroups} />
                             )}
                         </Col>
                     </Row>
