@@ -5,7 +5,7 @@ import { getUserInfoFromToken } from "../../../common/common";
 import { useState } from "react";
 
 function MessageWithUser({ messageGroups }) {
-    const { currentUser: currentMessagingUser, isUserInfoLoading } = useSelector((state) => state.message);
+    const { currentUser, isUserInfoLoading } = useSelector((state) => state.message);
 
     const [selfInfo, setSelfInfo] = useState({
         avatar: null,
@@ -21,7 +21,10 @@ function MessageWithUser({ messageGroups }) {
     const dispatch = useDispatch();
 
     return (
-        <>
+        <> 
+        <Row className="bg-facebook--dark">
+            
+        </Row>
             <Row className="bg-facebook--dark m-2 p-4 br-10 h-75">
                 <Col md={12}>
                     {messageGroups.map((_group, _idx) => (

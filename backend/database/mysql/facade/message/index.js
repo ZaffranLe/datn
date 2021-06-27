@@ -8,6 +8,7 @@ async function getLatestMessages(idUser) {
                                 FROM (SELECT *, RANK() OVER(PARTITION BY idUserTo ORDER BY createdAt DESC) AS time_rank 
                                             FROM message WHERE idUserFrom = ?) t1
                                             JOIN user t2 ON t1.idUserTo = t2.id
+                                            LEFT JOIN image t3 ON t1.avatar = t3.id
                                             WHERE t1.time_rank = 1 
                                             ORDER BY t1.createdAt DESC LIMIT ?`;
     const sentMsgs = await dbClient.query(sentMsgQuery, [idUser, DEFAULT_LIMIT]);
@@ -16,6 +17,7 @@ async function getLatestMessages(idUser) {
                                 FROM (SELECT *, RANK() OVER(PARTITION BY idUserFrom ORDER BY createdAt DESC) AS time_rank 
                                             FROM message WHERE idUserTo = ?) t1 
                                             JOIN user t2 ON t1.idUserFrom = t2.id
+                                            LEFT JOIN image t3 ON t1.avatar = t3.id
                                             WHERE t1.time_rank = 1 
                                             ORDER BY t1.createdAt DESC LIMIT ?`;
     const receiveMsgs = await dbClient.query(receiveMsgQuery, [idUser, DEFAULT_LIMIT]);

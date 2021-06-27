@@ -68,7 +68,7 @@ function getUserBasicInfoBySlug(slug) {
         } catch (e) {
             console.error(e);
         } finally {
-            dispatch(setUserInfoLoading(true));
+            dispatch(setUserInfoLoading(false));
         }
     };
 }

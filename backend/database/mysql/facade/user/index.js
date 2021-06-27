@@ -12,7 +12,7 @@ async function getUserBasicInfoById(id) {
         lastName: "t1.lastName",
         slug: "t1.slug",
     };
-    const user = await knex("user AS t1").join("image AS t2", "t1.avatar", "t2.id").where("t1.id", id).column(fields).first();
+    const user = await knex("user AS t1").leftJoin("image AS t2", "t1.avatar", "t2.id").where("t1.id", id).column(fields).first();
     return user;
 }
 
