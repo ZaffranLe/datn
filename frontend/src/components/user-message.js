@@ -29,7 +29,7 @@ function UserMessage({ msg }) {
                                 height: 50,
                                 borderRadius: 50,
                             }}
-                            src={msg.avatar ? getImageUrl(msg.avatar.fileName) : null}
+                            src={msg.avatar ? getImageUrl(msg.avatar) : null}
                         />
                     </div>
                 </div>

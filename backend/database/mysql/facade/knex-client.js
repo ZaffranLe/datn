@@ -14,12 +14,12 @@ const knexClient = knex({
     pool: { min: 2, max: 50 },
 });
 
-knexClient.on("query", function (queryData) {
-    console.log(
-        `knex-mysql: ${queryData.sql}${
-            queryData.bindings && queryData.bindings.length ? `\nparams: ${JSON.stringify(queryData.bindings)}` : ``
-        }`
-    );
-});
+// knexClient.on("query", function (queryData) {
+//     console.log(
+//         `knex-mysql: ${queryData.sql}${
+//             queryData.bindings && queryData.bindings.length ? `\nparams: ${JSON.stringify(queryData.bindings)}` : ``
+//         }`
+//     );
+// });
 
 module.exports = knexClient;
