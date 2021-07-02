@@ -8,7 +8,7 @@ function MessageList(props) {
 
     return (
         <>
-            <Row style={{ overflowY: "auto" }} className="bg-facebook--dark m-2 p-4 br-10 h-75">
+            <Row style={{ overflowY: "auto" }} className="bg-facebook--dark m-2 p-4 br-10 h-85">
                 <Col md={12}>
                     {isMessageListLoading ? (
                         <div className="w-100 h-100 text-center display--table">

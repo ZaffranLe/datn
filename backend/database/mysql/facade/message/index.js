@@ -38,13 +38,7 @@ async function getLatestMessages(idUser) {
         }
         return false;
     });
-    const avatarPromises = [];
-    filteredMsgs.forEach((msg) => {
-        avatarPromises.push(knex("image").where("id", msg.avatar).first());
-    });
-    const avatars = await Promise.all(avatarPromises);
     for (let i = 0; i < filteredMsgs.length; ++i) {
-        filteredMsgs[i].avatar = avatars[i];
         filteredMsgs[i].fromSelf = filteredMsgs[i].idUserFrom === idUser ? true : false;
     }
     return filteredMsgs;

@@ -241,3 +241,13 @@ body {
 .bg-img {
     background-size: cover !important;
 }
+
+.h {
+    &-85 {
+        height: 85% !important;
+    }
+
+    &-90 {
+        height: 90% !important;
+    }
+}
