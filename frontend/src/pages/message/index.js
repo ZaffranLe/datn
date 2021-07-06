@@ -7,6 +7,7 @@ import { getUserInfoFromToken } from "../../common/common";
 import MessageWithUser from "./components/message-with-user";
 import * as messageActions from "./slice";
 import * as userActions from "../profile/slice";
+import "./style.scss";
 
 function Message(props) {
     const [messageGroups, setMessageGroups] = useState([]);
@@ -20,7 +21,7 @@ function Message(props) {
             const _messageGroups = [];
             currentMessages.forEach((_msg, _idx) => {
                 const FROM_SELF = _msg.idUserFrom === userInfo.id;
-                if (!currentMessages[_idx - 1] || currentMessages[_idx - 1].fromSelf !== _msg.fromSelf) {
+                if (!currentMessages[_idx - 1] || currentMessages[_idx - 1].idUserFrom !== _msg.idUserFrom) {
                     _messageGroups.push({
                         messages: [_msg],
                         firstName: FROM_SELF ? userInfo.firstName : currentUser.firstName,
@@ -30,8 +31,9 @@ function Message(props) {
                 } else {
                     _messageGroups[_messageGroups.length - 1].messages.push(_msg);
                 }
-                setMessageGroups(_messageGroups);
             });
+            setMessageGroups(_messageGroups);
+            console.log(_messageGroups);
         }
     }, [currentMessages, currentUser]);
 

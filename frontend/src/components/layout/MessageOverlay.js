@@ -15,7 +15,6 @@ function MessageOverlay({ show, marginTop, onToggle }) {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        console.log("Triggered");
         dispatch(messageActions.getLatestMessages(1));
     }, [dispatch])
 
