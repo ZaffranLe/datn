@@ -4,24 +4,24 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const router = require("./routes");
-const responseError = require('./api/middleware/resp-send-error');
+const responseError = require("./api/middleware/resp-send-error");
 const cors = require("cors");
 const app = express();
 
-app.use(cors())
+app.use(cors());
 app.use(responseError);
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 app.use("/", router);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+  next(createError(404));
 });
 
 module.exports = app;
