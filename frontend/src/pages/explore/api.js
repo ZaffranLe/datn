@@ -28,4 +28,19 @@ async function getUserSuggestions() {
     }
 }
 
-export { changeSkipUser, getUserSuggestions };
+async function changeFollowUser(id) {
+    try {
+        const resp = await APICall({
+            url: "/api/user/follow",
+            method: constants.HTTP_METHOD.POST,
+            data: {
+                id,
+            },
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
+export { changeSkipUser, getUserSuggestions, changeFollowUser };

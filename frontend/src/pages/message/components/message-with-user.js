@@ -82,9 +82,25 @@ function MessageWithUser({ messageGroups }) {
                                         }}
                                     >
                                         <div className="display--flex">
-                                            <div style={{ alignSelf: "flex-end" }} className="mr-2">
-                                                <LazyImage />
-                                            </div>
+                                            {!_group.fromSelf && (
+                                                <div
+                                                    style={{ alignSelf: "flex-end" }}
+                                                    className="mr-2"
+                                                >
+                                                    <LazyImage
+                                                        style={{
+                                                            width: 40,
+                                                            height: 40,
+                                                            borderRadius: 40,
+                                                        }}
+                                                        src={
+                                                            currentUser.avatar
+                                                                ? getImageUrl(currentUser.avatar)
+                                                                : DefaultAvatar
+                                                        }
+                                                    />
+                                                </div>
+                                            )}
                                             <div className="w-100">
                                                 <p>
                                                     {_group.fromSelf
@@ -100,6 +116,25 @@ function MessageWithUser({ messageGroups }) {
                                                     </div>
                                                 ))}
                                             </div>
+                                            {_group.fromSelf && (
+                                                <div
+                                                    style={{ alignSelf: "flex-end" }}
+                                                    className="ml-2"
+                                                >
+                                                    <LazyImage
+                                                        style={{
+                                                            width: 40,
+                                                            height: 40,
+                                                            borderRadius: 40,
+                                                        }}
+                                                        src={
+                                                            selfInfo.avatar
+                                                                ? getImageUrl(selfInfo.avatar.fileName)
+                                                                : DefaultAvatar
+                                                        }
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
                                     </Col>
                                 </Row>
@@ -116,6 +151,7 @@ function MessageWithUser({ messageGroups }) {
                                 onKeyUp={handleKeyUp}
                                 as={TextareaAutosize}
                                 maxRows={1}
+                                value={message}
                             />
                         </div>
                     </Row>

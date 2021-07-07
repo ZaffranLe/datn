@@ -22,7 +22,7 @@ function Explore(props) {
                 dispatch(exploreActions.changeSkipUser(currentUser.id));
             }
             if (e.keyCode === FOLLOW_N_CONTINUE_KEY_CODE) {
-                alert("Followed");
+                dispatch(exploreActions.changeFollowUser(currentUser.id));
             }
         }
     };

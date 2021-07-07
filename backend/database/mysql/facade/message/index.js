@@ -57,6 +57,23 @@ async function getMessageByUserId(idUserFrom, idUserTo) {
     return messages;
 }
 
+async function sendMessage(info, transaction = null) {
+    const _knex = transaction ? transaction : await knex.transaction();
+    const fields = ["idUserFrom", "idUserTo", "content"];
+    const data = _.pick(info, fields);
+    try {
+        await _knex("message").insert(data);
+        if (!transaction) {
+            await _knex.commit();
+        }
+    } catch (e) {
+        if (!transaction) {
+            await _knex.rollback();
+        }
+        throw e;
+    }
+}
+
 module.exports = {
     getLatestMessages,
     getMessageByUserId,

@@ -9,6 +9,7 @@ export const exploreSlice = createSlice({
         currentUser: null,
         isLoading: false,
         isSkippedBtnLoading: false,
+        isFollowedBtnLoading: false,
     },
     reducers: {
         setUsers: (state, action) => {
@@ -19,6 +20,9 @@ export const exploreSlice = createSlice({
         },
         setSkippedBtnLoading: (state, action) => {
             state.isSkippedBtnLoading = action.payload;
+        },
+        setFollowedBtnLoading: (state, action) => {
+            state.isFollowedBtnLoading = action.payload;
         },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload;
@@ -32,7 +36,7 @@ export const exploreSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { setUsers, setLoading, setSkippedBtnLoading, setCurrentUser, skipUser } = exploreSlice.actions;
+export const { setUsers, setLoading, setSkippedBtnLoading, setCurrentUser, skipUser, setFollowedBtnLoading } = exploreSlice.actions;
 
 function changeSkipUser(id) {
     return async (dispatch) => {
@@ -44,6 +48,20 @@ function changeSkipUser(id) {
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         } finally {
             dispatch(setSkippedBtnLoading(false));
+        }
+    };
+}
+
+function changeFollowUser(id) {
+    return async (dispatch) => {
+        try {
+            dispatch(setFollowedBtnLoading(true));
+            await api.changeFollowUser(id);
+            dispatch(skipUser(id));
+        } catch (e) {
+            toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+        } finally {
+            dispatch(setFollowedBtnLoading(false));
         }
     };
 }
@@ -65,6 +83,6 @@ function getUserSuggestions() {
     };
 }
 
-export { changeSkipUser, getUserSuggestions };
+export { changeSkipUser, getUserSuggestions, changeFollowUser };
 
 export default exploreSlice.reducer;
