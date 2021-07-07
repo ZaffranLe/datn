@@ -34,7 +34,28 @@ async function getMessagesBySlug(req, res) {
     }
 }
 
+async function sendMessage(req, res) {
+    try {
+        const { id: idUserTo, content, image } = req.body;
+        const { id: idUserFrom } = req.user;
+        const info = {
+            idUserFrom,
+            idUserTo,
+            content: content || null,
+            image: image || null,
+        };
+        await mysqlMessage.sendMessage(info);
+        res.status(200).send({
+            data: null,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, sendMessage.name);
+    }
+}
+
 module.exports = {
     getLatestMessages,
     getMessagesBySlug,
+    sendMessage,
 };

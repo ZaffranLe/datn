@@ -62,7 +62,11 @@ async function sendMessage(info, transaction = null) {
     const fields = ["idUserFrom", "idUserTo", "content"];
     const data = _.pick(info, fields);
     try {
-        await _knex("message").insert(data);
+        const result = await _knex("message").insert(data);
+        if (info.image) {
+            const msgId = result[0];
+            await _knex("message_image").insert({ idMessage: msgId, idImage: info.image });
+        }
         if (!transaction) {
             await _knex.commit();
         }
@@ -77,4 +81,5 @@ async function sendMessage(info, transaction = null) {
 module.exports = {
     getLatestMessages,
     getMessageByUserId,
+    sendMessage,
 };

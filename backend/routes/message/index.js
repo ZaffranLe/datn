@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post("/get-latest", verifyToken, messageController.getLatestMessages);
 router.get("/url/:slug", verifyToken, messageController.getMessagesBySlug);
+router.post("/", verifyToken, messageController.sendMessage);
 
 module.exports = router;

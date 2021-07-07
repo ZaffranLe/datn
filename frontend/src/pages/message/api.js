@@ -28,4 +28,8 @@ async function getLatestMessages(page) {
     }
 }
 
+async function sendMessage(data) {
+    
+}
+
 export { getAllByUserSlug, getLatestMessages };
