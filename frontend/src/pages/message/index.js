@@ -33,7 +33,6 @@ function Message(props) {
                 }
             });
             setMessageGroups(_messageGroups);
-            console.log(_messageGroups);
         }
     }, [currentMessages, currentUser]);
 

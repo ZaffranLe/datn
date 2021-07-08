@@ -51,9 +51,9 @@ async function getMessageByUserId(idUserFrom, idUserTo) {
             idUserTo: idUserFrom,
             idUserFrom: idUserTo,
         })
-        .orderBy("createdAt", "asc")
+        .orderBy("createdAt", "desc")
         .limit(20);
-
+    await knex("message").update({isSeen: 1}).whereIn("id", messages.map(_msg => _msg.id));
     return messages;
 }
 

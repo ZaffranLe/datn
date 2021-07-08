@@ -36,7 +36,7 @@ async function getMessagesBySlug(req, res) {
 
 async function sendMessage(req, res) {
     try {
-        const { id: idUserTo, content, image } = req.body;
+        const { idUserTo, content, image } = req.body;
         const { id: idUserFrom } = req.user;
         const info = {
             idUserFrom,
@@ -46,7 +46,7 @@ async function sendMessage(req, res) {
         };
         await mysqlMessage.sendMessage(info);
         res.status(200).send({
-            data: null,
+            data: info,
             message: null,
         });
     } catch (e) {

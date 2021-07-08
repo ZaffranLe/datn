@@ -7,9 +7,10 @@ import { LazyImage } from "../../../components";
 import DefaultAvatar from "../../../assets/img/default-avatar.png";
 import Skeleton from "react-loading-skeleton";
 import TextareaAutosize from "react-textarea-autosize";
+import * as messageActions from "../slice";
 
 function MessageWithUser({ messageGroups }) {
-    const { currentUser, isUserInfoLoading } = useSelector((state) => state.message);
+    const { currentUser, isUserInfoLoading, currentMessages } = useSelector((state) => state.message);
 
     const [selfInfo, setSelfInfo] = useState({
         avatar: null,
@@ -28,8 +29,13 @@ function MessageWithUser({ messageGroups }) {
 
     const handleKeyUp = (e) => {
         const ENTER = "Enter";
-        if (e.key === ENTER && !e.shiftKey) {
-            console.log("submit");
+        if (e.key === ENTER && !e.shiftKey && message) {
+            const info = {
+                idUserTo: currentUser.id,
+                content: message,
+                image: null,
+            };
+            dispatch(messageActions.sendMessage(info, currentMessages));
             setMessage("");
         }
     };
@@ -110,7 +116,7 @@ function MessageWithUser({ messageGroups }) {
                                                 {_group.messages.map((__msg) => (
                                                     <div
                                                         key={__msg.id}
-                                                        className="p-2 msg__bg--light br-10"
+                                                        className="p-2 msg__bg--light br-10 mt-2"
                                                     >
                                                         {__msg.content}
                                                     </div>
@@ -129,7 +135,9 @@ function MessageWithUser({ messageGroups }) {
                                                         }}
                                                         src={
                                                             selfInfo.avatar
-                                                                ? getImageUrl(selfInfo.avatar.fileName)
+                                                                ? getImageUrl(
+                                                                      selfInfo.avatar.fileName
+                                                                  )
                                                                 : DefaultAvatar
                                                         }
                                                     />

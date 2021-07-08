@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import * as api from "./api";
 import * as userApi from "../profile/api";
+import _ from "lodash";
 
 export const messageSlice = createSlice({
     name: "message",
@@ -12,6 +13,7 @@ export const messageSlice = createSlice({
         isLoading: false,
         isMessageListLoading: false,
         isUserInfoLoading: false,
+        isSendingMessage: false,
     },
     reducers: {
         setCurrentMessages: (state, action) => {
@@ -32,6 +34,9 @@ export const messageSlice = createSlice({
         setUserInfoLoading: (state, action) => {
             state.isUserInfoLoading = action.payload;
         },
+        setProperty: (state, action) => {
+            state[action.payload.name] = action.payload.value;
+        },
     },
 });
 
@@ -43,6 +48,7 @@ export const {
     setLoading,
     setMessageListLoading,
     setUserInfoLoading,
+    setProperty,
 } = messageSlice.actions;
 
 function getAllByUserSlug(slug) {
@@ -50,7 +56,8 @@ function getAllByUserSlug(slug) {
         try {
             dispatch(setLoading(true));
             const data = await api.getAllByUserSlug(slug);
-            dispatch(setCurrentMessages(data));
+            const sortedData = _.sortBy(data, ["createdAt"]);
+            dispatch(setCurrentMessages(sortedData));
         } catch (e) {
             console.error(e);
         } finally {
@@ -90,6 +97,20 @@ function getLatestMessages(page) {
     };
 }
 
-export { getAllByUserSlug, getLatestMessages, getUserBasicInfoBySlug };
+function sendMessage(info, currentMessages) {
+    return async (dispatch) => {
+        try {
+            dispatch(setProperty({ name: "isSendingMessage", value: true }));
+            const msg = await api.sendMessage(info);
+            dispatch(setCurrentMessages([...currentMessages, { ...msg, createdAt: new Date() }]));
+        } catch (e) {
+            console.error(e);
+        } finally {
+            dispatch(setProperty({ name: "isSendingMessage", value: false }));
+        }
+    };
+}
+
+export { getAllByUserSlug, getLatestMessages, getUserBasicInfoBySlug, sendMessage };
 
 export default messageSlice.reducer;
