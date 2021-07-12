@@ -9,8 +9,6 @@ import SettingOverlay from "./SettingOverlay";
 import { getTokenByRefreshToken } from "../../utils/api/common";
 import { appendTokenInfo, getImageUrl, getUserInfoFromToken } from "../../common/common";
 import { LazyImage } from "..";
-import socketIOClient from "socket.io-client";
-import config from "../../utils/config/cfg";
 
 function AuthLayout(props) {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -36,11 +34,6 @@ function AuthLayout(props) {
     useEffect(() => {
         const headerHeight = document.getElementById("app-header").clientHeight;
         setMarginTop(headerHeight);
-        const socket = socketIOClient(config[config.environment].originBackend);
-        return () => {
-            console.log("Socket disconnected");
-            socket.disconnect();
-        };
     }, []);
 
     // Mock data for notifications
