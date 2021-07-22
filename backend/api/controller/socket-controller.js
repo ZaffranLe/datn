@@ -23,7 +23,7 @@ function handleSocket(io) {
             const msg = data.msg;
             const { idUserTo } = msg;
             if (clients[idUserTo]) {
-                io.to(clients[idUserTo].emit("receive-msg", { msg }));
+                io.to(clients[idUserTo]).emit("receive-msg", { msg });
             }
         });
     });
