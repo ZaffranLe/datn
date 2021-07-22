@@ -18,6 +18,14 @@ function handleSocket(io) {
         socket.on("disconnect", (data) => {
             console.log(`Socket ${socket.id} disconnected.`);
         });
+
+        socket.on("send-msg", (data) => {
+            const msg = data.msg;
+            const { idUserTo } = msg;
+            if (clients[idUserTo]) {
+                io.to(clients[idUserTo].emit("receive-msg", { msg }));
+            }
+        });
     });
 }
 

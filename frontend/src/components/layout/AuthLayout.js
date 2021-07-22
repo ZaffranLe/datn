@@ -29,11 +29,11 @@ function AuthLayout(props) {
         }
     }
 
-    const [marginTop, setMarginTop] = useState(0);
+    const [paddingTop, setPaddingTop] = useState(0);
 
     useEffect(() => {
         const headerHeight = document.getElementById("app-header").clientHeight;
-        setMarginTop(headerHeight);
+        setPaddingTop(headerHeight);
     }, []);
 
     // Mock data for notifications
@@ -108,7 +108,7 @@ function AuthLayout(props) {
                             <Nav.Item>
                                 <MessageOverlay
                                     show={activeMenu === "message"}
-                                    marginTop={marginTop}
+                                    paddingTop={paddingTop}
                                     onToggle={handleToggleMenu}
                                 />
                             </Nav.Item>
@@ -140,7 +140,7 @@ function AuthLayout(props) {
                                 <SettingOverlay
                                     show={activeMenu === "setting"}
                                     target={settingRef.current}
-                                    marginTop={marginTop}
+                                    paddingTop={paddingTop}
                                     onClose={handleToggleMenu}
                                 />
                             </Nav.Item>
@@ -148,8 +148,8 @@ function AuthLayout(props) {
                     </Navbar>
                 </Col>
             </Row>
-            <Row style={{ marginTop: marginTop }} className="h-100">
-                <Col md="12">{props.children}</Col>
+            <Row style={{ paddingTop: paddingTop }} className="h-100vh">
+                <Col md="12" className="h-100">{props.children}</Col>
             </Row>
         </Container>
     );

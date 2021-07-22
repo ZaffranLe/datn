@@ -24,7 +24,7 @@ function ProfileImage(props) {
 
     return (
         <>
-            <Row className="bg-facebook--darker pt-4 pb-5 justify-content-center">
+            <Row className="bg-facebook--darker br-10 mt-2 p-4 justify-content-center">
                 <Col md={12} className="bg-facebook--dark border--round p-3">
                     <Row>
                         {images.length > 0 ? (

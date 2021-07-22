@@ -5,15 +5,18 @@ import { getImageUrl, calcTimeDifferenceFromNow } from "../common/common";
 import { useHistory } from "react-router-dom";
 
 function UserMessage({ msg }) {
+    const isSeen = msg.isSeen || msg.fromSelf;
+
     const classes = classNames("mb-3", "pb-3", "pt-3", "user-message", {
-        "user-message--unseen": !msg.isSeen,
+        "user-message--unseen": !isSeen,
     });
+
 
     const history = useHistory();
 
     const handleNavigateToMessage = () => {
-        history.push(`/messages/${msg.slug}`)
-    }
+        history.push(`/messages/${msg.slug}`);
+    };
 
     return (
         <Row className={classes} onClick={handleNavigateToMessage}>
@@ -44,10 +47,10 @@ function UserMessage({ msg }) {
                         >
                             <span
                                 style={{ fontSize: 20 }}
-                                className={`${!msg.isSeen ? "font-weight-bold" : ""}`}
+                                className={`${!isSeen ? "font-weight-bold" : ""}`}
                             >{`${msg.lastName} ${msg.firstName}`}</span>
                         </OverlayTrigger>
-                        {!msg.isSeen ? (
+                        {!isSeen ? (
                             <Badge pill style={{ backgroundColor: "#77aff7" }} className="ml-1">
                                 &nbsp;
                             </Badge>

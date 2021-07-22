@@ -55,10 +55,10 @@ function Message(props) {
                         </Col>
                     </Row>
                     <Row className="h-100">
-                        <Col md={4}>
+                        <Col md={4} className="h-100">
                             <MessageList />
                         </Col>
-                        <Col md={8}>
+                        <Col md={8} className="h-100">
                             {isLoading ? (
                                 <div className="w-100 h-100 text-center display--table">
                                     <div className="display--table-cell vertical-align-middle">

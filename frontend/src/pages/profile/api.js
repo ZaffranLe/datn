@@ -16,7 +16,19 @@ async function getUserBySlug(slug) {
 async function getUserBasicInfoBySlug(slug) {
     try {
         const resp = await APICall({
-            url: `/api/user/info/${slug}`,
+            url: `/api/user/info/slug/${slug}`,
+            method: constants.HTTP_METHOD.GET,
+        });
+        return resp.data.data;
+    } catch (e) {
+        throw e.response.data.message;
+    }
+}
+
+async function getUserBasicInfoById(id) {
+    try {
+        const resp = await APICall({
+            url: `/api/user/info/${id}`,
             method: constants.HTTP_METHOD.GET,
         });
         return resp.data.data;
@@ -146,4 +158,5 @@ export {
     getPostById,
     submitCommentToPost,
     getUserBasicInfoBySlug,
+    getUserBasicInfoById,
 };

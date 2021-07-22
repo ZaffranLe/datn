@@ -5,8 +5,9 @@ import ImageModal from "./album/image-modal";
 import CustomLoader from "./loader";
 import LazyImage from "./album/lazy-loading-img";
 import UserMessage from "./user-message";
+import SocketWrapper from "./socket-wrapper";
 
-export { AuthLayout };
+export { AuthLayout, SocketWrapper };
 
 export { HobbyPill, ImageModal, CustomLoader, LazyImage, UserMessage };
 

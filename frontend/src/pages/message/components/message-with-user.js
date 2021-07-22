@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { Row, Col, FormControl } from "react-bootstrap";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { getImageUrl, getUserInfoFromToken } from "../../../common/common";
 import { useState } from "react";
 import { LazyImage } from "../../../components";
@@ -8,9 +8,13 @@ import DefaultAvatar from "../../../assets/img/default-avatar.png";
 import Skeleton from "react-loading-skeleton";
 import TextareaAutosize from "react-textarea-autosize";
 import * as messageActions from "../slice";
+import { SocketContext } from "../../../context";
 
 function MessageWithUser({ messageGroups }) {
-    const { currentUser, isUserInfoLoading, currentMessages } = useSelector((state) => state.message);
+    const socket = useContext(SocketContext);
+    const { currentUser, isUserInfoLoading, isSendingMessage } = useSelector(
+        (state) => state.message
+    );
 
     const [selfInfo, setSelfInfo] = useState({
         avatar: null,
@@ -25,6 +29,13 @@ function MessageWithUser({ messageGroups }) {
         setSelfInfo(userInfo);
     }, []);
 
+    useEffect(() => {
+        if (messageGroups.length > 0) {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+    }, [messageGroups]);
+
     const dispatch = useDispatch();
 
     const handleKeyUp = (e) => {
@@ -35,15 +46,15 @@ function MessageWithUser({ messageGroups }) {
                 content: message,
                 image: null,
             };
-            dispatch(messageActions.sendMessage(info, currentMessages));
+            dispatch(messageActions.sendMessage(info, socket));
             setMessage("");
         }
     };
 
     return (
         <>
-            <Row className="bg-facebook--dark m-2 p-4 br-10 h-85">
-                <Col md={12}>
+            <Row className="bg-facebook--dark m-2 p-4 br-10 h-90">
+                <Col md={12} className="h-100">
                     <Row className="h-15">
                         <Col md={12}>
                             {isUserInfoLoading ? (
@@ -77,7 +88,7 @@ function MessageWithUser({ messageGroups }) {
                             )}
                         </Col>
                     </Row>
-                    <Row className="h-75 overflow-auto">
+                    <Row className="h-75 overflow-auto" id="chatbox">
                         <Col md={12} className="h-100">
                             {messageGroups.map((_group, _idx) => (
                                 <Row key={_idx}>
@@ -113,9 +124,9 @@ function MessageWithUser({ messageGroups }) {
                                                         ? selfInfo.firstName
                                                         : currentUser.firstName}
                                                 </p>
-                                                {_group.messages.map((__msg) => (
+                                                {_group.messages.map((__msg, __idx) => (
                                                     <div
-                                                        key={__msg.id}
+                                                        key={__idx}
                                                         className="p-2 msg__bg--light br-10 mt-2"
                                                     >
                                                         {__msg.content}
@@ -160,6 +171,7 @@ function MessageWithUser({ messageGroups }) {
                                 as={TextareaAutosize}
                                 maxRows={1}
                                 value={message}
+                                disabled={isSendingMessage}
                             />
                         </div>
                     </Row>

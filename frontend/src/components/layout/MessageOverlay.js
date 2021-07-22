@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import UserMessage from "../user-message";
 import * as messageActions from "../../pages/message/slice";
 
-function MessageOverlay({ show, marginTop, onToggle }) {
+function MessageOverlay({ show, paddingTop, onToggle }) {
     const [messageData, setMessageData] = useState({
         havingUnseen: false,
         unseenAmount: 0,
@@ -24,7 +24,7 @@ function MessageOverlay({ show, marginTop, onToggle }) {
             unseenAmount: 0,
         };
         messageList.forEach((_msg, _idx) => {
-            if (!_msg.isSeen) {
+            if (!_msg.isSeen && !_msg.fromSelf) {
                 _messageData.havingUnseen = true;
                 _messageData.unseenAmount += 1;
             }
@@ -55,7 +55,7 @@ function MessageOverlay({ show, marginTop, onToggle }) {
                         style={{
                             position: "absolute",
                             right: 10,
-                            top: marginTop,
+                            top: paddingTop,
                             width: "35vw",
                         }}
                         className="bg-facebook--dark text-light rounded pb-2 pt-4"

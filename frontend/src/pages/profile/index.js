@@ -75,7 +75,7 @@ function Profile(props) {
 
     return (
         <>
-            <Row className="bg-facebook--darker h-100">
+            <Row className="h-100">
                 <Col md={12}>
                     <Row className="justify-content-center">
                         <Col md={9} className="bg-facebook--dark br-10">

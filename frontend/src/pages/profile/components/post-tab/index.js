@@ -23,9 +23,13 @@ function ProfilePost(props) {
     };
     return (
         <>
-            <Row className="bg-facebook--darker pt-4 pb-5 justify-content-center">
+            <Row className="bg-facebook--darker br-10 mt-2 p-4 justify-content-center">
                 <Col md={5}>
-                    {isLoading ? <Skeleton count={10} /> : <Info handleShowUserList={handleShowUserList} user={user} />}
+                    {isLoading ? (
+                        <Skeleton count={10} />
+                    ) : (
+                        <Info handleShowUserList={handleShowUserList} user={user} />
+                    )}
                 </Col>
                 <Col md={7}>
                     {userInfo.id === user.id && (

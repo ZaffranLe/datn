@@ -3,6 +3,8 @@ import { toast } from "react-toastify";
 import * as api from "./api";
 import * as userApi from "../profile/api";
 import _ from "lodash";
+import { getUserInfoFromToken } from "../../common/common";
+import produce from "immer";
 
 export const messageSlice = createSlice({
     name: "message",
@@ -97,12 +99,15 @@ function getLatestMessages(page) {
     };
 }
 
-function sendMessage(info, currentMessages) {
+function sendMessage(info, socket) {
     return async (dispatch) => {
         try {
             dispatch(setProperty({ name: "isSendingMessage", value: true }));
             const msg = await api.sendMessage(info);
-            dispatch(setCurrentMessages([...currentMessages, { ...msg, createdAt: new Date() }]));
+            socket.emit("send-msg", {
+                msg,
+            });
+            dispatch(appendMessage(msg));
         } catch (e) {
             console.error(e);
         } finally {
@@ -111,6 +116,102 @@ function sendMessage(info, currentMessages) {
     };
 }
 
-export { getAllByUserSlug, getLatestMessages, getUserBasicInfoBySlug, sendMessage };
+function appendMessage(msg) {
+    return async (dispatch, getState) => {
+        const appState = getState();
+        const { currentMessages, currentUser, messageList } = appState.message;
+        const userInfo = getUserInfoFromToken();
+        if (userInfo.id === msg.idUserFrom && currentUser.id === msg.idUserTo) {
+            // sending msg to other
+            dispatch(
+                setCurrentMessages([
+                    ...currentMessages,
+                    { ...msg, createdAt: new Date().toISOString() },
+                ])
+            );
+            dispatch(
+                appendMessageList({
+                    ...msg,
+                    id: new Date().getTime(),
+                    firstName: currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    fromSelf: true,
+                    avatar: currentUser.avatar,
+                    slug: currentUser.slug,
+                    isSeen: 0,
+                    createdAt: new Date().toISOString(),
+                })
+            );
+        } else if (currentUser.id === msg.idUserFrom) {
+            // receive msg from currentUserMessaging
+            dispatch(
+                setCurrentMessages([
+                    ...currentMessages,
+                    { ...msg, createdAt: new Date().toISOString() },
+                ])
+            );
+            dispatch(
+                appendMessageList({
+                    ...msg,
+                    id: new Date().getTime(),
+                    firstName: currentUser.firstName,
+                    lastName: currentUser.lastName,
+                    fromSelf: false,
+                    avatar: currentUser.avatar,
+                    slug: currentUser.slug,
+                    isSeen: 1,
+                    createdAt: new Date().toISOString(),
+                })
+            );
+        } else {
+            // receive msg from someone
+            let currentUserInfo = {};
+            const existMsg = messageList.find(
+                (_msg) =>
+                    (_msg.idUserFrom === msg.idUserFrom && _msg.idUserTo === msg.idUserTo) ||
+                    (_msg.idUserTo === msg.idUserFrom && _msg.idUserFrom === msg.idUserTo)
+            );
+            if (!existMsg) {
+                currentUserInfo = await userApi.getUserBasicInfoById(msg.idUserFrom);
+            } else {
+                currentUserInfo = existMsg;
+            }
+            dispatch(
+                appendMessageList({
+                    ...msg,
+                    id: new Date().getTime(),
+                    firstName: currentUserInfo.firstName,
+                    lastName: currentUserInfo.lastName,
+                    fromSelf: false,
+                    avatar: currentUserInfo.avatar,
+                    slug: currentUserInfo.slug,
+                    isSeen: 0,
+                    createdAt: new Date().toISOString(),
+                })
+            );
+        }
+    };
+}
+
+function appendMessageList(msg) {
+    return (dispatch, getState) => {
+        const appState = getState();
+        const { messageList } = appState.message;
+        const newMessageList = produce(messageList, (draft) => {
+            const existMsgIdx = draft.findIndex(
+                (_msg) =>
+                    (_msg.idUserFrom === msg.idUserFrom && _msg.idUserTo === msg.idUserTo) ||
+                    (_msg.idUserFrom === msg.idUserTo && _msg.idUserTo === msg.idUserFrom)
+            );
+            if (existMsgIdx >= 0) {
+                draft.splice(existMsgIdx, 1);
+            }
+            draft.unshift(msg);
+        });
+        dispatch(setMessageList(newMessageList));
+    };
+}
+
+export { getAllByUserSlug, getLatestMessages, getUserBasicInfoBySlug, sendMessage, appendMessage };
 
 export default messageSlice.reducer;

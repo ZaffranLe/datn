@@ -1,10 +1,7 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { Router, Route, Switch } from "react-router-dom";
-import { AuthLayout, ImageModal } from "../components";
-import { SocketContext } from "../context";
+import { AuthLayout, ImageModal, SocketWrapper } from "../components";
 import { history } from "./history";
-import socketIOClient from "socket.io-client";
-import config from "../utils/config/cfg";
 // import pages
 import LoginPage from "./login";
 import ProfilePage from "./profile";
@@ -15,24 +12,13 @@ import ExplorePage from "./explore";
 import MessagePage from "./message";
 
 function AuthRoute({ component: Component, documentTitle, ...rest }) {
-    const token = localStorage.getItem("token");
-
-    const socket = useMemo(() => {
-        if (token) {
-            return socketIOClient(config[config.environment].originBackend, { query: { token } });
-        }
-        return null;
-    }, [token]);
 
     useEffect(() => {
         document.title = `Soulatte - ${documentTitle}` || "Soulatte";
-        return () => {
-            socket.disconnect();
-        };
     }, []);
 
     return (
-        <SocketContext.Provider value={socket}>
+        <SocketWrapper>
             <Route
                 {...rest}
                 render={(matchProps) => (
@@ -41,7 +27,7 @@ function AuthRoute({ component: Component, documentTitle, ...rest }) {
                     </AuthLayout>
                 )}
             />
-        </SocketContext.Provider>
+        </SocketWrapper>
     );
 }
 

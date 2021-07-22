@@ -8,7 +8,7 @@ function MessageList(props) {
 
     return (
         <>
-            <Row style={{ overflowY: "auto" }} className="bg-facebook--dark m-2 p-4 br-10 h-85">
+            <Row style={{ overflowY: "auto" }} className="bg-facebook--dark m-2 p-4 br-10 h-90">
                 <Col md={12}>
                     {isMessageListLoading ? (
                         <div className="w-100 h-100 text-center display--table">
@@ -20,8 +20,8 @@ function MessageList(props) {
                         <>
                             {messageList.length > 0 ? (
                                 <>
-                                    {messageList.map((msg, idx) => (
-                                        <UserMessage key={idx} msg={msg} />
+                                    {messageList.map((msg) => (
+                                        <UserMessage key={msg.id} msg={msg} />
                                     ))}
                                 </>
                             ) : (

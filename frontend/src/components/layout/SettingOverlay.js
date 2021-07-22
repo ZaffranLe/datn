@@ -8,7 +8,7 @@ import DefaultAvatar from "../../assets/img/default-avatar.png";
 import { Link } from "react-router-dom";
 import { LazyImage } from "..";
 
-function SettingOverlay({ show, target, marginTop, onClose }) {
+function SettingOverlay({ show, target, paddingTop, onClose }) {
     const handleLogout = async () => {
         const token = localStorage.getItem("token");
         const refreshToken = localStorage.getItem("refreshToken");
@@ -32,7 +32,7 @@ function SettingOverlay({ show, target, marginTop, onClose }) {
                     style={{
                         position: "absolute",
                         right: 10,
-                        top: marginTop,
+                        top: paddingTop,
                         width: "30vw",
                         maxHeight: "60vh",
                         overflowY: "auto",
