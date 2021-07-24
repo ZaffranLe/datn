@@ -9,12 +9,12 @@ import Skeleton from "react-loading-skeleton";
 import TextareaAutosize from "react-textarea-autosize";
 import * as messageActions from "../slice";
 import { SocketContext } from "../../../context";
+import { Link } from "react-router-dom";
+import moment from "moment";
 
 function MessageWithUser({ messageGroups }) {
     const socket = useContext(SocketContext);
-    const { currentUser, isUserInfoLoading, isSendingMessage } = useSelector(
-        (state) => state.message
-    );
+    const { currentUser, isUserInfoLoading } = useSelector((state) => state.message);
 
     const [selfInfo, setSelfInfo] = useState({
         avatar: null,
@@ -45,6 +45,7 @@ function MessageWithUser({ messageGroups }) {
                 idUserTo: currentUser.id,
                 content: message,
                 image: null,
+                createdAt: new Date(),
             };
             dispatch(messageActions.sendMessage(info, socket));
             setMessage("");
@@ -64,23 +65,28 @@ function MessageWithUser({ messageGroups }) {
                             ) : (
                                 currentUser && (
                                     <div className="display--flex pb-4 mb-3 border-bottom">
-                                        <LazyImage
-                                            style={{
-                                                width: 60,
-                                                height: 60,
-                                                borderRadius: 60,
-                                            }}
-                                            src={
-                                                currentUser.avatar
-                                                    ? getImageUrl(currentUser.avatar)
-                                                    : DefaultAvatar
-                                            }
-                                        />
+                                        <Link to={`/profile/${currentUser.slug}`}>
+                                            <LazyImage
+                                                style={{
+                                                    width: 60,
+                                                    height: 60,
+                                                    borderRadius: 60,
+                                                }}
+                                                src={
+                                                    currentUser.avatar
+                                                        ? getImageUrl(currentUser.avatar)
+                                                        : DefaultAvatar
+                                                }
+                                            />
+                                        </Link>
                                         <div style={{ height: 60 }} className="display--table ml-2">
                                             <span className="display--table-cell vertical-align-middle">
-                                                <big>
-                                                    {currentUser.lastName} {currentUser.firstName}
-                                                </big>
+                                                <Link to={`/profile/${currentUser.slug}`}>
+                                                    <big className="text-white">
+                                                        {currentUser.lastName}{" "}
+                                                        {currentUser.firstName}
+                                                    </big>
+                                                </Link>
                                             </span>
                                         </div>
                                     </div>
@@ -104,26 +110,38 @@ function MessageWithUser({ messageGroups }) {
                                                     style={{ alignSelf: "flex-end" }}
                                                     className="mr-2"
                                                 >
-                                                    <LazyImage
-                                                        style={{
-                                                            width: 40,
-                                                            height: 40,
-                                                            borderRadius: 40,
-                                                        }}
-                                                        src={
-                                                            currentUser.avatar
-                                                                ? getImageUrl(currentUser.avatar)
-                                                                : DefaultAvatar
-                                                        }
-                                                    />
+                                                    <Link to={`/profile/${currentUser.slug}`}>
+                                                        <LazyImage
+                                                            style={{
+                                                                width: 40,
+                                                                height: 40,
+                                                                borderRadius: 40,
+                                                            }}
+                                                            src={
+                                                                currentUser.avatar
+                                                                    ? getImageUrl(
+                                                                          currentUser.avatar
+                                                                      )
+                                                                    : DefaultAvatar
+                                                            }
+                                                        />
+                                                    </Link>
                                                 </div>
                                             )}
                                             <div className="w-100">
-                                                <p>
-                                                    {_group.fromSelf
-                                                        ? selfInfo.firstName
-                                                        : currentUser.firstName}
-                                                </p>
+                                                <Link
+                                                    to={`/profile/${
+                                                        _group.fromSelf
+                                                            ? selfInfo.slug
+                                                            : currentUser.slug
+                                                    }`}
+                                                >
+                                                    <p className="text-white">
+                                                        {_group.fromSelf
+                                                            ? selfInfo.firstName
+                                                            : currentUser.firstName}
+                                                    </p>
+                                                </Link>
                                                 {_group.messages.map((__msg, __idx) => (
                                                     <div
                                                         key={__idx}
@@ -171,7 +189,6 @@ function MessageWithUser({ messageGroups }) {
                                 as={TextareaAutosize}
                                 maxRows={1}
                                 value={message}
-                                disabled={isSendingMessage}
                             />
                         </div>
                     </Row>

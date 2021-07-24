@@ -45,9 +45,9 @@ function Explore(props) {
                                 placement="bottom"
                                 overlay={
                                     <Tooltip className="text-left">
-                                        <span>- Bấm nút mũi tên sang phải để bỏ qua</span>
+                                        <span>- Bấm nút mũi tên sang trái để bỏ qua</span>
                                         <br />
-                                        <span>- Bấm nút mũi tên sang trái để theo dõi và tìm kiếm người mới</span>
+                                        <span>- Bấm nút mũi tên sang phải để theo dõi và tìm kiếm người mới</span>
                                     </Tooltip>
                                 }
                             >

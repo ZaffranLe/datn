@@ -38,7 +38,7 @@ function ProfileImage(props) {
                                 </Col>
                             ))
                         ) : (
-                            <Alert variant="dark">Người dùng hiện chưa đăng ảnh.</Alert>
+                            <Alert className="p-3" variant="dark">Người dùng hiện chưa đăng ảnh.</Alert>
                         )}
                     </Row>
                 </Col>

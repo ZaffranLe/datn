@@ -112,7 +112,7 @@ function AuthLayout(props) {
                                     onToggle={handleToggleMenu}
                                 />
                             </Nav.Item>
-                            <Nav.Item>
+                            {/* <Nav.Item>
                                 <div
                                     ref={notiRef}
                                     className="clickable"
@@ -129,7 +129,7 @@ function AuthLayout(props) {
                                     )}
                                 </div>
                                 <NotificationOverlay show={activeMenu === "notification"} target={notiRef.current} />
-                            </Nav.Item>
+                            </Nav.Item> */}
                             <Nav.Item>
                                 <div ref={settingRef} className="clickable" onClick={() => handleToggleMenu("setting")}>
                                     <span className="fas fa-stack fa-lg">

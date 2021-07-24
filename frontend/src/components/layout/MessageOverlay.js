@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Col, Container, Overlay, Row, Badge } from "react-bootstrap";
+import { Col, Container, Overlay, Row, Badge, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import UserMessage from "../user-message";
@@ -16,7 +16,7 @@ function MessageOverlay({ show, paddingTop, onToggle }) {
 
     useEffect(() => {
         dispatch(messageActions.getLatestMessages(1));
-    }, [dispatch])
+    }, [dispatch]);
 
     useEffect(() => {
         const _messageData = {
@@ -73,9 +73,13 @@ function MessageOverlay({ show, paddingTop, onToggle }) {
                         </Row>
                         <hr className="bg-light" />
                         <div style={{ maxHeight: "30vh", overflowY: "auto", overflowX: "hidden" }}>
-                            {messageList.map((msg, idx) => (
-                                <UserMessage msg={msg} key={idx} />
-                            ))}
+                            {messageList.length > 0 ? (
+                                messageList.map((msg, idx) => <UserMessage msg={msg} key={idx} />)
+                            ) : (
+                                <Alert variant="secondary">
+                                    Chưa có tin nhắn nào được ghi nhận
+                                </Alert>
+                            )}
                         </div>
                         <hr className="bg-light" />
                         <Row>

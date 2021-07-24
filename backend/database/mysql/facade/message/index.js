@@ -4,7 +4,7 @@ const _ = require("lodash");
 const DEFAULT_LIMIT = 10;
 
 async function getLatestMessages(idUser) {
-    const sentMsgQuery = `SELECT t1.content, t1.createdAt, t1.isSeen, t2.firstName, t2.lastName, t2.slug, t1.idUserFrom, t1.idUserTo, t3.fileName AS avatar
+    const sentMsgQuery = `SELECT t1.id, t1.content, t1.createdAt, t1.isSeen, t2.firstName, t2.lastName, t2.slug, t1.idUserFrom, t1.idUserTo, t3.fileName AS avatar
                                 FROM (SELECT *, RANK() OVER(PARTITION BY idUserTo ORDER BY createdAt DESC) AS time_rank 
                                             FROM message WHERE idUserFrom = ?) t1
                                             JOIN user t2 ON t1.idUserTo = t2.id
@@ -13,7 +13,7 @@ async function getLatestMessages(idUser) {
                                             ORDER BY t1.createdAt DESC LIMIT ?`;
     const sentMsgs = await dbClient.query(sentMsgQuery, [idUser, DEFAULT_LIMIT]);
 
-    const receiveMsgQuery = `SELECT t1.content, t1.createdAt, t1.isSeen, t2.firstName, t2.lastName, t2.slug, t1.idUserFrom, t1.idUserTo, t3.fileName AS avatar
+    const receiveMsgQuery = `SELECT t1.id, t1.content, t1.createdAt, t1.isSeen, t2.firstName, t2.lastName, t2.slug, t1.idUserFrom, t1.idUserTo, t3.fileName AS avatar
                                 FROM (SELECT *, RANK() OVER(PARTITION BY idUserFrom ORDER BY createdAt DESC) AS time_rank 
                                             FROM message WHERE idUserTo = ?) t1 
                                             JOIN user t2 ON t1.idUserFrom = t2.id
@@ -65,7 +65,7 @@ async function getMessageByUserId(idUserFrom, idUserTo) {
 
 async function sendMessage(info, transaction = null) {
     const _knex = transaction ? transaction : await knex.transaction();
-    const fields = ["idUserFrom", "idUserTo", "content"];
+    const fields = ["idUserFrom", "idUserTo", "content", "createdAt"];
     const data = _.pick(info, fields);
     try {
         const result = await _knex("message").insert(data);

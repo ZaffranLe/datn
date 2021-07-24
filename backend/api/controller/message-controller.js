@@ -36,13 +36,14 @@ async function getMessagesBySlug(req, res) {
 
 async function sendMessage(req, res) {
     try {
-        const { idUserTo, content, image } = req.body;
+        const { idUserTo, content, image, createdAt } = req.body;
         const { id: idUserFrom } = req.user;
         const info = {
             idUserFrom,
             idUserTo,
             content: content || null,
             image: image || null,
+            createdAt: new Date(createdAt)
         };
         await mysqlMessage.sendMessage(info);
         res.status(200).send({

@@ -183,7 +183,7 @@ function NewPost(props) {
                             </span>
                         ))}
                     </div>
-                    <Row className="br-10 border border-secondary p-3 m-0 mb-3 display--table">
+                    <Row className="br-10 border border-secondary p-3 m-0 mb-3 w-100 display--table">
                         <Col md={6} className="display--table-cell vertical-align-middle">
                             <span style={{ fontSize: 20 }}>Thêm vào bài đăng</span>
                         </Col>

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Row, Col, Alert } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { CustomLoader, UserMessage } from "../../../components";
@@ -20,8 +19,8 @@ function MessageList(props) {
                         <>
                             {messageList.length > 0 ? (
                                 <>
-                                    {messageList.map((msg) => (
-                                        <UserMessage key={msg.id} msg={msg} />
+                                    {messageList.map((_msg, _idx) => (
+                                        <UserMessage key={_msg.id} msg={_msg} />
                                     ))}
                                 </>
                             ) : (

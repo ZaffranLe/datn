@@ -15,7 +15,6 @@ export const messageSlice = createSlice({
         isLoading: false,
         isMessageListLoading: false,
         isUserInfoLoading: false,
-        isSendingMessage: false,
     },
     reducers: {
         setCurrentMessages: (state, action) => {
@@ -102,7 +101,6 @@ function getLatestMessages(page) {
 function sendMessage(info, socket) {
     return async (dispatch) => {
         try {
-            dispatch(setProperty({ name: "isSendingMessage", value: true }));
             const msg = await api.sendMessage(info);
             socket.emit("send-msg", {
                 msg,
@@ -110,8 +108,6 @@ function sendMessage(info, socket) {
             dispatch(appendMessage(msg));
         } catch (e) {
             console.error(e);
-        } finally {
-            dispatch(setProperty({ name: "isSendingMessage", value: false }));
         }
     };
 }
