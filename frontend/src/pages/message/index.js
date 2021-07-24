@@ -78,9 +78,7 @@ function Message(props) {
                                     </div>
                                 </div>
                             ) : (
-                                currentMessages.length > 0 && (
-                                    <MessageWithUser messageGroups={messageGroups} />
-                                )
+                                <MessageWithUser messageGroups={messageGroups} />
                             )}
                         </Col>
                     </Row>
