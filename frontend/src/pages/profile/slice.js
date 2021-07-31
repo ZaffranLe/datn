@@ -98,6 +98,7 @@ function changeFollowUser(id) {
             const isFollowing = await api.changeFollowUser(id);
             dispatch(setFollowing(isFollowing));
         } catch (e) {
+            console.error(e);
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         } finally {
             dispatch(setFollowLoading(false));
@@ -112,6 +113,7 @@ function getImagesByUserId(id) {
             const images = await api.getImagesByUserId(id);
             dispatch(setImages(images));
         } catch (e) {
+            console.error(e);
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         } finally {
             dispatch(setLoading(false));
@@ -127,6 +129,7 @@ function getPostByUserId() {
             const data = await api.getPostByUserId(user.id);
             dispatch(setPosts(data));
         } catch (e) {
+            console.error(e);
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         }
     };
@@ -138,6 +141,7 @@ function getPostById(id) {
             const data = await api.getPostById(id);
             dispatch(setSpecificPost({ idPost: id, data }));
         } catch (e) {
+            console.error(e);
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         }
     };
@@ -150,6 +154,7 @@ function createPost(images, content) {
             await api.createPost(images, content);
             dispatch(setActionSucceed(true));
         } catch (e) {
+            console.error(e);
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         } finally {
             dispatch(setLoading(false));
