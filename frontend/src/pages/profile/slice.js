@@ -108,13 +108,13 @@ function changeFollowUser(id) {
 function getImagesByUserId(id) {
     return async (dispatch) => {
         try {
-            dispatch(setFollowing(true));
+            dispatch(setLoading(true));
             const images = await api.getImagesByUserId(id);
             dispatch(setImages(images));
         } catch (e) {
             toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
         } finally {
-            dispatch(setFollowing(false));
+            dispatch(setLoading(false));
         }
     };
 }

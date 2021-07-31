@@ -12,5 +12,6 @@ router.get("/follow/:id", verifyToken, userController.checkFollowUser);
 router.post("/follow", verifyToken, userController.changeFollowUser);
 router.post("/skip", verifyToken, userController.changeSkipUser);
 router.get("/suggestion", verifyToken, userController.getUserSuggestions);
+router.get("/search", verifyToken, userController.searchUser);
 
 module.exports = router;

@@ -8,6 +8,7 @@ import hobbyReducer from "../pages/hobby/slice";
 import preferenceReducer from "../pages/preference/slice";
 import provinceReducer from "../pages/province/slice";
 import exploreReducer from "../pages/explore/slice";
+import searchReducer from "../pages/search/slice";
 import messageReducer from "../pages/message/slice";
 import imageModalReducer from "../components/album/image-modal/slice";
 
@@ -24,5 +25,6 @@ export default configureStore({
         imageModal: imageModalReducer,
         explore: exploreReducer,
         message: messageReducer,
+        search: searchReducer,
     },
 });

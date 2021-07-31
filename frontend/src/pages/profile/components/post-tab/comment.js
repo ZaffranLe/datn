@@ -1,10 +1,7 @@
 import { Col, Row } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {
-    getImageUrl,
-    calcTimeDifferenceFromNow,
-} from "../../../../common/common";
+import { getImageUrl, calcTimeDifferenceFromNow } from "../../../../common/common";
 import { LazyImage } from "../../../../components";
 import * as imageModalActions from "../../../../components/album/image-modal/slice";
 
@@ -34,19 +31,18 @@ function Comment({ comment }) {
                 <Col md={11} className="bg-facebook--darker br-10 pt-2 pb-2">
                     <Row>
                         <Col md={12}>
-                            <span
-                                className="clickable text-white font-weight-bold"
-                                as={Link}
+                            <Link
                                 to={`/profile/${comment.userSlug}`}
+                                className="clickable text-white font-weight-bold"
                             >
                                 {comment.userLastName} {comment.userFirstName}
-                            </span>
+                            </Link>
                         </Col>
                     </Row>
                     {comment.content && (
                         <Row>
                             <Col md={12}>
-                                <pre className="text-white">{comment.content}</pre>
+                                <pre className="text-white comment">{comment.content}</pre>
                             </Col>
                         </Row>
                     )}

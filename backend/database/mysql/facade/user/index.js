@@ -12,7 +12,11 @@ async function getUserBasicInfoById(id) {
         lastName: "t1.lastName",
         slug: "t1.slug",
     };
-    const user = await knex("user AS t1").leftJoin("image AS t2", "t1.avatar", "t2.id").where("t1.id", id).column(fields).first();
+    const user = await knex("user AS t1")
+        .leftJoin("image AS t2", "t1.avatar", "t2.id")
+        .where("t1.id", id)
+        .column(fields)
+        .first();
     return user;
 }
 
@@ -119,7 +123,9 @@ async function update(id, info, transaction = null) {
         let _currentHobbies = await knex("user_hobby").where("idUser", id);
         _currentHobbies = _currentHobbies.map((_hobby) => _hobby.idHobby);
 
-        let _newHobbies = _hobbies.filter((_hobby) => !_currentHobbies.find((_id) => _id === _hobby));
+        let _newHobbies = _hobbies.filter(
+            (_hobby) => !_currentHobbies.find((_id) => _id === _hobby)
+        );
         _newHobbies = _newHobbies.map((_idHobby) => ({
             idUser: id,
             idHobby: _idHobby,
@@ -128,7 +134,9 @@ async function update(id, info, transaction = null) {
             await _knex("user_hobby").insert(_newHobbies);
         }
 
-        const _deleteHobbies = _currentHobbies.filter((_id) => !_hobbies.find((_hobby) => _id === _hobby));
+        const _deleteHobbies = _currentHobbies.filter(
+            (_id) => !_hobbies.find((_hobby) => _id === _hobby)
+        );
         if (_deleteHobbies.length > 0) {
             await _knex("user_hobby").whereIn("idHobby", _deleteHobbies).del();
         }
@@ -222,26 +230,38 @@ async function getUserSuggestions(idCurrentUser) {
 
     let userSuggestions = knex("user AS t1")
         .whereNotExists((builder) =>
-            builder.select("*").from("user_skip").where({ idUserFrom: idCurrentUser, idUserSkipped: "t1.id" })
+            builder
+                .select("*")
+                .from("user_skip")
+                .where({ idUserFrom: idCurrentUser, idUserSkipped: "t1.id" })
         )
         .andWhereNot("t1.id", idCurrentUser);
 
     switch (currentUser.idPreference) {
         case constants.PREFERENCE.STRAIGHT:
             userSuggestions = userSuggestions.andWhere((builder) =>
-                builder.whereIn("idPreference", [constants.PREFERENCE.BISEXUAL, constants.PREFERENCE.STRAIGHT])
+                builder.whereIn("idPreference", [
+                    constants.PREFERENCE.BISEXUAL,
+                    constants.PREFERENCE.STRAIGHT,
+                ])
             );
             switch (currentUser.idGender) {
                 case constants.GENDER.FEMALE:
                 case constants.GENDER.TRANS_FEMALE:
                     userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [constants.GENDER.MALE, constants.GENDER.TRANS_MALE])
+                        builder.whereIn("idGender", [
+                            constants.GENDER.MALE,
+                            constants.GENDER.TRANS_MALE,
+                        ])
                     );
                     break;
                 case constants.GENDER.MALE:
                 case constants.GENDER.TRANS_MALE:
                     userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [constants.GENDER.FEMALE, constants.GENDER.TRANS_FEMALE])
+                        builder.whereIn("idGender", [
+                            constants.GENDER.FEMALE,
+                            constants.GENDER.TRANS_FEMALE,
+                        ])
                     );
                     break;
                 default:
@@ -250,19 +270,28 @@ async function getUserSuggestions(idCurrentUser) {
             break;
         case constants.PREFERENCE.GAY:
             userSuggestions = userSuggestions.andWhere((builder) =>
-                builder.whereIn("idPreference", [constants.PREFERENCE.BISEXUAL, constants.PREFERENCE.GAY])
+                builder.whereIn("idPreference", [
+                    constants.PREFERENCE.BISEXUAL,
+                    constants.PREFERENCE.GAY,
+                ])
             );
             switch (currentUser.idGender) {
                 case constants.GENDER.FEMALE:
                 case constants.GENDER.TRANS_FEMALE:
                     userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [constants.GENDER.FEMALE, constants.GENDER.TRANS_FEMALE])
+                        builder.whereIn("idGender", [
+                            constants.GENDER.FEMALE,
+                            constants.GENDER.TRANS_FEMALE,
+                        ])
                     );
                     break;
                 case constants.GENDER.MALE:
                 case constants.GENDER.TRANS_MALE:
                     userSuggestions = userSuggestions.andWhere((builder) =>
-                        builder.whereIn("idGender", [constants.GENDER.MALE, constants.GENDER.TRANS_MALE])
+                        builder.whereIn("idGender", [
+                            constants.GENDER.MALE,
+                            constants.GENDER.TRANS_MALE,
+                        ])
                     );
                     break;
                 default:
@@ -322,6 +351,21 @@ async function getUserSuggestions(idCurrentUser) {
     return _.sortBy(userSuggestions, ["score"]).reverse();
 }
 
+async function searchUser(search) {
+    const fields = {
+        id: "t1.id",
+        avatar: "t2.fileName",
+        firstName: "t1.firstName",
+        lastName: "t1.lastName",
+        slug: "t1.slug",
+    };
+    const user = await knex("user AS t1")
+        .leftJoin("image AS t2", "t1.avatar", "t2.id")
+        .whereRaw("concat(t1.lastName, ' ', t1.firstName) LIKE ?", [`%${search}%`])
+        .column(fields);
+    return user;
+}
+
 module.exports = {
     getUserBasicInfoById,
     getUserByEmail,
@@ -334,4 +378,5 @@ module.exports = {
     changeFollowUser,
     changeSkipUser,
     getUserSuggestions,
+    searchUser,
 };

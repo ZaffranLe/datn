@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Image, Navbar, Nav, Form, Button, Badge } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AppThumbnail from "../../assets/img/thumbnail.jpg";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import MessageOverlay from "./MessageOverlay";
@@ -11,6 +11,7 @@ import { appendTokenInfo, getImageUrl, getUserInfoFromToken } from "../../common
 import { LazyImage } from "..";
 
 function AuthLayout(props) {
+    const [searchText, setSearchText] = useState("");
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) {
         window.location.replace("/login");
@@ -28,6 +29,8 @@ function AuthLayout(props) {
             getTokenByRefreshToken();
         }
     }
+
+    const history = useHistory();
 
     const [paddingTop, setPaddingTop] = useState(0);
 
@@ -48,6 +51,16 @@ function AuthLayout(props) {
 
     const handleToggleMenu = (name) => {
         setActiveMenu(activeMenu === name ? null : name);
+    };
+
+    const handleChangeSearchText = (e) => {
+        setSearchText(e.target.value);
+    };
+
+    const handleSearchUser = () => {
+        if (searchText) {
+            history.push(`/search?name=${searchText}`);
+        }
     };
 
     return (
@@ -71,8 +84,14 @@ function AuthLayout(props) {
                                             className="mr-2"
                                         />
                                     </Link>
-                                    <Form.Control type="text" placeholder="Tìm kiếm" className="fluid" />
-                                    <Button variant="outline-info">
+                                    <Form.Control
+                                        value={searchText}
+                                        type="text"
+                                        placeholder="Tìm kiếm"
+                                        className="fluid"
+                                        onChange={handleChangeSearchText}
+                                    />
+                                    <Button variant="outline-info" onClick={handleSearchUser}>
                                         <i className="fas fa-search" />
                                     </Button>
                                 </Form>
@@ -96,7 +115,11 @@ function AuthLayout(props) {
                                             height: 40,
                                             borderRadius: 40,
                                         }}
-                                        src={userInfo.avatar ? getImageUrl(userInfo.avatar.fileName) : DefaultAvatar}
+                                        src={
+                                            userInfo.avatar
+                                                ? getImageUrl(userInfo.avatar.fileName)
+                                                : DefaultAvatar
+                                        }
                                     />
                                     <div style={{ height: 40 }} className="display--table ml-2">
                                         <span className="display--table-cell vertical-align-middle">
@@ -131,7 +154,11 @@ function AuthLayout(props) {
                                 <NotificationOverlay show={activeMenu === "notification"} target={notiRef.current} />
                             </Nav.Item> */}
                             <Nav.Item>
-                                <div ref={settingRef} className="clickable" onClick={() => handleToggleMenu("setting")}>
+                                <div
+                                    ref={settingRef}
+                                    className="clickable"
+                                    onClick={() => handleToggleMenu("setting")}
+                                >
                                     <span className="fas fa-stack fa-lg">
                                         <i className="fas fa-circle fa-stack-2x text-light" />
                                         <i className="fas fa-caret-down fa-stack-1x text-dark" />
@@ -149,7 +176,9 @@ function AuthLayout(props) {
                 </Col>
             </Row>
             <Row style={{ paddingTop: paddingTop }} className="h-100vh">
-                <Col md="12" className="h-100">{props.children}</Col>
+                <Col md="12" className="h-100">
+                    {props.children}
+                </Col>
             </Row>
         </Container>
     );

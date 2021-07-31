@@ -21,6 +21,7 @@
     "moment": "^2.29.1",
     "node-sass": "^5.0.0",
     "npm": "^7.6.1",
+    "query-string": "^7.0.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.1",
     "react-datepicker": "^3.6.0",

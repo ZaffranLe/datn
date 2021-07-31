@@ -9,6 +9,7 @@ import RegisterPage from "./register";
 import RegisterUpdateInfoPage from "./update-info";
 import TermOfUsePage from "./term-of-use";
 import ExplorePage from "./explore";
+import SearchPage from "./search";
 import MessagePage from "./message";
 
 function AuthRoute({ component: Component, documentTitle, ...rest }) {
@@ -65,6 +66,7 @@ function App() {
                         component={MessagePage}
                     />
                     <AuthRoute documentTitle="Khám phá" exact path="/" component={ExplorePage} />
+                    <AuthRoute documentTitle="Tìm kiếm" exact path="/search" component={SearchPage} />
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/register" component={RegisterPage} />
                     <AuthRoute

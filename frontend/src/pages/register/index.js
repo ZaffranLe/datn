@@ -66,6 +66,7 @@ function Register(props) {
         const _registerInfoValidation = produce(registerInfoValidation, (draft) => {
             draft["isEmailValid"] = _isValid;
         });
+        setIsFocusingEmail(false);
         dispatch(registerActions.updateRegisterInfoValidation(_registerInfoValidation));
     };
 

@@ -132,6 +132,19 @@ async function getUserSuggestions(req, res) {
     }
 }
 
+async function searchUser(req, res) {
+    try {
+        const { name } = req.query;
+        const users = await mysqlUser.searchUser(name);
+        res.status(200).json({
+            data: users,
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, searchUser.name);
+    }
+}
+
 module.exports = {
     updateSelf,
     checkSlugExist,
@@ -141,5 +154,6 @@ module.exports = {
     changeSkipUser,
     getUserSuggestions,
     getUserBasicInfoBySlug,
-    getUserBasicInfoById
+    getUserBasicInfoById,
+    searchUser,
 };
