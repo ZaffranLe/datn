@@ -36,7 +36,7 @@ function Profile(props) {
 
     useEffect(() => {
         if (user) {
-            dispatch(profileActions.getPostByUserId());
+            dispatch(profileActions.getPostByUserId(user.id));
             if (userInfo.id !== user.id) {
                 dispatch(profileActions.checkFollowUser(user.id));
             }

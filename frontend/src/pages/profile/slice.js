@@ -121,12 +121,10 @@ function getImagesByUserId(id) {
     };
 }
 
-function getPostByUserId() {
-    return async (dispatch, getState) => {
+function getPostByUserId(id) {
+    return async (dispatch) => {
         try {
-            const stateRedux = getState();
-            const user = stateRedux.profile.user;
-            const data = await api.getPostByUserId(user.id);
+            const data = await api.getPostByUserId(id);
             dispatch(setPosts(data));
         } catch (e) {
             console.error(e);
