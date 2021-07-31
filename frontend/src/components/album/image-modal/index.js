@@ -38,7 +38,7 @@ function ImageModal(props) {
                     </Row>
                 ) : image ? (
                     <Row style={{ height: "inherit" }}>
-                        <Col md={12} className="text-center p-5 border-right" style={{ maxHeight: "90%" }}>
+                        <Col md={12} className="text-center p-5" style={{ maxHeight: "90%" }}>
                             <Image src={getImageUrl(image.fileName)} fluid style={{ maxHeight: "90%" }} />
                         </Col>
                     </Row>

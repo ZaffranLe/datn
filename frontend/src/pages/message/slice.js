@@ -138,7 +138,7 @@ function appendMessage(msg) {
                     createdAt: new Date().toISOString(),
                 })
             );
-        } else if (currentUser.id === msg.idUserFrom) {
+        } else if (currentUser && currentUser.id === msg.idUserFrom) {
             // receive msg from currentUserMessaging
             dispatch(
                 setCurrentMessages([

@@ -41,9 +41,11 @@ function MessageWithUser({ messageGroups }) {
     const handleKeyUp = (e) => {
         const ENTER = "Enter";
         if (e.key === ENTER && !e.shiftKey && message) {
+            console.log(message);
+            console.log(message.trim());
             const info = {
                 idUserTo: currentUser.id,
-                content: message,
+                content: message.trim(),
                 image: null,
                 createdAt: new Date(),
             };
@@ -146,7 +148,9 @@ function MessageWithUser({ messageGroups }) {
                                                             key={__idx}
                                                             className="p-2 msg__bg--light br-10 mt-2"
                                                         >
-                                                            {__msg.content}
+                                                            <pre className="comment text-white mb-0">
+                                                                {__msg.content}
+                                                            </pre>
                                                         </div>
                                                     ))}
                                                 </div>

@@ -114,7 +114,11 @@ async function update(id, info, transaction = null) {
             "banner",
         ];
         const data = _.pick(info, fields);
-        data.idProvince = info.province ? info.province.value : undefined;
+        data.idProvince = info.province
+            ? info.province.value
+            : info.idProvince
+            ? info.idProvince
+            : undefined;
         data.dob = new Date(data.dob);
         mutableTrimObj(data);
         await _knex("user").update(data).where("id", id);
@@ -339,7 +343,7 @@ async function getUserSuggestions(idCurrentUser) {
     for (let i = 0; i < userSuggestions.length; ++i) {
         let score = 0;
         if (userSuggestions[i].idProvince == currentUser.idProvince) {
-            score += 10;
+            score += 5;
         }
         score += userSameHobbies[i].length;
         userSuggestions[i].score = score;

@@ -85,6 +85,8 @@ function UpdateInfo(props) {
         setProfileInfo((p) => ({
             ...p,
             ..._userInfo,
+            avatar: _userInfo.avatar ? _userInfo.avatar.id : null,
+            banner: _userInfo.banner ? _userInfo.banner.id : null,
             dob: _userInfo.dob ? new Date(_userInfo.dob) : "",
         }));
     }, []);

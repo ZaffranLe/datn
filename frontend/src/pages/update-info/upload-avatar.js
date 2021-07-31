@@ -69,7 +69,6 @@ function UploadAvatar({ handleChangeAvatar }) {
                 id="avatar-file"
                 accept="image/*"
                 style={{ display: "none" }}
-                multiple
                 onChange={uploadImage}
             />
         </>

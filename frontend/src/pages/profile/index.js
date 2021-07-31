@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, FormFile, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultAvatar from "../../assets/img/default-avatar.png";
 import DefaultBanner from "../../assets/img/default-banner.jpg";
@@ -7,14 +7,17 @@ import { LazyImage, ProfileNonExist } from "../../components";
 import { history } from "../history";
 import "./index.scss";
 import * as profileActions from "./slice";
-import * as messageActions from "../message/slice";
 import * as imageModalActions from "../../components/album/image-modal/slice";
+import * as updateInfoActions from "../update-info/slice";
 import { Link } from "react-router-dom";
 import { getImageUrl, getUserInfoFromToken } from "../../common/common";
 import classNames from "classnames";
 import ProfilePost from "./components/post-tab";
 import ProfilePanes from "./components/panes";
 import ProfileImage from "./components/image-tab";
+import constants from "../../common/constants";
+import { toast } from "react-toastify";
+import { uploadImages } from "../../utils/api/common";
 
 function Profile(props) {
     const userInfo = getUserInfoFromToken();
@@ -56,6 +59,32 @@ function Profile(props) {
         return classNames("profile__btn", {
             active: activePane === name,
         });
+    };
+
+    const uploadImage = async (e) => {
+        try {
+            let image = null;
+            if (e.target.files.length > 0) {
+                image = e.target.files[0];
+            } else {
+                return null;
+            }
+            if (image.size > constants.MAX_FILE_SIZE) {
+                toast.error("Ảnh vượt quá kích thước tối đa 5MB!");
+                return null;
+            }
+            const data = await uploadImages([image]);
+            const uploadedImage = data[0];
+            const newInfo = {
+                ...userInfo,
+                avatar: userInfo.avatar ? userInfo.avatar.id : null,
+                banner: uploadedImage["id"]
+            }
+            dispatch(updateInfoActions.updateInfo(newInfo));
+        } catch (e) {
+            console.error(e);
+            toast.error("Hệ thống gặp sự cố. Vui lòng thử lại sau");
+        }
     };
 
     const panes = [
@@ -104,6 +133,29 @@ function Profile(props) {
                                         }
                                         style={{ width: 200, height: 200, borderRadius: 200 }}
                                     />
+                                    {userInfo.id === user.id && (
+                                        <Form>
+                                            <FormFile.Label htmlFor="oops">
+                                                <div
+                                                    className="btn btn-outline-dark"
+                                                    style={{
+                                                        float: "right",
+                                                        position: "absolute",
+                                                        right: 15,
+                                                        top: 15,
+                                                    }}
+                                                >
+                                                    <i className="fas fa-camera" /> Cập nhật ảnh bìa
+                                                </div>
+                                            </FormFile.Label>
+                                            <FormFile.Input
+                                                id="oops"
+                                                accept="image/*"
+                                                style={{ display: "none" }}
+                                                onChange={uploadImage}
+                                            />
+                                        </Form>
+                                    )}
                                 </Col>
                             </Row>
                             <Row>
