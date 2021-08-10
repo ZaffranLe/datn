@@ -44,22 +44,31 @@ async function getLatestMessages(idUser) {
     return filteredMsgs;
 }
 
-async function getMessageByUserId(idUserFrom, idUserTo) {
-    const messages = await knex("message")
-        .where({ idUserFrom: idUserFrom, idUserTo: idUserTo })
+async function getMessageByUserId(info) {
+    const { userRequested, userTargeted, offset = 0, limit = 20 } = info;
+    const fields = {
+        id: "t1.id",
+        content: "t1.content",
+        idUserFrom: "t1.idUserFrom",
+        idUserTo: "t1.idUserTo",
+        createdAt: "t1.createdAt",
+        image: "t3.fileName",
+    };
+    const messages = await knex("message AS t1")
+        .leftJoin("message_image AS t2", "t1.id", "t2.idMessage")
+        .leftJoin("image AS t3", "t2.idImage", "t3.id")
+        .where({ "t1.idUserFrom": userRequested, "t1.idUserTo": userTargeted })
         .orWhere({
-            idUserTo: idUserFrom,
-            idUserFrom: idUserTo,
+            "t1.idUserTo": userRequested,
+            "t1.idUserFrom": userTargeted,
         })
-        .orderBy("createdAt", "desc")
-        .limit(20);
+        .orderBy("t1.createdAt", "desc")
+        .offset(offset)
+        .limit(limit)
+        .columns(fields);
     await knex("message")
         .update({ isSeen: 1 })
-        .whereIn(
-            "id",
-            messages.map((_msg) => _msg.id)
-        )
-        .andWhere("idUserFrom", idUserTo);
+        .where({ idUserFrom: userTargeted, idUserTo: userRequested });
     return messages;
 }
 
@@ -71,7 +80,7 @@ async function sendMessage(info, transaction = null) {
         const result = await _knex("message").insert(data);
         if (info.image) {
             const msgId = result[0];
-            await _knex("message_image").insert({ idMessage: msgId, idImage: info.image });
+            await _knex("message_image").insert({ idMessage: msgId, idImage: info.image.id });
         }
         if (!transaction) {
             await _knex.commit();

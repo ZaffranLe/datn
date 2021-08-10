@@ -1,6 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
-import { Row, Col, FormControl } from "react-bootstrap";
-import { useContext, useEffect } from "react";
+import {
+  Row,
+  Col,
+  FormControl,
+  OverlayTrigger,
+  Tooltip,
+  Overlay,
+  Popover,
+} from "react-bootstrap";
+import { useContext, useEffect, useRef } from "react";
 import { getImageUrl, getUserInfoFromToken } from "../../../common/common";
 import { useState } from "react";
 import { LazyImage } from "../../../components";
@@ -10,7 +18,9 @@ import TextareaAutosize from "react-textarea-autosize";
 import * as messageActions from "../slice";
 import { SocketContext } from "../../../context";
 import { Link } from "react-router-dom";
-import moment from "moment";
+import { uploadImages } from "../../../utils/api/common";
+import constants from "../../../common/constants";
+import { toast } from "react-toastify";
 
 function MessageWithUser({ messageGroups }) {
   const socket = useContext(SocketContext);
@@ -23,7 +33,8 @@ function MessageWithUser({ messageGroups }) {
     firstName: "User",
     lastName: "Soulatte",
   });
-
+  const [image, setImage] = useState(null);
+  const [isImageLoading, setImageLoading] = useState(false);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -43,18 +54,43 @@ function MessageWithUser({ messageGroups }) {
   const handleKeyUp = (e) => {
     const ENTER = "Enter";
     if (e.key === ENTER && !e.shiftKey && message) {
-      console.log(message);
-      console.log(message.trim());
       const info = {
         idUserTo: currentUser.id,
         content: message.trim(),
-        image: null,
+        image,
         createdAt: new Date(),
       };
       dispatch(messageActions.sendMessage(info, socket));
       setMessage("");
+      setImage(null);
     }
   };
+
+  const handleAddImage = async (e) => {
+    try {
+      let image = null;
+      if (e.target.files.length > 0) {
+        image = e.target.files[0];
+      } else {
+        return null;
+      }
+      const exceedSizeImg = image.size > constants.MAX_FILE_SIZE;
+      if (exceedSizeImg) {
+        toast.error("Ảnh vượt quá kích thước tối đa 5MB!");
+        return null;
+      }
+      setImageLoading(true);
+      const uploadedImages = await uploadImages([image]);
+      setImage(uploadedImages[0]);
+    } catch (e) {
+      console.error(e);
+      toast.error(e.response.data.message);
+    } finally {
+      setImageLoading(false);
+    }
+  };
+
+  const inputRef = useRef(null);
 
   return (
     <>
@@ -149,6 +185,13 @@ function MessageWithUser({ messageGroups }) {
                               <pre className="comment text-white mb-0 message-content">
                                 {__msg.content}
                               </pre>
+                              {__msg.image && (
+                                <LazyImage
+                                  className="br-10 mt-2"
+                                  src={getImageUrl(__msg.image)}
+                                  style={{ width: 300, height: 200 }}
+                                />
+                              )}
                             </div>
                           ))}
                         </div>
@@ -178,7 +221,7 @@ function MessageWithUser({ messageGroups }) {
               </Col>
             </Row>
             {/* Message input box */}
-            <Row className="h-10 w-100 display--table m-0 ">
+            <Row className="w-100 display--table m-0 mt-3">
               <div className="display--table-cell vertical-align-middle w-100">
                 <FormControl
                   className="w-100"
@@ -190,8 +233,50 @@ function MessageWithUser({ messageGroups }) {
                   maxRows={1}
                   value={message}
                   // Should have a resize script or use resizable library
-                  style={{resize: "none"}}
+                  style={{ resize: "none" }}
+                  ref={inputRef}
                 />
+                <Overlay
+                  placement="top-end"
+                  show={Boolean(image)}
+                  target={inputRef.current}
+                >
+                  <Popover onClick={() => setImage(null)}>
+                    <LazyImage
+                      className="br-10 m-1"
+                      style={{
+                        width: 150,
+                        height: 100,
+                      }}
+                      src={getImageUrl(image && image.fileName)}
+                    />
+                  </Popover>
+                </Overlay>
+                <div className="mt-1">
+                  {isImageLoading ? (
+                    <i className="fas fa-spin fa-spinner" />
+                  ) : (
+                    <>
+                      <OverlayTrigger
+                        placement="top"
+                        delay={{ show: 400, hide: 200 }}
+                        overlay={(_props) => <Tooltip {..._props}>Ảnh</Tooltip>}
+                      >
+                        <label htmlFor="upload-image" className="mb-0">
+                          <i className="fas fa-image text-success fa-2x clickable" />
+                        </label>
+                      </OverlayTrigger>
+                      <input
+                        type="file"
+                        className="d-none"
+                        id="upload-image"
+                        multiple
+                        accept="image/*"
+                        onChange={handleAddImage}
+                      />
+                    </>
+                  )}
+                </div>
               </div>
             </Row>
           </Col>
