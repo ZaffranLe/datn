@@ -117,6 +117,7 @@ function appendMessage(msg) {
         const appState = getState();
         const { currentMessages, currentUser, messageList } = appState.message;
         const userInfo = getUserInfoFromToken();
+        console.log(msg);
         if (userInfo.id === msg.idUserFrom && currentUser.id === msg.idUserTo) {
             // sending msg to other
             dispatch(

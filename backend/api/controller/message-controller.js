@@ -53,6 +53,7 @@ async function sendMessage(req, res) {
             imageId: image ? image.id : null
         };
         await mysqlMessage.sendMessage(info);
+        console.log(info);
         res.status(200).send({
             data: info,
             message: null,
