@@ -169,6 +169,24 @@ function createPost(images, content) {
   };
 }
 
+function deletePost(id) {
+  return async (dispatch, getState) => {
+    try {
+      const appState = getState();
+      const { posts } = appState.profile;
+      dispatch(setLoading(true));
+      await api.deletePost(id);
+      dispatch(setActionSucceed(true));
+      dispatch(setPosts([...posts.filter((_post) => _post.id !== id)]));
+    } catch (e) {
+      console.error(e);
+      toast.error("Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+    } finally {
+      dispatch(setLoading(false));
+    }
+  };
+}
+
 export {
   getUserBySlug,
   changeFollowUser,
@@ -177,6 +195,7 @@ export {
   createPost,
   getPostByUserId,
   getPostById,
+  deletePost,
 };
 
 export default profileSlice.reducer;
