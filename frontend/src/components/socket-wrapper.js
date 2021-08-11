@@ -20,7 +20,7 @@ function SocketWrapper({ children }) {
 
     useEffect(() => {
         socket.on("receive-msg", (data) => {
-            const { msg } = data;
+            const msg = data;
             dispatch(messageActions.appendMessage(msg));
         });
 
