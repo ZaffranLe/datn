@@ -53,6 +53,7 @@ async function getMessageByUserId(info) {
         idUserTo: "t1.idUserTo",
         createdAt: "t1.createdAt",
         image: "t3.fileName",
+        imageId: "t3.id"
     };
     const messages = await knex("message AS t1")
         .leftJoin("message_image AS t2", "t1.id", "t2.idMessage")
@@ -80,7 +81,7 @@ async function sendMessage(info, transaction = null) {
         const result = await _knex("message").insert(data);
         if (info.image) {
             const msgId = result[0];
-            await _knex("message_image").insert({ idMessage: msgId, idImage: info.image.id });
+            await _knex("message_image").insert({ idMessage: msgId, idImage: info.imageId });
         }
         if (!transaction) {
             await _knex.commit();

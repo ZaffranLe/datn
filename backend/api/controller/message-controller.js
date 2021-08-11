@@ -50,6 +50,7 @@ async function sendMessage(req, res) {
             content: content || null,
             image: image.fileName || null,
             createdAt: new Date(createdAt),
+            imageId: image.id || null
         };
         await mysqlMessage.sendMessage(info);
         res.status(200).send({

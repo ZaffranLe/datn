@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import { uploadImages } from "../../../utils/api/common";
 import constants from "../../../common/constants";
 import { toast } from "react-toastify";
+import * as imageModalActions from "../../../components/album/image-modal/slice";
 
 function MessageWithUser({ messageGroups }) {
   const socket = useContext(SocketContext);
@@ -88,6 +89,10 @@ function MessageWithUser({ messageGroups }) {
     } finally {
       setImageLoading(false);
     }
+  };
+
+  const handleViewImage = (idImage) => {
+    dispatch(imageModalActions.openModal(idImage));
   };
 
   const inputRef = useRef(null);
@@ -187,9 +192,10 @@ function MessageWithUser({ messageGroups }) {
                               </pre>
                               {__msg.image && (
                                 <LazyImage
-                                  className="br-10 mt-2"
+                                  className="br-10 mt-2 clickable"
                                   src={getImageUrl(__msg.image)}
                                   style={{ width: 300, height: 200 }}
+                                  onClick={() => handleViewImage(__msg.imageId)}
                                 />
                               )}
                             </div>

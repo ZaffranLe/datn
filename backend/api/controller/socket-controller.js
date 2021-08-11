@@ -26,6 +26,7 @@ function handleSocket(io) {
                 io.to(clients[idUserTo]).emit("receive-msg", {
                     ...msg,
                     image: msg.image ? msg.image.fileName : null,
+                    imageId: msg.image ? msg.image.id : null
                 });
             }
         });
