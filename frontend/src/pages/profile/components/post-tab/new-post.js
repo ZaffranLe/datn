@@ -27,7 +27,6 @@ function NewPost(props) {
             setImages([]);
             setContent("");
             dispatch(profileActions.setActionSucceed(false));
-            dispatch(profileActions.getPostByUserId());
         }
     }, [isActionSucceed, dispatch]);
 
@@ -51,18 +50,18 @@ function NewPost(props) {
 
     const handleAddImage = async (e) => {
         try {
-            let images = null;
+            let _images = null;
             if (e.target.files.length > 0) {
-                images = [...e.target.files];
+                _images = [...e.target.files];
             } else {
                 return null;
             }
-            const exceedSizeImg = images.find((img) => img.size > constants.MAX_FILE_SIZE);
+            const exceedSizeImg = _images.find((img) => img.size > constants.MAX_FILE_SIZE);
             if (exceedSizeImg) {
                 toast.error("Ảnh vượt quá kích thước tối đa 5MB!");
                 return null;
             }
-            const uploadedImages = await uploadImages(images);
+            const uploadedImages = await uploadImages(_images);
             setImages(uploadedImages);
         } catch (e) {
             console.error(e);
@@ -196,14 +195,14 @@ function NewPost(props) {
                                 delay={{ show: 400, hide: 200 }}
                                 overlay={(_props) => <Tooltip {..._props}>Ảnh</Tooltip>}
                             >
-                                <label htmlFor="upload-image" className="mb-0">
+                                <label htmlFor="new-post__upload-image" className="mb-0">
                                     <i className="fas fa-image text-success fa-2x clickable" />
                                 </label>
                             </OverlayTrigger>
                             <input
                                 type="file"
                                 className="d-none"
-                                id="upload-image"
+                                id="new-post__upload-image"
                                 multiple
                                 accept="image/*"
                                 onChange={handleAddImage}

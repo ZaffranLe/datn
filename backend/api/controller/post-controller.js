@@ -32,9 +32,9 @@ async function getById(req, res) {
 async function create(req, res) {
     try {
         const { images, content } = req.body;
-        await mysqlPost.create({ images, content, idUser: req.user.id });
+        const newPost = await mysqlPost.create({ images, content, idUser: req.user.id });
         res.status(201).json({
-            data: {},
+            data: newPost,
             message: null,
         });
     } catch (e) {
@@ -60,9 +60,9 @@ async function submitCommentToPost(req, res) {
     try {
         const { id: idUser } = req.user;
         const { idPost, comment } = req.body;
-        await mysqlPost.submitCommentToPost(idPost, idUser, comment);
+        const newComment = await mysqlPost.submitCommentToPost(idPost, idUser, comment);
         res.status(201).json({
-            data: {},
+            data: newComment,
             message: null,
         });
     } catch (e) {

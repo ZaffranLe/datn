@@ -23,6 +23,7 @@ async function getByUserId(id, idCurrentUser) {
         fileName: "t2.fileName",
     };
     const commentColumns = {
+        id: "t1.id",
         content: "t1.content",
         imgFileName: "t3.fileName",
         imgId: "t3.id",
@@ -31,6 +32,7 @@ async function getByUserId(id, idCurrentUser) {
         userLastName: "t4.lastName",
         userSlug: "t4.slug",
         createdAt: "t1.createdAt",
+        idComment: "t1.idComment",
     };
     posts.forEach((post) => {
         imgPromises.push(
@@ -49,7 +51,7 @@ async function getByUserId(id, idCurrentUser) {
                 .leftJoin("image AS t5", "t4.avatar", "t5.id")
                 .leftJoin("comment_image AS t2", "t1.id", "t2.idComment")
                 .leftJoin("image AS t3", "t2.idImage", "t3.id")
-                .where("idPost", post.id)
+                .where("t1.idPost", post.id)
                 .columns(commentColumns)
         );
     });
@@ -62,6 +64,11 @@ async function getByUserId(id, idCurrentUser) {
         posts[i].images = imgData[i];
         posts[i].isLiked = Boolean(likeStatusData[i]);
         posts[i].numOfLike = numOfLikeData[i].length;
+        commentData[i].forEach((_comment) => {
+            _comment.comments = commentData[i].filter(
+                (__comment) => __comment.idComment === _comment.id
+            );
+        });
         posts[i].comments = commentData[i];
     }
 
@@ -111,11 +118,25 @@ async function create(info, transaction = null) {
             }));
             await _knex("post_image").insert(imageList);
             const imageIdList = images.map((img) => img.id);
-            await _knex("image").update({ idUser: data.idUser, isUsing: 1 }).whereIn("id", imageIdList);
+            await _knex("image")
+                .update({ idUser: data.idUser, isUsing: 1 })
+                .whereIn("id", imageIdList);
         }
         if (!transaction) {
             await _knex.commit();
         }
+        const newPost = {
+            id: createdPostId,
+            content: data.content,
+            idUser: data.idUser,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            isLiked: false,
+            numOfLike: 0,
+            images: images.map((img) => ({ id: img.id, fileName: img.fileName })),
+            comments: [],
+        };
+        return newPost;
     } catch (e) {
         if (!transaction) {
             await _knex.rollback();
@@ -150,18 +171,19 @@ async function changeLikeStatus(idUser, idPost, transaction = null) {
 
 async function submitCommentToPost(idPost, idUser, comment, transaction = null) {
     const _knex = transaction || (await knex.transaction());
-    const { content, image = null } = comment;
+    const { content, image = null, idComment = null } = comment;
     try {
         const data = {
             idPost,
             idUser,
             content,
+            idComment,
         };
         const _comment = await _knex("post_comment").insert(data);
-        const idComment = _comment[0];
+        const idCreatedComment = _comment[0];
         if (image) {
             await _knex("comment_image").insert({
-                idComment,
+                idComment: idCreatedComment,
                 idImage: image.id,
             });
             await _knex("image").update({ idUser: idUser, isUsing: 1 }).where("id", image.id);
@@ -169,6 +191,11 @@ async function submitCommentToPost(idPost, idUser, comment, transaction = null) 
         if (!transaction) {
             await _knex.commit();
         }
+        const newComment = {
+            id: idCreatedComment,
+            idComment,
+        };
+        return newComment;
     } catch (e) {
         if (!transaction) {
             await _knex.rollback();
