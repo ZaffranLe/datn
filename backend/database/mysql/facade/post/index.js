@@ -12,6 +12,7 @@ async function getByUserId(id, idCurrentUser) {
     };
     const posts = await knex("post AS t1")
         .where("idUser", id)
+        .andWhere("status", 1)
         .orderBy("createdAt", "desc")
         .columns(postColumns);
     const imgPromises = [];
@@ -73,6 +74,21 @@ async function getByUserId(id, idCurrentUser) {
     }
 
     return posts;
+}
+
+async function deleteById(id, transaction = null) {
+    const _knex = transaction || (await knex.transaction());
+    try {
+        await _knex("post").update({ status: 0 }).where("id", id);
+        if (!transaction) {
+            await _knex.commit();
+        }
+    } catch (e) {
+        if (!transaction) {
+            await _knex.rollback();
+        }
+        throw e;
+    }
 }
 
 async function getById(id, idCurrentUser) {
@@ -209,4 +225,5 @@ module.exports = {
     changeLikeStatus,
     getById,
     submitCommentToPost,
+    deleteById,
 };

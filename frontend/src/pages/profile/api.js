@@ -115,6 +115,18 @@ async function createPost(images, content) {
   }
 }
 
+async function deletePost(id) {
+  try {
+    const resp = await APICall({
+      url: `/api/post/${id}`,
+      method: constants.HTTP_METHOD.DELETE,
+    });
+    return resp.data.data;
+  } catch (e) {
+    throw e.response.data.message;
+  }
+}
+
 async function changeLikeStatus(idPost) {
   try {
     const resp = await APICall({
@@ -162,4 +174,5 @@ export {
   submitCommentToPost,
   getUserBasicInfoBySlug,
   getUserBasicInfoById,
+  deletePost,
 };

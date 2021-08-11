@@ -17,9 +17,12 @@ import { LazyImage } from "../../../../components";
 import {
   getImageUrl,
   calcTimeDifferenceFromNow,
+  getUserInfoFromToken,
 } from "../../../../common/common";
 import Comment from "./comment";
 import NewComment from "./new-comment";
+import { useDispatch } from "react-redux";
+import * as postActions from "../../slice";
 
 function Post({ post, user }) {
   const MAX_CONTENT_LENGTH = 300;
@@ -27,6 +30,10 @@ function Post({ post, user }) {
   const [_comments, setComments] = useState([]);
   const [isLikeBtnLoading, setLikeBtnLoading] = useState(false);
   const [isContentExtended, setContentExtended] = useState(false);
+  const [showToolbar, setShowToolbar] = useState(false);
+  const userInfo = getUserInfoFromToken();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const shortedContent =
@@ -60,6 +67,13 @@ function Post({ post, user }) {
     }
     setLikeBtnLoading(false);
   };
+
+  const handleDeletePost = () => {
+    const confirm = window.confirm("Bạn có chắc chắn muốn xoá bài đăng này?");
+    if (confirm) {
+      dispatch(postActions.deletePost(post.id))
+    }
+  }
 
   return (
     <>
@@ -97,7 +111,17 @@ function Post({ post, user }) {
                                   to={`${user.slug}`}
                                 >
                                   {user.lastName} {user.firstName}
-                                </span>
+                                </span>{" "}
+                                {userInfo.id === _post.idUser && (
+                                  <OverlayTrigger show={showToolbar} placement="right" overlay={
+                                    <Tooltip>
+                                      <p className="clickable">Sửa bài đăng</p>
+                                      <p className="clickable" onClick={handleDeletePost}>Xoá bài đăng</p>
+                                    </Tooltip>
+                                  }>
+                                    <i onClick={() => setShowToolbar(!showToolbar)} className="fas fa-ellipsis-h clickable text-white-50" />
+                                  </OverlayTrigger>
+                                )}
                               </Col>
                             </Row>
                             <Row>

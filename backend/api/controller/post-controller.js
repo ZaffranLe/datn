@@ -29,6 +29,19 @@ async function getById(req, res) {
     }
 }
 
+async function deleteById(req, res) {
+    const { id } = req.params;
+    try {
+        await mysqlPost.deleteById(id);
+        res.status(200).json({
+            data: {},
+            message: null,
+        });
+    } catch (e) {
+        res.sendError(e, FILE_NAME, deleteById.name);
+    }
+}
+
 async function create(req, res) {
     try {
         const { images, content } = req.body;
@@ -70,4 +83,4 @@ async function submitCommentToPost(req, res) {
     }
 }
 
-module.exports = { create, getByUserId, changeLikeStatus, getById, submitCommentToPost };
+module.exports = { create, getByUserId, changeLikeStatus, getById, submitCommentToPost,deleteById };
